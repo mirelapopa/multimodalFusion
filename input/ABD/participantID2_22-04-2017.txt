@@ -1,0 +1,7 @@
+daily_motion: 	{'slow_mov': 0.034759211625636548, 'stationary': 4.339174758063894, 'fast_mov': 0.0}
+as_day_motion: 	{'toilet': [['14:09:29'], ['0:01:56']], 'entrance': [[], []], 'bedroom': [[], []]}
+as_night_motion: 	{'toilet': [['14:21:37'], ['0:00:49']], 'entrance': [[], []], 'bedroom': [[], []]}
+visit_bathroom: 	{'times': [['14:09:29'], ['14:21:37']], 'duration': [['0:01:56'], ['0:00:49']]}
+confusion_behavior_detection: 	{'number': 1, 'times': [['14-09-10']], 'duration': [['0:00:10']]}
+leave the house: 	2
+leave_house_confused: 	0

@@ -1,0 +1,4 @@
+total_time_dit:	100
+new_attachments:	{'number':1, 'beggining': [['14:09:29']], 'duration': [['0:00:12']]}
+add_medication:	{'number':0, 'beggining': [], 'duration': []}
+add_appointment:	{'number':1, 'beggining': [['10:01:19']], 'duration': [['0:00:19']]}

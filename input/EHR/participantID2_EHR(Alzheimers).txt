@@ -1,0 +1,26 @@
+Main_diagnosis:	'Alzheimers'
+Date_birth:	'1931-03-14'
+Gender:	1
+CivilStatus:	'Single'
+Bmi:	22
+Active:	0
+Mobility:	0
+GradeDependence:	1
+AutonomousWalk:	1
+IndependenceDailyActivities:	2
+ComorbiditiesNeurologist:	0
+ComorbiditiesPsychiatrist:	0
+PreserveCognitiveFunctions:	0
+ComorbiditiesCardiovascular:	0
+Hipertension:	1
+ComorbiditiesUrinary:	0
+Incontinence:	1
+Insomnia:	0
+Depression:	1
+MMSE:	26
+SPMSQ:	5
+Medication:	{
+	"numberMedications": 2,	
+	"Name": 'Levodopa', "time": ['morning', 'night'], "dosage": ['1', '1'],
+	"Name": 'Anticholinergic', "time": ['morning'], "dosage": ['1'],
+	}
