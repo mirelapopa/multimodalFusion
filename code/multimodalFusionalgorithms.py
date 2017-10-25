@@ -412,7 +412,8 @@ class MultimodalFusion():
             line = "Apathy: no signs; "  + str(stationary) +  "\n"                                 
         print line
         
-        line = '\t\"stationaryBehaviour\":{\n' + '\t\t\"result\":' + str(round(percent_stationary*100)) + ',\n' + '\t\t\"events\":['+','.join(map(str,stationary))+']\n' + '\t},\n'
+        line = '\t\t\"stationaryBehaviour\":{\n' + '\t\t\t\"result\":' + str(round(percent_stationary*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,stationary))+'\n\t\t\t]\n' + '\t\t},\n'
+                
         outputFile.writelines(line)
         
         if(percent_stationary>=0):
@@ -453,7 +454,7 @@ class MultimodalFusion():
             line = "Daily motion no deviations; "  + str(dailyMotion) +  "\n"           
         print line
                 
-        line = '\t\"dailyMotion\":{\n' + '\t\t\"result\":' + str(round(percent_dailyMotion*100)) + ',\n' + '\t\t\"events\":['+','.join(map(str,dailyMotion))+']\n' + '\t},\n'
+        line = '\t\t\"dailyMotion\":{\n' + '\t\t\t\"result\":' + str(round(percent_dailyMotion*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,dailyMotion))+'\n\t\t\t]\n' + '\t\t},\n'
         outputFile.writelines(line)
         
         #in the case daily motion decreases, the probability of apathy increases
@@ -506,9 +507,9 @@ class MultimodalFusion():
             probabilityApathy_leavingHouse = 0.001
             probabilityImprovedBehaviour_leavingHouse = 0.3*percent_leavingHouse
     
-        line = '\t\"leavingHouse\":{\n' + '\t\t\"result\":' + str(round(percent_leavingHouse*100)) + ',\n' + '\t\t\"events\":[' +','.join(map(str,nr_leaving_the_house))+']\n' + '\t},\n'
+        line = '\t\t\"leavingHouse\":{\n' + '\t\t\t\"result\":' + str(round(percent_leavingHouse*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,nr_leaving_the_house))+'\n\t\t\t]\n' + '\t\t},\n'              
         outputFile.writelines(line)
-    
+       
         #plot a graph of the leaving the house over the investigated days
         showGraph_leaving = 0
         if showGraph_leaving:
@@ -544,11 +545,11 @@ class MultimodalFusion():
             line = 'Night motion, no deviations; ' + str(nr_night_visits) + "\n"                 
         print line
         
-        line = '\t\"nightMotion\":{\n' + '\t\t\"result\":' + str(round(percent_nightMotion*100)) + ',\n' + '\t\t\"events\":[' +','.join(map(str,nr_night_visits))+']\n' + '\t},\n'
+        line = '\t\t\"nightMotion\":{\n' + '\t\t\t\"result\":' + str(round(percent_nightMotion*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,nr_night_visits))+'\n\t\t\t]\n' + '\t\t},\n'              
         outputFile.writelines(line)
     
         insomnia = self.insomnia
-        line = '\t\"insomnia\":'+str(insomnia)+',\n'
+        line = '\t\t\"insomnia\":'+str(insomnia)+',\n'
         outputFile.writelines(line)
     
         if(percent_nightMotion>=0):
@@ -565,13 +566,8 @@ class MultimodalFusion():
             
         else:
             probabilityInsomnia_nightMotion = 0.7*probabilityInsomnia_nightMotion
-            insomniaProb = 0.3*insomnia + probabilityInsomnia_nightMotion
+            insomniaProb = 0.3*insomnia + probabilityInsomnia_nightMotion              
                 
-        line = '\t\"probability(Insomnia|nightMotion)\":'+str(probabilityInsomnia_nightMotion) + ', \n'
-        outputFile.writelines(line)    
-        line = '\t\"sleepDisordersProbability\":'+str(insomniaProb) + ', \n'
-        outputFile.writelines(line)
-        
         #plot a graph of the night motion over the investigated days
         showGraph_nightMotion = 0
         if showGraph_nightMotion:
@@ -606,7 +602,7 @@ class MultimodalFusion():
             line = 'Freezing events, no deviations; ' + str(freezing_events) + "\n"
         print line
                 
-        line = '\t\"freezing\":{\n' + '\t\t\"result\":' + str(round(percent_freezing*100)) + ',\n' + '\t\t\"events\":['+','.join(map(str,freezing_events))+']\n' + '\t},\n'
+        line = '\t\t\"freezing\":{\n' + '\t\t\t\"result\":' + str(round(percent_freezing*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,freezing_events))+'\n\t\t\t]\n' + '\t\t},\n'              
         outputFile.writelines(line)
         
         if(percent_freezing>=0):            
@@ -653,7 +649,7 @@ class MultimodalFusion():
             line = 'Festination events, no deviations; ' + str(festination_events) + "\n"
         print line
                 
-        line = '\t\"festination\":{\n' + '\t\t\"result\":' + str(round(percent_festination*100)) + ',\n' + '\t\t\"events\":['+','.join(map(str,festination_events))+']\n' + '\t},\n'
+        line = '\t\t\"festination\":{\n' + '\t\t\t\"result\":' + str(round(percent_festination*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,festination_events))+'\n\t\t\t]\n' + '\t\t},\n'              
         outputFile.writelines(line)
     
         if(percent_festination>=0):            
@@ -713,7 +709,7 @@ class MultimodalFusion():
             line = 'Fall down events, no deviations; '+ str(fall_down_events) + "\n"
         print line
                 
-        line = '\t\"fallDown\":{\n' + '\t\t\"result\":' + str(round(percent_fall_down*100)) + ',\n' + '\t\t\"events\":['+','.join(map(str,fall_down_events))+']\n' + '\t},\n'
+        line = '\t\t\"fallDown\":{\n' + '\t\t\t\"result\":' + str(round(percent_fall_down*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,fall_down_events))+'\n\t\t\t]\n' + '\t\t},\n'              
         outputFile.writelines(line)
         
         if(percent_fall_down>=0):            
@@ -763,7 +759,7 @@ class MultimodalFusion():
         print line
         
     
-        line = '\t\"lossBalance\":{\n' + '\t\t\"result\":' + str(round(percent_loss_of_balance*100)) + ',\n' + '\t\t\"events\":['+','.join(map(str,loss_of_balance_events))+']\n' + '\t},\n'
+        line = '\t\t\"lossBalance\":{\n' + '\t\t\t\"result\":' + str(round(percent_loss_of_balance*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,loss_of_balance_events))+'\n\t\t\t]\n' + '\t\t},\n'              
         outputFile.writelines(line)
     
         #plot a graph of the loss of balance events over the investigated days
@@ -815,12 +811,12 @@ class MultimodalFusion():
             line = 'Number of visits to the bathroom, no deviations; '  + str(nr_visits_bathroom) + "\n"
         print line
             
-        line = '\t\"visitBathroom\":{\n' + '\t\t\"result\":' + str(round(percent_nr_visits_bathroom*100)) + ',\n' + '\t\t\"events\":['+','.join(map(str,nr_visits_bathroom))+']\n' + '\t},\n'
+        line = '\t\t\"visitBathroom\":{\n' + '\t\t\t\"result\":' + str(round(percent_nr_visits_bathroom*100)) + ',\n' +'\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,nr_visits_bathroom))+'\n\t\t\t]\n' + '\t\t},\n'              
         outputFile.writelines(line)
         
         incontinence = self.incontinence
         
-        line = '\t\"incontinence\":'+str(incontinence) + ', \n'
+        line = '\t\t\"incontinence\":'+str(incontinence) + ', \n'
         outputFile.writelines(line)
 
         if(percent_nr_visits_bathroom>=0):            
@@ -831,10 +827,7 @@ class MultimodalFusion():
 
         incontinenceProb = 0.3*incontinence + probabilityIncontinence_visitsBathroom           
         
-        line = '\t\"probability(Incontinence|visitsBathroom)\":'+str(round(probabilityIncontinence_visitsBathroom,2)) + ', \n'
-        outputFile.writelines(line)    
-        line = '\t\"incontinenceProbability\":'+str(round(incontinenceProb,2)) + ', \n'
-        outputFile.writelines(line)
+       
         
         #plot a graph of the number of visits to the bathroom over the investigated days
         showGraph_bathroom = 0
@@ -876,7 +869,7 @@ class MultimodalFusion():
             line = 'Time spent on digital devices, no deviations; '+ str(time_dit) + "\n" 
         print line
                 
-        line = '\t\"digitalTimeSpent\":{\n' + '\t\t\"result\":' + str(round(percent_time_dit*100)) + ',\n' + '\t\t\"events\":['+','.join(map(str,time_dit))+']\n' + '\t},\n'
+        line = '\t\t\"digitalTimeSpent\":{\n' + '\t\t\t\"result\":' + str(round(percent_time_dit*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,time_dit))+'\n\t\t\t]\n' + '\t\t},\n'              
         outputFile.writelines(line)
         
         if(percent_time_dit>=0):            
@@ -888,12 +881,7 @@ class MultimodalFusion():
             probabilityApathy_timeDit = 0.001
 
         probDigitalAddiction = 0.4*self.comorbiditesPsychiatrist + probabilityDigitalAddiction_timeDit
-
-        line = '\t\"probability(digitalAddiction|digitalTimeUsage)\":' + str(round(probabilityDigitalAddiction_timeDit,2)) + ',\n' 
-        outputFile.writelines(line)            
-        line = '\t\"digitalAddictionProbability\":' + str(round(probDigitalAddiction,2)) + ',\n' 
-        outputFile.writelines(line)
-        
+               
         #plot a graph of the time spent on dit over the investigated days
         showGraph_time = 0
         if showGraph_time:
@@ -936,7 +924,7 @@ class MultimodalFusion():
             line = 'Number of abnormal digital behaviours, no deviations; '  + str(nr_abnormal_dit_behaviours) + "\n" 
         print line
              
-        line = '\t\"abnormalDigitalBehaviours\":{\n' + '\t\t\"result\":' + str(round(percent_abnormal_dit*100)) + ',\n' + '\t\t\"events\":['+','.join(map(str,nr_abnormal_dit_behaviours))+']\n' + '\t},\n'
+        line = '\t\t\"abnormalDigitalBehaviours\":{\n' + '\t\t\t\"result\":' + str(round(percent_abnormal_dit*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,nr_abnormal_dit_behaviours))+'\n\t\t\t]\n' + '\t\t},\n'              
         outputFile.writelines(line)
 
         if(percent_abnormal_dit>=0):            
@@ -964,70 +952,103 @@ class MultimodalFusion():
         else:
             probabilityDigitalConfusion_abnormalDigitalBehaviour = 0.7*probabilityDigitalConfusion_abnormalDigitalBehaviour		
             probDigitalConfusion =probabilityDigitalConfusion_abnormalDigitalBehaviour + 0.3*(1-int(cognitiveFunctions))
-           
-        line = '\t\"probability(digitalConfusion|abnormalDigitalBehaviour)\":' + str(round(probabilityDigitalConfusion_abnormalDigitalBehaviour,2)) + ',\n' 
+        
+        line = '\t\t\"probabilities\":[\n' 
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"Insomnia|nightMotion\",\n'+'\t\t\t\"value\":'+str(round(probabilityInsomnia_nightMotion,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)    
+        
+        line = '\t\t{\n\t\t\t\"type\":\"sleepDisorders\",\n'+'\t\t\t\"value\":'+str(round(insomniaProb,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"Incontinence|visitsBathroom\",\n'+'\t\t\t\"value\":'+str(round(probabilityIncontinence_visitsBathroom,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)    
+        
+        line = '\t\t{\n\t\t\t\"type\":\"Incontinence\",\n'+'\t\t\t\"value\":'+str(round(incontinenceProb,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"digitalAddiction|digitalTimeUsage\",\n'+'\t\t\t\"value\":'+str(round(probabilityDigitalAddiction_timeDit,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)            
+        
+        line = '\t\t{\n\t\t\t\"type\":\"digitalAddiction\",\n'+'\t\t\t\"value\":'+str(round(probDigitalAddiction,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"digitalConfusion|abnormalDigitalBehaviour\",\n'+'\t\t\t\"value\":'+str(round(probabilityDigitalConfusion_abnormalDigitalBehaviour,3)) + '\n\t\t},\n'
         outputFile.writelines(line)   
-        line = '\t\"digitalConfusionProbability\":' + str(round(probDigitalConfusion,2)) + ',\n' 
+        
+        line = '\t\t{\n\t\t\t\"type\":\"digitalConfusion\",\n'+'\t\t\t\"value\":'+str(round(probDigitalConfusion,3)) + '\n\t\t},\n'
         outputFile.writelines(line)
         
         probApathy = probabilityApathy_stationary + probabilityApathy_dailyMotion + probabilityApathy_leavingHouse + probabilityApathy_timeDit                      
-    
-        line = '\t\"probability(Apathy|stationaryBehaviour)\":' + str(round(probabilityApathy_stationary,2)) + ',\n' 
+        line = '\t\t{\n\t\t\t\"type\":\"Apathy|stationaryBehaviour\",\n'+'\t\t\t\"value\":'+str(round(probabilityApathy_stationary,3)) + '\n\t\t},\n'
         outputFile.writelines(line)
         
-        line = '\t\"probability(Apathy|dailyMotion)\":' + str(round(probabilityApathy_dailyMotion,2)) + ',\n' 
+        line = '\t\t{\n\t\t\t\"type\":\"Apathy|dailyMotion\",\n'+'\t\t\t\"value\":'+str(round(probabilityApathy_dailyMotion,3)) + '\n\t\t},\n'
         outputFile.writelines(line)
         
-        line = '\t\"probability(Apathy|leavingHouse)\":' + str(round(probabilityApathy_leavingHouse,2)) + ',\n' 
+        line = '\t\t{\n\t\t\t\"type\":\"Apathy|leavingHouse\",\n'+'\t\t\t\"value\":'+str(round(probabilityApathy_leavingHouse,3)) + '\n\t\t},\n'
         outputFile.writelines(line)
-        line = '\t\"probability(Apathy|digitalTimeUsage)\":' + str(round(probabilityApathy_timeDit,2)) + ',\n' 
+        
+        line = '\t\t{\n\t\t\t\"type\":\"Apathy|digitalTimeUsage\",\n'+'\t\t\t\"value\":'+str(round(probabilityApathy_timeDit,3)) + '\n\t\t},\n'
         outputFile.writelines(line)
 
-        line = '\t\"apathyProbability\":' + str(round(probApathy,2)) + ',\n' 
+        line = '\t\t{\n\t\t\t\"type\":\"Apathy\",\n'+'\t\t\t\"value\":'+str(round(probApathy,3)) + '\n\t\t},\n'
         outputFile.writelines(line)
         
         probParkinsonsEvents = probabilityParkinsonsEvents_festination + probabilityParkinsonsEvents_freezing + probabilityParkinsonsEvents_fall_down  + probabilityParkinsonsEvents_lossBalance
         
-        line = '\t\"probability(ParkinsonsEvents|freezing)\":' + str(round(probabilityParkinsonsEvents_freezing,2)) + ',\n' 
+        line = '\t\t{\n\t\t\t\"type\":\"ParkinsonsEvents|freezing\",\n'+'\t\t\t\"value\":'+str(round(probabilityParkinsonsEvents_freezing,3)) + '\n\t\t},\n'
         outputFile.writelines(line)
-        line = '\t\"probability(ParkinsonsEvents|festination)\":' + str(round(probabilityParkinsonsEvents_festination,2)) + ',\n' 
+        
+        line = '\t\t{\n\t\t\t\"type\":\"ParkinsonsEvents|festination\",\n'+'\t\t\t\"value\":'+str(round(probabilityParkinsonsEvents_festination,3)) + '\n\t\t},\n'
         outputFile.writelines(line)
-        line = '\t\"probability(ParkinsonsEvents|fallDown)\":' + str(round(probabilityParkinsonsEvents_fall_down,2)) + ',\n' 
+        
+        line = '\t\t{\n\t\t\t\"type\":\"ParkinsonsEvents|fallDown\",\n'+'\t\t\t\"value\":'+str(round(probabilityParkinsonsEvents_fall_down,3)) + '\n\t\t},\n'                                    
         outputFile.writelines(line)
-        line = '\t\"probability(ParkinsonsEvents|lossOfBalance)\":' + str(round(probabilityParkinsonsEvents_lossBalance,2)) + ',\n' 
+        
+        line = '\t\t{\n\t\t\t\"type\":\"ParkinsonsEvents|lossOfBalance\",\n'+'\t\t\t\"value\":'+str(round(probabilityParkinsonsEvents_lossBalance,3)) + '\n\t\t},\n'                                    
         outputFile.writelines(line)
     
-        line = '\t\"ParkinsonsEventsProbability\":' + str(round(probParkinsonsEvents,2)) + ',\n' 
+        line = '\t\t{\n\t\t\t\"type\":\"ParkinsonsEvents\",\n'+'\t\t\t\"value\":'+str(round(probParkinsonsEvents,3)) + '\n\t\t},\n'                                    
         outputFile.writelines(line)  
 
         probImprovedBehaviour = probabilityImprovedBehaviour_abnormalDigitalBehaviour + probabilityImprovedBehaviour_dailyMotion + probabilityImprovedBehaviour_fallDown + probabilityImprovedBehaviour_festination + probabilityImprovedBehaviour_freezing + probabilityImprovedBehaviour_lossBalance + probabilityImprovedBehaviour_nightMotion + probabilityImprovedBehaviour_stationary + probabilityImprovedBehaviour_leavingHouse
         
         if(probImprovedBehaviour>1):
-            probImprovedBehaviour = 1
-            
-        line = '\t\"probability(ImprovedBehaviour|stationary)\":' + str(round(probabilityImprovedBehaviour_stationary,2)) + ',\n' 
-        outputFile.writelines(line)
-        line = '\t\"probability(ImprovedBehaviour|dailyMotion)\":' + str(round(probabilityImprovedBehaviour_dailyMotion,2)) + ',\n' 
-        outputFile.writelines(line)
-        line = '\t\"probability(ImprovedBehaviour|nightMotion)\":' + str(round(probabilityImprovedBehaviour_nightMotion,2)) + ',\n' 
-        outputFile.writelines(line)
-        line = '\t\"probability(ImprovedBehaviour|leavingHouse)\":' + str(round(probabilityImprovedBehaviour_leavingHouse,2)) + ',\n' 
-        outputFile.writelines(line)
-        line = '\t\"probability(ImprovedBehaviour|fallDown)\":' + str(round(probabilityImprovedBehaviour_fallDown,2)) + ',\n' 
-        outputFile.writelines(line)
-        line = '\t\"probability(ImprovedBehaviour|festination)\":' + str(round(probabilityImprovedBehaviour_festination,2)) + ',\n' 
-        outputFile.writelines(line)
-        line = '\t\"probability(ImprovedBehaviour|freezing)\":' + str(round(probabilityImprovedBehaviour_freezing,2)) + ',\n' 
-        outputFile.writelines(line)
-        line = '\t\"probability(ImprovedBehaviour|lossOfBalance)\":' + str(round(probabilityImprovedBehaviour_lossBalance,2)) + ',\n' 
-        outputFile.writelines(line)
-        line = '\t\"probability(ImprovedBehaviour|abnormalDigitalBehaviour)\":' + str(round(probabilityImprovedBehaviour_abnormalDigitalBehaviour,2)) + ',\n' 
+            probImprovedBehaviour = 1       
+        
+        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|stationary\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_stationary,3)) + '\n\t\t},\n'                                    
         outputFile.writelines(line)
         
-        line = '\t\"ImprovedBehaviourProbability\":' + str(round(probImprovedBehaviour,2)) + ',\n' 
+        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|dailyMotion\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_dailyMotion,3)) + '\n\t\t},\n'                                    
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|nightMotion\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_nightMotion,3)) + '\n\t\t},\n'                                    
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|leavingHouse\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_leavingHouse,3)) + '\n\t\t},\n'                                    
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|fallDown\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_fallDown,3)) + '\n\t\t},\n'                                    
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|festination\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_festination,3)) + '\n\t\t},\n'                                    
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|freezing\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_freezing,3)) + '\n\t\t},\n'                                    
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|lossOfBalance\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_lossBalance,3)) + '\n\t\t},\n'                                    
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|abnormalDigitalBehaviour\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_abnormalDigitalBehaviour,3)) + '\n\t\t},\n'                                    
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour\",\n'+'\t\t\t\"value\":'+str(round(probImprovedBehaviour,3)) + '\n\t\t}\n'                                    
         outputFile.writelines(line)  
         
-        line = '}]'
+        line = '\t\t]\n\t}\n]'
         outputFile.writelines(line)
     
         outputFile.close()  
@@ -1057,7 +1078,7 @@ class MultimodalFusion():
             line = "Apathy: no signs; "  + str(stationary) +  "\n"                                 
         print line
         
-        line = '\t\"stationaryBehaviour\":{\n' + '\t\t\"result\":' + str(round(percent_stationary*100)) + ',\n' + '\t\t\"events\":['+','.join(map(str,stationary))+']\n' + '\t},\n'
+        line = '\t\t\"stationaryBehaviour\":{\n' + '\t\t\t\"result\":' + str(round(percent_stationary*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,stationary))+'\n\t\t\t]\n' + '\t\t},\n'
         outputFile.writelines(line)
         
         if(percent_stationary>=0):
@@ -1100,7 +1121,7 @@ class MultimodalFusion():
             line = "Daily motion no deviations; "  + str(dailyMotion) +  "\n"           
         print line
                 
-        line = '\t\"dailyMotion\":{\n' + '\t\t\"result\":' + str(round(percent_dailyMotion*100)) + ',\n' + '\t\t\"events\":['+','.join(map(str,dailyMotion))+']\n' + '\t},\n'
+        line = '\t\t\"dailyMotion\":{\n' + '\t\t\t\"result\":' + str(round(percent_dailyMotion*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,dailyMotion))+'\n\t\t\t]\n' + '\t\t},\n'
         outputFile.writelines(line)
         
         #in the case daily motion decreases, the probability of apathy increases
@@ -1158,7 +1179,7 @@ class MultimodalFusion():
             probabilityImprovedBehaviour_leavingHouse = 0.3*percent_leavingHouse
             probabilityMovementIssues_leavingHouse = 0.001
     
-        line = '\t\"leavingHouse\":{\n' + '\t\t\"result\":' + str(round(percent_leavingHouse*100)) + ',\n' + '\t\t\"events\":[' +','.join(map(str,nr_leaving_the_house))+']\n' + '\t},\n'
+        line = '\t\t\"leavingHouse\":{\n' + '\t\t\t\"result\":' + str(round(percent_leavingHouse*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,nr_leaving_the_house))+'\n\t\t\t]\n' + '\t\t},\n'              
         outputFile.writelines(line)
     
         #plot a graph of the leaving the house over the investigated days
@@ -1196,11 +1217,11 @@ class MultimodalFusion():
             line = 'Night motion, no deviations; ' + str(nr_night_visits) + "\n"                 
         print line
         
-        line = '\t\"nightMotion\":{\n' + '\t\t\"result\":' + str(round(percent_nightMotion*100)) + ',\n' + '\t\t\"events\":[' +','.join(map(str,nr_night_visits))+']\n' + '\t},\n'
+        line = '\t\t\"nightMotion\":{\n' + '\t\t\t\"result\":' + str(round(percent_nightMotion*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,nr_night_visits))+'\n\t\t\t]\n' + '\t\t},\n'              
         outputFile.writelines(line)
     
         insomnia = self.insomnia
-        line = '\t\"insomnia\":'+str(insomnia)+',\n'
+        line = '\t\t\"insomnia\":'+str(insomnia)+',\n'
         outputFile.writelines(line)
     
         if(percent_nightMotion>=0):
@@ -1217,13 +1238,8 @@ class MultimodalFusion():
             
         else:
             probabilityInsomnia_nightMotion = 0.7*probabilityInsomnia_nightMotion
-            insomniaProb = 0.3*insomnia + probabilityInsomnia_nightMotion
-                
-        line = '\t\"probability(Insomnia|nightMotion)\":'+str(probabilityInsomnia_nightMotion) + ', \n'
-        outputFile.writelines(line)    
-        line = '\t\"sleepDisordersProbability\":'+str(insomniaProb) + ', \n'
-        outputFile.writelines(line)
-        
+            insomniaProb = 0.3*insomnia + probabilityInsomnia_nightMotion               
+      
         #plot a graph of the night motion over the investigated days
         showGraph_nightMotion = 0
         if showGraph_nightMotion:
@@ -1255,7 +1271,7 @@ class MultimodalFusion():
             line = "Abnormal events no deviations; "  + str(abnormalEvents) +  "\n"
         print line
                 
-        line = '\t\"abnormalEvents\":{\n' + '\t\t\"result\":' + str(round(percent_abnormalEvents*100)) + ',\n' + '\t\t\"events\":['+','.join(map(str,abnormalEvents))+']\n' + '\t},\n'
+        line = '\t\t\"abnormalEvents\":{\n' + '\t\t\t\"result\":' + str(round(percent_abnormalEvents*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,abnormalEvents))+'\n\t\t\t]\n' + '\t\t},\n' 
         outputFile.writelines(line)
         
         if(percent_abnormalEvents>=0):
@@ -1281,12 +1297,7 @@ class MultimodalFusion():
         else:
             probabilityConfusion_abnormalEvents = 0.7*probabilityConfusion_abnormalEvents
             probConfusion = probabilityConfusion_abnormalEvents 
-           
-        line = '\t\"probability(confusion|abnormalEvents)\":' + str(round(probabilityConfusion_abnormalEvents,2)) + ',\n' 
-        outputFile.writelines(line)   
-        line = '\t\"confusionProbability\":' + str(round(probConfusion,2)) + ',\n' 
-        outputFile.writelines(line)
-        
+                         
         #plot a graph of the confused behaviour over the investigated days
         showGraph_abnormalEvents = 0
         if showGraph_abnormalEvents:
@@ -1328,7 +1339,7 @@ class MultimodalFusion():
             line = 'Fall down events, no deviations; '+ str(fall_down_events) + "\n"
         print line
                 
-        line = '\t\"fallDown\":{\n' + '\t\t\"result\":' + str(round(percent_fall_down*100)) + ',\n' + '\t\t\"events\":['+','.join(map(str,fall_down_events))+']\n' + '\t},\n'
+        line = '\t\t\"fallDown\":{\n' + '\t\t\t\"result\":' + str(round(percent_fall_down*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,fall_down_events))+'\n\t\t\t]\n' + '\t\t},\n'              
         outputFile.writelines(line)
         
         if(percent_fall_down>=0):            
@@ -1375,10 +1386,9 @@ class MultimodalFusion():
         
         else:
             line = 'Loss of balance events, no deviations; '+ str(loss_of_balance_events) + "\n"
-        print line
-        
+        print line       
     
-        line = '\t\"lossBalance\":{\n' + '\t\t\"result\":' + str(round(percent_loss_of_balance*100)) + ',\n' + '\t\t\"events\":['+','.join(map(str,loss_of_balance_events))+']\n' + '\t},\n'
+        line = '\t\t\"lossBalance\":{\n' + '\t\t\t\"result\":' + str(round(percent_loss_of_balance*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,loss_of_balance_events))+'\n\t\t\t]\n' + '\t\t},\n'              
         outputFile.writelines(line)
     
         #plot a graph of the loss of balance events over the investigated days
@@ -1430,12 +1440,12 @@ class MultimodalFusion():
             line = 'Number of visits to the bathroom, no deviations; '  + str(nr_visits_bathroom) + "\n"
         print line
             
-        line = '\t\"visitBathroom\":{\n' + '\t\t\"result\":' + str(round(percent_nr_visits_bathroom*100)) + ',\n' + '\t\t\"events\":['+','.join(map(str,nr_visits_bathroom))+']\n' + '\t},\n'
+        line = '\t\t\"visitBathroom\":{\n' + '\t\t\t\"result\":' + str(round(percent_nr_visits_bathroom*100)) + ',\n' +'\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,nr_visits_bathroom))+'\n\t\t\t]\n' + '\t\t},\n'              
         outputFile.writelines(line)
         
         incontinence = self.incontinence
         
-        line = '\t\"incontinence\":'+str(incontinence) + ', \n'
+        line = '\t\t\"incontinence\":'+str(incontinence) + ', \n'
         outputFile.writelines(line)
 
         if(percent_nr_visits_bathroom>=0):            
@@ -1444,12 +1454,7 @@ class MultimodalFusion():
             # for decreasing number of visits to the bathroom the probability of Parkinson events is very low
             probabilityIncontinence_visitsBathroom = 0.01 
 
-        incontinenceProb = 0.3*incontinence + probabilityIncontinence_visitsBathroom           
-        
-        line = '\t\"probability(Incontinence|visitsBathroom)\":'+str(round(probabilityIncontinence_visitsBathroom,2)) + ', \n'
-        outputFile.writelines(line)    
-        line = '\t\"incontinenceProbability\":'+str(round(incontinenceProb,2)) + ', \n'
-        outputFile.writelines(line)
+        incontinenceProb = 0.3*incontinence + probabilityIncontinence_visitsBathroom                        
         
         #plot a graph of the number of visits to the bathroom over the investigated days
         showGraph_bathroom = 0
@@ -1491,7 +1496,7 @@ class MultimodalFusion():
             line = 'Time spent on digital devices, no deviations; '+ str(time_dit) + "\n" 
         print line
                 
-        line = '\t\"digitalTimeSpent\":{\n' + '\t\t\"result\":' + str(round(percent_time_dit*100)) + ',\n' + '\t\t\"events\":['+','.join(map(str,time_dit))+']\n' + '\t},\n'
+        line = '\t\t\"digitalTimeSpent\":{\n' + '\t\t\t\"result\":' + str(round(percent_time_dit*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,time_dit))+'\n\t\t\t]\n' + '\t\t},\n'              
         outputFile.writelines(line)
         
         if(percent_time_dit>=0):            
@@ -1502,12 +1507,7 @@ class MultimodalFusion():
             probabilityDigitalAddiction_timeDit = 0.01 
             probabilityApathy_timeDit = 0.01
 
-        probDigitalAddiction = 0.4*self.comorbiditesPsychiatrist + probabilityDigitalAddiction_timeDit
-
-        line = '\t\"probability(digitalAddiction|digitalTimeUsage)\":' + str(round(probabilityDigitalAddiction_timeDit,2)) + ',\n' 
-        outputFile.writelines(line)            
-        line = '\t\"digitalAddictionProbability\":' + str(round(probDigitalAddiction,2)) + ',\n' 
-        outputFile.writelines(line)
+        probDigitalAddiction = 0.4*self.comorbiditesPsychiatrist + probabilityDigitalAddiction_timeDit      
         
         #plot a graph of the time spent on dit over the investigated days
         showGraph_time = 0
@@ -1551,7 +1551,7 @@ class MultimodalFusion():
             line = 'Number of abnormal digital behaviours, no deviations; '  + str(nr_abnormal_dit_behaviours) + "\n" 
         print line
              
-        line = '\t\"abnormalDigitalBehaviours\":{\n' + '\t\t\"result\":' + str(round(percent_abnormal_dit*100)) + ',\n' + '\t\t\"events\":['+','.join(map(str,nr_abnormal_dit_behaviours))+']\n' + '\t},\n'
+        line = '\t\t\"abnormalDigitalBehaviours\":{\n' + '\t\t\t\"result\":' + str(round(percent_abnormal_dit*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,nr_abnormal_dit_behaviours))+'\n\t\t\t]\n' + '\t\t},\n'              
         outputFile.writelines(line)
 
         if(percent_abnormal_dit>=0):            
@@ -1579,40 +1579,75 @@ class MultimodalFusion():
         else:
             probabilityDigitalConfusion_abnormalDigitalBehaviour = 0.7*probabilityDigitalConfusion_abnormalDigitalBehaviour		
             probDigitalConfusion = 0.7*percent_abnormal_dit + 0.3*(1-int(cognitiveFunctions))
-           
-        line = '\t\"probability(digitalConfusion|abnormalDigitalBehaviour)\":' + str(round(probabilityDigitalConfusion_abnormalDigitalBehaviour,2)) + ',\n' 
+        
+        line = '\t\t\"probabilities\":[\n' 
+        outputFile.writelines(line)
+       
+        line = '\t\t{\n\t\t\t\"type\":\"confusion|abnormalEvents\",\n'+'\t\t\t\"value\":'+str(round(probabilityConfusion_abnormalEvents,3)) + '\n\t\t},\n'
         outputFile.writelines(line)   
-        line = '\t\"digitalConfusionProbability\":' + str(round(probDigitalConfusion,2)) + ',\n' 
+        
+        line = '\t\t{\n\t\t\t\"type\":\"Confusion\",\n'+'\t\t\t\"value\":'+str(round(probConfusion,3)) + '\n\t\t},\n'       
         outputFile.writelines(line)
         
+        line = '\t\t{\n\t\t\t\"type\":\"Insomnia|nightMotion\",\n'+'\t\t\t\"value\":'+str(round(probabilityInsomnia_nightMotion,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)    
+        
+        line = '\t\t{\n\t\t\t\"type\":\"sleepDisorders\",\n'+'\t\t\t\"value\":'+str(round(insomniaProb,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"Incontinence|visitsBathroom\",\n'+'\t\t\t\"value\":'+str(round(probabilityIncontinence_visitsBathroom,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)    
+        
+        line = '\t\t{\n\t\t\t\"type\":\"Incontinence\",\n'+'\t\t\t\"value\":'+str(round(incontinenceProb,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"digitalAddiction|digitalTimeUsage\",\n'+'\t\t\t\"value\":'+str(round(probabilityDigitalAddiction_timeDit,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)            
+        
+        line = '\t\t{\n\t\t\t\"type\":\"digitalAddiction\",\n'+'\t\t\t\"value\":'+str(round(probDigitalAddiction,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"digitalConfusion|abnormalDigitalBehaviour\",\n'+'\t\t\t\"value\":'+str(round(probabilityDigitalConfusion_abnormalDigitalBehaviour,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)   
+        
+        line = '\t\t{\n\t\t\t\"type\":\"digitalConfusion\",\n'+'\t\t\t\"value\":'+str(round(probDigitalConfusion,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)
+                       
         probApathy = probabilityApathy_stationary + probabilityApathy_leavingHouse + probabilityApathy_timeDit+probabilityApathy_dailyMotion                      
     
-        line = '\t\"probability(Apathy|stationaryBehaviour)\":' + str(round(probabilityApathy_stationary,2)) + ',\n' 
+        line = '\t\t{\n\t\t\t\"type\":\"Apathy|stationaryBehaviour\",\n'+'\t\t\t\"value\":'+str(round(probabilityApathy_stationary,3)) + '\n\t\t},\n'
         outputFile.writelines(line)
-        line = '\t\"probability(Apathy|dailyMotion)\":' + str(round(probabilityApathy_dailyMotion,2)) + ',\n' 
+        
+        line = '\t\t{\n\t\t\t\"type\":\"Apathy|dailyMotion\",\n'+'\t\t\t\"value\":'+str(round(probabilityApathy_dailyMotion,3)) + '\n\t\t},\n'
         outputFile.writelines(line)
-        line = '\t\"probability(Apathy|leavingHouse)\":' + str(round(probabilityApathy_leavingHouse,2)) + ',\n' 
+        
+        line = '\t\t{\n\t\t\t\"type\":\"Apathy|leavingHouse\",\n'+'\t\t\t\"value\":'+str(round(probabilityApathy_leavingHouse,3)) + '\n\t\t},\n'
         outputFile.writelines(line)
-        line = '\t\"probability(Apathy|digitalTimeUsage)\":' + str(round(probabilityApathy_timeDit,2)) + ',\n' 
+        
+        line = '\t\t{\n\t\t\t\"type\":\"Apathy|digitalTimeUsage\",\n'+'\t\t\t\"value\":'+str(round(probabilityApathy_timeDit,3)) + '\n\t\t},\n'
         outputFile.writelines(line)
 
-        line = '\t\"apathyProbability\":' + str(round(probApathy,2)) + ',\n' 
-        outputFile.writelines(line)
+        line = '\t\t{\n\t\t\t\"type\":\"Apathy\",\n'+'\t\t\t\"value\":'+str(round(probApathy,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)                               
         
         probMovementIssues = probabilityMovementIssues_fall_down  + probabilityMovementIssues_lossBalance + probabilityMovementIssues_leavingHouse + probabilityMovementIssues_stationary + probabilityMovementIssues_dailyMotion
         
-        line = '\t\"probability(MovementIssues|fallDown)\":' + str(round(probabilityMovementIssues_fall_down,2)) + ',\n' 
-        outputFile.writelines(line)
-        line = '\t\"probability(MovementIssues|lossOfBalance)\":' + str(round(probabilityMovementIssues_lossBalance,2)) + ',\n' 
-        outputFile.writelines(line)
-        line = '\t\"probability(MovementIssues|stationaryBehaviour)\":' + str(round(probabilityMovementIssues_stationary,2)) + ',\n' 
-        outputFile.writelines(line)
-        line = '\t\"probability(MovementIssues|dailyMotion)\":' + str(round(probabilityMovementIssues_dailyMotion,2)) + ',\n' 
-        outputFile.writelines(line)
-        line = '\t\"probability(MovementIssues|leavingHouse)\":' + str(round(probabilityMovementIssues_leavingHouse,2)) + ',\n'                        
+        line = '\t\t{\n\t\t\t\"type\":\"MovementIssues|fallDown\",\n'+'\t\t\t\"value\":'+str(round(probabilityMovementIssues_fall_down,3)) + '\n\t\t},\n'      
         outputFile.writelines(line)
         
-        line = '\t\"MovementIssuesProbability\":' + str(round(probMovementIssues,2)) + ',\n' 
+        line = '\t\t{\n\t\t\t\"type\":\"MovementIssues|lossOfBalance\",\n'+'\t\t\t\"value\":'+str(round(probabilityMovementIssues_lossBalance,3)) + '\n\t\t},\n'      
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"MovementIssues|stationaryBehaviour\",\n'+'\t\t\t\"value\":'+str(round(probabilityMovementIssues_stationary,3)) + '\n\t\t},\n'      
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"MovementIssues|dailyMotion\",\n'+'\t\t\t\"value\":'+str(round(probabilityMovementIssues_dailyMotion,3)) + '\n\t\t},\n'      
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"MovementIssues|leavingHouse\",\n'+'\t\t\t\"value\":'+str(round(probabilityMovementIssues_leavingHouse,3)) + '\n\t\t},\n'      
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"MovementIssues\",\n'+'\t\t\t\"value\":'+str(round(probMovementIssues,3)) + '\n\t\t},\n'
         outputFile.writelines(line)                
         
         probImprovedBehaviour = probabilityImprovedBehaviour_abnormalDigitalBehaviour + probabilityImprovedBehaviour_dailyMotion + probabilityImprovedBehaviour_fallDown + probabilityImprovedBehaviour_abnormalEvents + probabilityImprovedBehaviour_lossBalance + probabilityImprovedBehaviour_nightMotion + probabilityImprovedBehaviour_stationary + probabilityImprovedBehaviour_leavingHouse
@@ -1620,29 +1655,36 @@ class MultimodalFusion():
         if(probImprovedBehaviour>1):
             probImprovedBehaviour = 1
         
-        line = '\t\"probability(ImprovedBehaviour|confusedBehaviours)\":' + str(round(probabilityImprovedBehaviour_abnormalEvents,2)) + ',\n' 
-        outputFile.writelines(line)
-        line = '\t\"probability(ImprovedBehaviour|stationary)\":' + str(round(probabilityImprovedBehaviour_stationary,2)) + ',\n' 
-        outputFile.writelines(line)
-        line = '\t\"probability(ImprovedBehaviour|dailyMotion)\":' + str(round(probabilityImprovedBehaviour_dailyMotion,2)) + ',\n' 
-        outputFile.writelines(line)
-        line = '\t\"probability(ImprovedBehaviour|nightMotion)\":' + str(round(probabilityImprovedBehaviour_nightMotion,2)) + ',\n' 
-        outputFile.writelines(line)
-        line = '\t\"probability(ImprovedBehaviour|leavingHouse)\":' + str(round(probabilityImprovedBehaviour_leavingHouse,2)) + ',\n' 
-        outputFile.writelines(line)
-        line = '\t\"probability(ImprovedBehaviour|fallDown)\":' + str(round(probabilityImprovedBehaviour_fallDown,2)) + ',\n' 
-        outputFile.writelines(line)
-        line = '\t\"probability(ImprovedBehaviour|lossOfBalance)\":' + str(round(probabilityImprovedBehaviour_lossBalance,2)) + ',\n' 
-        outputFile.writelines(line)
-        line = '\t\"probability(ImprovedBehaviour|abnormalDigitalBehaviour)\":' + str(round(probabilityImprovedBehaviour_abnormalDigitalBehaviour,2)) + ',\n' 
+        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|confusedBehaviours\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_abnormalEvents,3)) + '\n\t\t},\n'                                    
         outputFile.writelines(line)
         
-        line = '\t\"ImprovedBehaviourProbability\":' + str(round(probImprovedBehaviour,2)) + ',\n' 
+        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|stationary\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_stationary,3)) + '\n\t\t},\n'                                    
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|dailyMotion\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_dailyMotion,3)) + '\n\t\t},\n'                                    
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|nightMotion\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_nightMotion,3)) + '\n\t\t},\n'                                    
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|leavingHouse\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_leavingHouse,3)) + '\n\t\t},\n'                                    
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|fallDown\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_fallDown,3)) + '\n\t\t},\n'                                    
+        outputFile.writelines(line)
+
+        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|lossOfBalance\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_lossBalance,3)) + '\n\t\t},\n'                                    
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|abnormalDigitalBehaviour\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_abnormalDigitalBehaviour,3)) + '\n\t\t},\n'                                    
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour\",\n'+'\t\t\t\"value\":'+str(round(probImprovedBehaviour,3)) + '\n\t\t}\n'                                    
         outputFile.writelines(line)  
         
-        line = '\t}\n]'
-        outputFile.writelines(line)
-    
+        line = '\t\t]\n\t}\n]'
+        outputFile.writelines(line) 
+        
         outputFile.close()    
         
     def multimodalFusionalgorithms(self,patientId,currentDate):
@@ -1653,7 +1695,8 @@ class MultimodalFusion():
         
         #output file of the MF module containing the results of the analysis          
         outputMFpath = '../output/ehr'
-        outputMF_File =  'participantID' + str(patientId) + '_' + str(currentDate) + '_outputResultsMF.txt'              
+        #outputMF_File =  'participantID' + str(patientId) + '_' + str(currentDate) + '_outputResultsMF.txt'              
+        outputMF_File =  str(patientId) + '_' + str(currentDate) + '.txt'              
         outputFileMF = outputMFpath + '/' + outputMF_File   
         outputFile = open(outputFileMF,'w')
        
@@ -1687,12 +1730,12 @@ class MultimodalFusion():
         if commentsEnabled: 
             print startDate
     
-        line = '[\n\t{\n'+'\t\"patientID\":\"patient'+str(patientId)+ '\",\n'
+        line = '[\n\t{\n'+'\t\t\"patientID\":\"patient'+str(patientId)+ '\",\n'
         outputFile.writelines(line)
     
-        line = '\t\"startDate\":\"' + str(startDate) + '\",\n' 
+        line = '\t\t\"startDate\":\"' + str(startDate) + '\",\n' 
         outputFile.writelines(line)
-        line = '\t\"endDate\":\"' + str(currentDate) + '\",\n' 
+        line = '\t\t\"endDate\":\"' + str(currentDate) + '\",\n' 
         outputFile.writelines(line)
      
         #downloadFileFromCloud.downloadFile_Cloud(inputEHRPath,inputEHRFileMF) 
