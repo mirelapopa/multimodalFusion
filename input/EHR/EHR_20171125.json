@@ -1,0 +1,33 @@
+[
+	{
+		"patientID":"2",
+		"mainDiagnosis":"Parkinsons",
+		"ParkinsonHoehnAndYard":3,
+		"dateBirth":"1931-03-14",
+		"gender":1,
+		"civilStatus":"single",
+		"bmi":22,
+		"active":0,
+		"mobility":0,
+		"gradeDependence":1,
+		"autonomousWalk":1,
+		"independenceDailyActivities":2,
+		"depression":0,
+		"comorbiditiesNeurologist":1,
+		"comorbiditiesPsychiatrist":1,		
+		"comorbiditiesCardiovascular":1,
+		"comorbiditiesUrinary":0,
+		"preserveCognitiveFunctions":1,
+		"hipertension":1,
+		"incontinence":1,
+		"insomnia":1,
+		"depression":0,
+		"MMSE":24,
+		"SPMSQ":5,
+		"medication":{
+			"number":2,
+			{"Name": "Levodopa", "time": [0,1,0], "dosage": [0,2,0]},
+			{"Name": "Anticholinergic", "time": [1,0,0], "dosage": [1,0,0]},
+		}
+	}
+]	

@@ -8,10 +8,12 @@ import retrieve_data_ as getDIT
 import os
 from matplotlib.figure import Figure
 from datetime import timedelta
-       
+import json
+from pprint import pprint
+        
 class MultimodalFusion():
     
-    def __init__(self,mainDiagnose=0,stationaryEvents=[],disease_level=0,dailyMotion=[],nightMotion=[],visitsBathroom=[],abnormalEvents=[],freezing=[],festination=[],lossOfBalance=[],fallDown=[],incontinence=[],leavingHouse=[],digitalTime=[],abnormalDigitalEvents=[],insomnia=0,comorbiditesNeurologist=0,comorbiditesUrinary=0,cognitiveFunctions=0,comorbiditesPsychiatrist=0):
+    def __init__(self,mainDiagnose=0,stationaryEvents=[],disease_level=0,dailyMotion=[],nightMotion=[],visitsBathroom=[],abnormalEvents=[],freezing=[],festination=[],lossOfBalance=[],fallDown=[],incontinence=[],leavingHouse=[],digitalTime=[],abnormalDigitalEvents=[],insomnia=0,comorbiditesNeurologist=0,comorbiditesUrinary=0,cognitiveFunctions=0,comorbiditesPsychiatrist=0,depression=0):
         
         self.mainDiagnose = mainDiagnose
         self.stationaryEvents= stationaryEvents      
@@ -28,350 +30,445 @@ class MultimodalFusion():
         self.leavingHouse = leavingHouse
         self.digitalTime = digitalTime
         self.abnormalDigitalEvents = abnormalDigitalEvents    
-        self.insomnia = insomnia      
+        self.insomnia = insomnia 
+        self.depression = depression
         self.comorbiditesNeurologist = comorbiditesNeurologist
         self.comorbiditesUrinary= comorbiditesUrinary
         self.comorbiditesPsychiatrist= comorbiditesPsychiatrist
         self.cognitiveFunctions = cognitiveFunctions
               
-    def parseABDFile(self,filePath):
+    def parseHETRAFile(self,filePath,patientId,startDate,nrDays):
        
-        stationary_=0
-        dailyMov =0
-        freezing_nr =0
-        festination_nr = 0
-        loss_of_balance_nr =0
-        fall_down_nr = 0
-        nr_visits_bathroom = 0
-        leaving_the_house = 0
-        nr_night_visits = 0
-                   
-        with open(filePath,'r') as inf:
-            for line in inf:          
-          
-                functionalityName = line.split(':')[0]              
-                obj = line.split('\t')[1]     
-              
-                if functionalityName == 'daily_motion':
-                   
-                    daily_dict = ast.literal_eval(obj)
-                    stationary_ = int(daily_dict.get('stationary',0))
-                    fastMov = daily_dict.get('fast_mov',0)  
-                    slowMov = daily_dict.get('slow_mov',0)  
-                    dailyMov = fastMov + slowMov        
+        stationary = np.zeros(shape =nrDays)
+        dailyMotion =  np.zeros(shape =nrDays)
+        freezing_events = np.zeros(shape =nrDays)
+        festination_events = np.zeros(shape =nrDays)
+        loss_of_balance_events = np.zeros(shape =nrDays)
+        fall_down_events = np.zeros(shape =nrDays)
+        nr_visits_bathroom = np.zeros(shape =nrDays)
+        nr_leaving_the_house = np.zeros(shape =nrDays)
+        nr_night_visits = np.zeros(shape =nrDays)
+        abnormalEvents = np.zeros(shape =nrDays)  
+        foundPatientId = 0
+        indexAnalysis = 0
+        startDate = startDate.strftime('%Y-%m-%d')    
+        startDate =  datetime.datetime.strptime(startDate,'%Y-%m-%d')       
+        
+        with open(filePath) as f:
+       
+            try:
+                d = json.load(f) 
+                #pprint(d)    
+                
+            except ValueError,e:
+                print e
+                
+            for line in d:                   
+                
+                if ('patientID' in line.keys()):                    
+                    if(line['patientID']==patientId):
+                        foundPatientId = 1
+                        #print 'found patient'
+                        
+                    if ('date' in line.keys()):
+                        
+                        dateFile = datetime.datetime.strptime(str(line['date']),'%Y-%m-%d')
+                        difDays = (dateFile-startDate).days                          
+                        indexAnalysis = difDays                        
+                        
+                    if ('daily_motion' in line.keys()):
+                        
+                        daily_dict = line['daily_motion']
+                        stationary_ = round(daily_dict.get('stationary',0),2)
+                        fastMov = daily_dict.get('fast_mov',0)  
+                        slowMov = daily_dict.get('slow_mov',0)  
+                        dailyMov = round(fastMov + slowMov,2)        
+                        dailyMotion[indexAnalysis] = dailyMov
+                        stationary[indexAnalysis] = stationary_                       
                                   
-                elif functionalityName == 'as_day_motion':
+                    if('as_day_motion' in line.keys()):
            
-                    daily_dict = ast.literal_eval(obj)
+                        daily_dict = line['as_day_motion']
                     
-                    toilet_list = daily_dict.get('toilet',0)  
-                    toilet_times = toilet_list[0]
-                    toilet_duration = toilet_list[1]         
-                         
-                    entrance_list = daily_dict.get('entrance',0)  
-                    entrance_times = entrance_list[0]
-                    entrance_duration = entrance_list[1]         
+                        toilet_dict = daily_dict.get('toilet') 
+                        if('event' in toilet_dict.keys()):
+                            toilet_events = toilet_dict.get('event')
+                            toiletNr = len(toilet_events)
+                            if(toiletNr>0):
+                                toilet_duration = np.zeros(shape=toiletNr)
+                                for i in range(toiletNr):
+                                    dictToilet = toilet_events[i]                            
+                                    toilet_duration[i] = dictToilet.get('duration')                                                               
+                        else:
+                            toiletNr = 0                        
+                        
+                        entrance_dict = daily_dict.get('entrance')
+                        if('event' in entrance_dict.keys()):
+                            entrance_events = entrance_dict.get('event')
+                            entranceNr = len(entrance_events)                            
+                            if(entranceNr>0):
+                                entrance_duration = np.zeros(shape=entranceNr)
+                                for i in range(entranceNr):
+                                    dictEntrance = entrance_events[i]                            
+                                    entrance_duration[i] = dictEntrance.get('duration')
+                        else:
+                            entranceNr = 0                        
+                        
+                        bedroom_dict = daily_dict.get('bedroom')  
+                        if('event' in bedroom_dict.keys()):
+                            bedroom_events = bedroom_dict.get('event')
+                            bedroomNr = len(bedroom_events)
+                        
+                            if(bedroomNr>0):
+                                bedroom_duration = np.zeros(shape=bedroomNr)
+                                for i in range(bedroomNr):
+                                    dictBedroom = bedroom_events[i]                            
+                                    bedroom_duration[i] = dictBedroom.get('duration')
+                        else:
+                            bedroomNr = 0                                                    
+                        
+                    if('as_night_motion' in line.keys()):
+           
+                        daily_dict = line['as_day_motion']
                     
-                    bedroom_list = daily_dict.get('bedroom',0)  
-                    bedroom_times = bedroom_list[0]
-                    bedroom_duration = bedroom_list[1]         
-                      
-                elif functionalityName == 'as_night_motion':
-           
-                    daily_dict = ast.literal_eval(obj)
-                    nr_night_visits = 0 
-                    toilet_list = daily_dict.get('toilet',0)  
-                    toilet_times = toilet_list[0]
-                    toilet_duration = toilet_list[1]         
-                
-                    if (toilet_times!=[]):                      
-                        nr_night_visits = nr_night_visits + len(toilet_list)/2
-                     
-                    entrance_list = daily_dict.get('entrance',0)  
-                    entrance_times = entrance_list[0]
-                    #entrance_duration = entrance_list[1]  
-
-                    if (entrance_times!=[]):                      
-                        nr_night_visits = nr_night_visits + len(entrance_list)/2
-           
-                    bedroom_list = daily_dict.get('bedroom',0)  
-                    bedroom_times = bedroom_list[0]
-                    bedroom_duration = bedroom_list[1]         
-                    if (bedroom_times!=[]):                      
-                        nr_night_visits = nr_night_visits + len(bedroom_list)/2                                                                 
+                        toilet_dict = daily_dict.get('toilet') 
+                        if('event' in toilet_dict.keys()):
+                            toilet_events = toilet_dict.get('event')
+                            toiletNr = len(toilet_events)
+                            if(toiletNr>0):
+                                toilet_duration = np.zeros(shape=toiletNr)
+                                for i in range(toiletNr):
+                                    dictToilet = toilet_events[i]                            
+                                    toilet_duration[i] = dictToilet.get('duration')                                                               
+                        else:
+                            toiletNr = 0                        
+                        
+                        entrance_dict = daily_dict.get('entrance')
+                        if('event' in entrance_dict.keys()):
+                            entrance_events = entrance_dict.get('event')
+                            entranceNr = len(entrance_events)                            
+                            if(entranceNr>0):
+                                entrance_duration = np.zeros(shape=entranceNr)
+                                for i in range(entranceNr):
+                                    dictEntrance = entrance_events[i]                            
+                                    entrance_duration[i] = dictEntrance.get('duration')
+                        else:
+                            entranceNr = 0
+                                                
+                        bedroom_dict = daily_dict.get('bedroom')  
+                        if('event' in bedroom_dict.keys()):
+                            bedroom_events = bedroom_dict.get('event')
+                            bedroomNr = len(bedroom_events)
+                        
+                            if(bedroomNr>0):
+                                bedroom_duration = np.zeros(shape=bedroomNr)
+                                for i in range(bedroomNr):
+                                    dictBedroom = bedroom_events[i]                            
+                                    bedroom_duration[i] = dictBedroom.get('duration')
+                        else:
+                            bedroomNr = 0                                                    
+                        nr_night_visits[indexAnalysis] = toiletNr + entranceNr + bedroomNr
                        
-                elif functionalityName == 'freezing':
-           
-                   daily_dict = ast.literal_eval(obj)
-        
-                   freezing_nr = daily_dict.get('number',0)  
-                   freezing_beginning = daily_dict.get('beggining',0)  
-                   freezing_duration = daily_dict.get('duration',0)        
-                   
-                elif functionalityName == 'festination':
-           
-                   daily_dict = ast.literal_eval(obj)
-        
-                   festination_nr = daily_dict.get('number',0)  
-                   festination_beginning = daily_dict.get('beggining',0)  
-                   festination_duration = daily_dict.get('duration',0)    
-           
-                elif functionalityName == 'loss_of_balance':
-           
-                   daily_dict = ast.literal_eval(obj)
-        
-                   loss_of_balance_nr = daily_dict.get('number',0)  
-                   loss_of_balance_beginning = daily_dict.get('beggining',0)  
-                   loss_of_balance_duration = daily_dict.get('duration',0)    
-           
-                elif functionalityName == 'fall_down':
-               
-                   daily_dict = ast.literal_eval(obj)
-        
-                   fall_down_nr = daily_dict.get('number',0)  
-                   fall_down_beginning = daily_dict.get('beggining',0)  
-                   fall_down_duration = daily_dict.get('duration',0)    
-       
-                elif functionalityName == 'visit_bathroom':
-           
-                    daily_dict = ast.literal_eval(obj)
-                    
-                    nr_visits_bathroom = daily_dict.get('number',0)  
-                    toilet_beggining = daily_dict.get('beggining',0)  
-                    toilet_duration = daily_dict.get('duration',0)            
-                                                          
-                elif functionalityName == 'confusion_behavior_detection':
-           
-                   daily_dict = ast.literal_eval(obj)
-        
-                   confusion_nr = daily_dict.get('number',0)  
-                   #print confusion_nr
-                   confusion_times = daily_dict.get('times',0)  
-                   confusion_duration = daily_dict.get('duration',0)        
-                   #print max(confusion_duration) 
-           
-                elif functionalityName == 'leave the house':  
-           
-                   leaving_the_house = obj
-                   #print leaving_the_house
-           
-                elif functionalityName == 'leave_house_confused':  
-          
-                   confused_and_leaving_the_house = obj
-                   #print confused_and_leaving_the_house
-           
-                else:
-                   print line
+                        if('freezing' in line.keys()):
+                            
+                            freezing_dict = line['freezing']
+                            if('number' in freezing_dict.keys()):                                
+                                freezing_events[indexAnalysis] = freezing_dict.get('number')  
+                            if('event' in freezing_dict.keys()):
+                                freezingEvents = freezing_dict.get('event')
+                                freezingNr = len(freezingEvents)
+                        
+                                if(freezingNr>0):
+                                    freezing_duration = np.zeros(shape=freezingNr)
+                                    for i in range(freezingNr):
+                                        dictfreezing = freezingEvents[i]                            
+                                        freezing_duration[i] = dictfreezing.get('duration')
+                        
+                        if('festination' in line.keys()):
+                            
+                            festination_dict = line['festination']
+                            if('number' in festination_dict.keys()):                                
+                                festination_events[indexAnalysis] = festination_dict.get('number')  
+                            if('event' in festination_dict.keys()):
+                                festinationEvents = festination_dict.get('event')
+                                festinationNr = len(festinationEvents)
+                        
+                                if(festinationNr>0):
+                                    festination_duration = np.zeros(shape=festinationNr)
+                                    for i in range(festinationNr):
+                                        dictfestination = festinationEvents[i]                            
+                                        festination_duration[i] = dictfestination.get('duration')     
+                            
+                        if('loss_of_balance' in line.keys()):
+                            
+                            loss_of_balance_dict = line['loss_of_balance']
+                            if('number' in loss_of_balance_dict.keys()):                                
+                                loss_of_balance_events[indexAnalysis] = loss_of_balance_dict.get('number')  
+                            if('event' in loss_of_balance_dict.keys()):
+                                loss_of_balanceEvents = loss_of_balance_dict.get('event')
+                                loss_of_balanceNr = len(loss_of_balanceEvents)
+                        
+                                if(loss_of_balanceNr>0):
+                                    loss_of_balance_duration = np.zeros(shape=loss_of_balanceNr)
+                                    for i in range(loss_of_balanceNr):
+                                        dictloss_of_balance = loss_of_balanceEvents[i]                            
+                                        loss_of_balance_duration[i] = dictloss_of_balance.get('duration')                                     
+                        
+                        if('fall_down' in line.keys()):
+                            
+                            fall_down_dict = line['fall_down']
+                            if('number' in fall_down_dict.keys()):                                
+                                fall_down_events[indexAnalysis] = fall_down_dict.get('number')  
+                            if('event' in fall_down_dict.keys()):
+                                fall_downEvents = fall_down_dict.get('event')
+                                fall_downNr = len(fall_downEvents)
+                        
+                                if(fall_downNr>0):
+                                    fall_down_duration = np.zeros(shape=fall_downNr)
+                                    for i in range(fall_downNr):
+                                        dictfall_down = fall_downEvents[i]                            
+                                        fall_down_duration[i] = dictfall_down.get('duration')                                                                     
+
+                        if('visit_bathroom' in line.keys()):
+                            
+                            visit_bathroom_dict = line['visit_bathroom']
+                            if('number' in visit_bathroom_dict.keys()):                                
+                                nr_visits_bathroom[indexAnalysis] = visit_bathroom_dict.get('number')  
+                            if('event' in visit_bathroom_dict.keys()):
+                                visit_bathroomEvents = visit_bathroom_dict.get('event')
+                                visit_bathroomNr = len(visit_bathroomEvents)
+                        
+                                if(visit_bathroomNr>0):
+                                    visit_bathroom_duration = np.zeros(shape=visit_bathroomNr)
+                                    for i in range(visit_bathroomNr):
+                                        dictvisit_bathroom = visit_bathroomEvents[i]                            
+                                        visit_bathroom_duration[i] = dictvisit_bathroom.get('duration')                                     
+                                
+                        if('confusion_behavior_detection' in line.keys()):
+                            
+                            confusion_behavior_detection_dict = line['confusion_behavior_detection']
+                            if('number' in confusion_behavior_detection_dict.keys()):                                
+                                abnormalEvents[indexAnalysis] = confusion_behavior_detection_dict.get('number')  
+                            if('event' in confusion_behavior_detection_dict.keys()):
+                                confusion_behavior_detectionEvents = confusion_behavior_detection_dict.get('event')
+                                confusion_behavior_detectionNr = len(confusion_behavior_detectionEvents)
+                        
+                                if(confusion_behavior_detectionNr>0):
+                                    confusion_behavior_detection_duration = np.zeros(shape=confusion_behavior_detectionNr)
+                                    for i in range(confusion_behavior_detectionNr):
+                                        dictconfusion_behavior_detection = confusion_behavior_detectionEvents[i]                            
+                                        confusion_behavior_detection_duration[i] = dictconfusion_behavior_detection.get('duration')     
+                                                                
+                        if('leave the house' in line.keys()):
+                            nr_leaving_the_house[indexAnalysis] = line['leave the house'] 
+                                                        
+                        if('leave_house_confused' in line.keys()):                            
+                            leavingHouseConfused = line['leave_house_confused']                                                                                                                        
             
-            return stationary_, dailyMov, freezing_nr, festination_nr, loss_of_balance_nr, fall_down_nr, nr_visits_bathroom, leaving_the_house, nr_night_visits, confusion_nr    
+        return foundPatientId, stationary, dailyMotion, freezing_events, festination_events, loss_of_balance_events, fall_down_events, nr_visits_bathroom, nr_leaving_the_house, nr_night_visits, abnormalEvents    
 
-    def parseEHRFile(self,filePath):
+    def parseEHRFile(self,filePath,patientId):
        
+        foundPatientId = 0
+        main_diagnosis = -1
+        disease_level = 0
+        age = 0
+        gender = 0
+        civilStatus = 0
+        bmi =0
+        active= 0
+        mobility = 0
+        depression = 0
+        gradeDependence = 0
+        autonomousWalk = 0
+        independenceDailyActivities = 0
+        comorbiditesNeurologist = 0
+        comorbiditesPsychiatrist  = 0
+        cognitiveFunctions = 0
+        comorbiditesCardiovascular = 0
+        hipertension = 0
+        comorbiditesUrinary = 0
+        incontinence = 0
+        insomnia = 0
+    
         with open(filePath,'r') as inf:
-            for line in inf:          
-          
-                functionalityName = line.split(':')[0]
-                #print functionalityName
-                obj = line.split('\t')[1]     
-              
-                if functionalityName == 'Main_diagnosis':
-           
-                    diagnosis = obj
-                    if diagnosis.find('Parkinsons') > 0:
-                        main_diagnosis = 1
-                    else:
-                        main_diagnosis = 0               
-               
-                    #print main_diagnosis
-           
-                elif functionalityName == 'ParkinsonHoehnAndYard':           
-                    disease_level = obj				
-                elif functionalityName == 'MMSE':
-                    mmse = int(obj)
-                    if(mmse<=10):
-    					  	 disease_level = 5
-					   
-                    elif(mmse<=19):
-						    disease_level = 4
-					   
-                    elif(mmse<=24):
-						    disease_level = 3
-					   
-                    elif(mmse<=27):
-						    disease_level = 2
-					   
-                    else:
-						    disease_level = 1
-                    					
-                elif functionalityName == 'Date_birth':  
-           
-                    datepatient = obj
-                    datepatient = datepatient.replace('\n', '')
-                    datepatient = datepatient.replace('\r', '')
-                    datepatient = datepatient.replace('\'', '')
-		    
-                    date_birth = datetime.datetime.strptime(datepatient, "%Y-%m-%d")                 
-
-                    currentDay =  datetime.date.today()
-                    currentYear = currentDay.year
-                    age = currentYear - date_birth.year           
-                    #print age
-           
-                elif functionalityName == 'Gender':  
-          
-                    gender = obj
-           
-                elif functionalityName == 'CivilStatus':  
-           
-                    civil_Status = obj
-                    if civil_Status.find('Single') > 0:
-                        civilStatus = 0
-                    elif civil_Status.find('Married') > 0:
-                        civilStatus = 1
-                    elif civil_Status.find('Divorced') > 0:
-                        civilStatus = 2
-                    else:
-                        civilStatus = 3                
-                        #print civilStatus    
+            for line in inf:  
                 
-                elif functionalityName == 'Bmi':  
+                index = line.find(':')                    
+                if(index>=0):
+                    
+                    functionalityName = line.split(':')[0]
+                    valueObj = line.split(':')[1]                    
+                    obj = valueObj.split(',')[0]
+                                        
+                    if (functionalityName.find('patientID')>=0):
+                        
+                        patientId_ = obj.split('"')[1]                           
+                        if(patientId_==patientId):
+                            foundPatientId = 1
+                            #print 'found patient'
+                            
+                    if (functionalityName.find('mainDiagnosis')>0):
+           
+                        diagnosis = obj
+                        if diagnosis.find('Parkinsons') > 0:
+                            main_diagnosis = 1
+                        elif(diagnosis.find('Alzheimers')>0):
+                            main_diagnosis = 0                              
+                            #print main_diagnosis
+           
+                    elif (functionalityName.find('ParkinsonHoehnAndYard')>0):           
+                        disease_level = int(obj)				
+                        
+                    elif (functionalityName.find('MMSE')>0):
+                        mmse = int(obj)
+                        if(mmse<=10):
+        					  	 disease_level = 5					   
+                        elif(mmse<=19):
+    						    disease_level = 4					   
+                        elif(mmse<=24):
+    						    disease_level = 3					   
+                        elif(mmse<=27):
+    						    disease_level = 2					   
+                        else:
+    						    disease_level = 1
+                    					
+                    elif (functionalityName.find('dateBirth')>0):  
+           
+                        datepatient = obj
+                        datepatient = datepatient.replace('"', '')
+                        datepatient = datepatient.replace('\n', '')
+                        datepatient = datepatient.replace('\r', '')
+                        datepatient = datepatient.replace('\'', '')
+		    
+                        date_birth = datetime.datetime.strptime(datepatient, "%Y-%m-%d")                 
+                        
+                        currentDay =  datetime.date.today()
+                        currentYear = currentDay.year
+                        age = currentYear - date_birth.year           
+                        #print age
+           
+                    elif (functionalityName.find('gender')>0):  
           
-                    bmi = obj           
+                        gender = int(obj)
+           
+                    elif (functionalityName.find('civilStatus')>0):  
+           
+                        civil_Status = obj
+                        if civil_Status.find('single') > 0:
+                            civilStatus = 0
+                        elif civil_Status.find('married') > 0:
+                            civilStatus = 1
+                        elif civil_Status.find('divorced') > 0:
+                            civilStatus = 2
+                        else:
+                            civilStatus = 3                
+                            #print civilStatus    
+                
+                    elif (functionalityName.find('bmi')>0):  
+                        
+                        bmi = int(obj)           
        
-                elif functionalityName == 'Active':  
-           
-                    active = obj
-                      
-                elif functionalityName == 'Mobility':  
+                    elif (functionalityName.find('active')>0):             
+                        active = int(obj)                        
+                    elif (functionalityName.find('mobility')>0):  
           
-                    mobility = obj
-                  
-                elif functionalityName == 'GradeDependence':  
-           
-                    gradeDependence = obj
-                      
-                elif functionalityName == 'AutonomousWalk':  
+                        mobility = int(obj)
+                        
+                    elif (functionalityName.find('depression')>0):  
           
-                    autonomousWalk = obj
-           
-                elif functionalityName == 'IndependenceDailyActivities':  
+                        depression = int(obj)
+                        
+                    elif (functionalityName.find('gradeDependence')>0):  
+                        
+                        gradeDependence = int(obj)                      
+                    elif (functionalityName.find('autonomousWalk')>0):  
           
-                    independenceDailyActivities = obj
+                        autonomousWalk = int(obj)
+                    elif (functionalityName.find('independenceDailyActivities')>0):  
+          
+                        independenceDailyActivities = int(obj)
        
-                elif functionalityName == 'ComorbiditiesNeurologist':  
+                    elif (functionalityName.find('comorbiditiesNeurologist')>0):  
           
-                    comorbiditesNeurologist = obj
+                        comorbiditesNeurologist = int(obj)
            
-                elif functionalityName == 'ComorbiditiesPsychiatrist':  
+                    elif (functionalityName.find('comorbiditiesPsychiatrist')>0):  
           
-                    comorbiditesPsychiatrist = obj
+                        comorbiditesPsychiatrist = int(obj)
+                    
+                    elif (functionalityName.find('comorbiditiesCardiovascular')>0):  
+          
+                        comorbiditesCardiovascular = int(obj)
            
-                elif functionalityName == 'PreserveCognitiveFunctions':  
+                    elif (functionalityName.find('preserveCognitiveFunctions')>0):  
           
-                    cognitiveFunctions = obj
+                        cognitiveFunctions = int(obj)                                 
+                    elif (functionalityName.find('hipertension')>0):  
+                        hipertension = int(obj)
            
-                elif functionalityName == 'ComorbiditiesCardiovascular':  
+                    elif (functionalityName.find('comorbiditiesUrinary')>0):  
           
-                    comorbiditesCardiovascular = obj
+                        comorbiditesUrinary = int(obj)
            
-                elif functionalityName == 'Hipertension':  
+                    elif (functionalityName.find('incontinence')>0):  
           
-                    hipertension = obj
-           
-                elif functionalityName == 'ComorbiditiesUrinary':  
-          
-                    comorbiditesUrinary = obj
-           
-                elif functionalityName == 'Incontinence':  
-          
-                    incontinence = obj    
+                        incontinence = int(obj)    
        
-                elif functionalityName == 'Insomnia':  
+                    elif (functionalityName.find('insomnia')>0):  
           
-                    insomnia = obj      
-                #else:
-                    #print obj
-        
-        return int(main_diagnosis), int(disease_level), int(age), int(gender), int(civilStatus), int(bmi), int(active), int(mobility), int(gradeDependence), int(autonomousWalk), int(independenceDailyActivities), int(comorbiditesNeurologist), int(comorbiditesPsychiatrist), int(cognitiveFunctions), int(comorbiditesCardiovascular), int(hipertension), int(comorbiditesUrinary), int(incontinence), int(insomnia) 
-
-    def parseDITFile(self,filePath):
-       
-        with open(filePath,'r') as inf:
-            for line in inf:          
-          
-                functionalityName = line.split(':')[0]
-                #print functionalityName
-                obj = line.split('\t')[1]     
-              
-                if functionalityName == 'total_time_dit':
-           
-                    time_dit = obj            
-           
-                elif functionalityName == 'new_attachments':
-           
-                   dit_dict = ast.literal_eval(obj)
-        
-                   nr_abnormal_behaviours_attachment = dit_dict.get('number',0)  
-                   attachement_beggining = dit_dict.get('beggining',0)  
-                   attachment_duration = dit_dict.get('duration',0)   
-               
-                elif functionalityName == 'add_medication':
-           
-                   dit_dict = ast.literal_eval(obj)
-        
-                   nr_abnormal_behaviours_medication = dit_dict.get('number',0)             
-                   medication_beggining = dit_dict.get('beggining',0)  
-                   medication_duration = dit_dict.get('duration',0)   
-           
-                elif functionalityName == 'add_appointment':
-           
-                   dit_dict = ast.literal_eval(obj)
-        
-                   nr_abnormal_behaviours_appointment = dit_dict.get('number',0)  
-                   appointment_beggining = dit_dict.get('beggining',0)  
-                   appointment_duration = dit_dict.get('duration',0)   
-           
-                else:
-                    print line
-           
-            return time_dit, nr_abnormal_behaviours_attachment, nr_abnormal_behaviours_medication, nr_abnormal_behaviours_appointment   
+                        insomnia = int(obj)    
+                    
+                    elif (functionalityName.find('SPMSQ')>0):                    
+                        spmsq = int(obj)
+                    else:
+                        str = 'process other functionalities'
+                        #print obj
+                        
+        return foundPatientId, main_diagnosis, disease_level, age, gender, civilStatus, bmi, active, mobility, gradeDependence, autonomousWalk, independenceDailyActivities, comorbiditesNeurologist, comorbiditesPsychiatrist, cognitiveFunctions, comorbiditesCardiovascular, hipertension, comorbiditesUrinary, incontinence, insomnia, depression       
     
-    def parseDITFile_allEvents(self,filePath):
+    def parseDITFile_ABD(self,filePath,nrDays):
     
-        abnormalUsageTime = 0
-        nrAbnormalEvents = 0
-        type_events_T = 0
-        type_events_S = 0
-        type_events_ST = 0
-        nrFunctionCalls_newAttachment = 0
-        nrFunctionCalls_kBase = 0
-        nrFunctionCalls_medication = 0 
-        
+        abnormalUsageTime = np.zeros(shape= nrDays)
+        nrAbnormalEvents = np.zeros(shape= nrDays)
+        type_events_T = np.zeros(shape= nrDays)
+        type_events_S = np.zeros(shape= nrDays)
+        type_events_ST = np.zeros(shape= nrDays)
+        nr_newAttachment = np.zeros(shape= nrDays)
+        nr_kBase = np.zeros(shape= nrDays)
+        nr_medication = np.zeros(shape= nrDays) 
+    
         with open(filePath,'r') as inf:
         
             for line in inf:          
           
                 functionalityName = line
-              
-                if functionalityName.find("doctype") > 0 :
+                if functionalityName.find("eventTime") > 0 :       
+               
+                    fieldName = functionalityName.split(':')[1]
+                    obj = fieldName.split('"')[1]
+                    obj_date = obj.split(' ')[0]                  
+                    index_day = int(obj_date.split('/')[1])                                
+           
+                elif functionalityName.find("doctype") > 0 :
            
                     fieldName = functionalityName.split(':')[1]
                     obj = fieldName.split(',')[0]
-                    nrAbnormalEvents = nrAbnormalEvents + 1
+                    nrAbnormalEvents[index_day-1] = nrAbnormalEvents[index_day-1] + 1
            
                     if obj.find("ST") > 0:
-                        type_events_ST = type_events_ST + 1 
+                        type_events_ST[index_day-1] = type_events_ST[index_day-1] + 1 
                     elif obj.find("S") > 0:
-                        type_events_S = type_events_S + 1 
+                        type_events_S[index_day-1] = type_events_S[index_day-1] + 1 
                     elif obj.find("T") > 0:
-                        type_events_T = type_events_T + 1     
+                        type_events_T[index_day-1] = type_events_T[index_day-1] + 1     
            
                 elif functionalityName.find("elapsedTime") > 0:
            
                     fieldName = functionalityName.split(':')[1]
                     obj = fieldName.split(',')[0]
-                    
-                    abnormalUsageTime = abnormalUsageTime + int(obj)
+           
+                    abnormalUsageTime[index_day-1] = abnormalUsageTime[index_day-1] + int(obj)
                     #print abnormalUsageTime
            
                 elif functionalityName.find("function") > 0:
@@ -379,21 +476,23 @@ class MultimodalFusion():
                     fieldName = functionalityName.split(':')[1]
                     obj = fieldName.split(',')[0]           
                     if obj.find("NEW_ATTACHMENT") > 0:
-                        nrFunctionCalls_newAttachment = nrFunctionCalls_newAttachment + 1 
+                        nr_newAttachment[index_day-1] = nr_newAttachment[index_day-1] + 1 
                     elif obj.find("K_BASE") > 0:
-                        nrFunctionCalls_kBase = nrFunctionCalls_kBase + 1                            
-                    elif obj.find("FORM_MEDICACION") > 0:
-                        nrFunctionCalls_medication = nrFunctionCalls_medication + 1  
-    
-        return abnormalUsageTime, nrAbnormalEvents, type_events_T, type_events_S, type_events_ST
-   
+                        nr_kBase[index_day-1] = nr_kBase[index_day-1] + 1                            
+                    elif obj.find("FORM_MEDICACION") > 0:                
+                        nr_medication[index_day-1] = nr_medication[index_day-1] + 1                               
+                  
+        #print abnormalUsageTime, nrAbnormalEvents, type_events_T, type_events_S, type_events_ST, nrFunctionCalls_newAttachment, nrFunctionCalls_kBase, nrFunctionCalls_medication 
+        return abnormalUsageTime, nrAbnormalEvents, type_events_T, type_events_S, type_events_ST         
+       
     def evaluateParkinsonsActivities(self,outputFile,investigatedPeriodinDays):
         
         halfInterval = int(investigatedPeriodinDays/2) 
         
         #evaluation of stationary behaviour
-        stationary = self.stationaryEvents
+        stationary = self.stationaryEvents       
         maxValue = max(stationary)
+        
         if maxValue>0:
             stationary_ = stationary/maxValue
         else:
@@ -561,12 +660,9 @@ class MultimodalFusion():
             probabilityImprovedBehaviour_nightMotion = -0.2*percent_nightMotion
                       
         if(insomnia):
-            probabilityInsomnia_nightMotion = 0.5*probabilityInsomnia_nightMotion
-            insomniaProb = 0.5*insomnia + probabilityInsomnia_nightMotion
-            
+            probabilityInsomnia_nightMotion = 0.4*probabilityInsomnia_nightMotion                        
         else:
-            probabilityInsomnia_nightMotion = 0.7*probabilityInsomnia_nightMotion
-            insomniaProb = 0.3*insomnia + probabilityInsomnia_nightMotion              
+            probabilityInsomnia_nightMotion = 0.6*probabilityInsomnia_nightMotion            
                 
         #plot a graph of the night motion over the investigated days
         showGraph_nightMotion = 0
@@ -824,10 +920,8 @@ class MultimodalFusion():
         else:
             # for decreasing number of visits to the bathroom the probability of Parkinson events is very low
             probabilityIncontinence_visitsBathroom = 0.001 
-
-        incontinenceProb = 0.3*incontinence + probabilityIncontinence_visitsBathroom           
-        
-       
+        probabilityIncontinence_medicalCondition = 0.3*incontinence 
+        incontinenceProb = probabilityIncontinence_medicalCondition  + probabilityIncontinence_visitsBathroom                        
         
         #plot a graph of the number of visits to the bathroom over the investigated days
         showGraph_bathroom = 0
@@ -880,7 +974,8 @@ class MultimodalFusion():
             probabilityDigitalAddiction_timeDit = 0.001 
             probabilityApathy_timeDit = 0.001
 
-        probDigitalAddiction = 0.4*self.comorbiditesPsychiatrist + probabilityDigitalAddiction_timeDit
+        probabilityDigitalAddiction_depression =  0.3*self.depression
+        probDigitalAddiction = probabilityDigitalAddiction_depression + probabilityDigitalAddiction_timeDit
                
         #plot a graph of the time spent on dit over the investigated days
         showGraph_time = 0
@@ -953,11 +1048,28 @@ class MultimodalFusion():
             probabilityDigitalConfusion_abnormalDigitalBehaviour = 0.7*probabilityDigitalConfusion_abnormalDigitalBehaviour		
             probDigitalConfusion =probabilityDigitalConfusion_abnormalDigitalBehaviour + 0.3*(1-int(cognitiveFunctions))
         
+        probabilityInsomnia_digitalAddiction = 0.2*probDigitalAddiction
+        probabilityInsomnia_depression = 0.2*self.depression
+        probabilityInsomnia_medicalCondition = 0.3*insomnia
+        insomniaProb = probabilityInsomnia_medicalCondition + probabilityInsomnia_nightMotion + probabilityInsomnia_depression + probabilityInsomnia_digitalAddiction
+
+        if(insomniaProb>1):
+            insomniaProb = 0.9
+            
         line = '\t\t\"probabilities\":[\n' 
         outputFile.writelines(line)
         
         line = '\t\t{\n\t\t\t\"type\":\"Insomnia|nightMotion\",\n'+'\t\t\t\"value\":'+str(round(probabilityInsomnia_nightMotion,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)  
+        
+        line = '\t\t{\n\t\t\t\"type\":\"Insomnia|digitalAddiction\",\n'+'\t\t\t\"value\":'+str(round(probabilityInsomnia_digitalAddiction,3)) + '\n\t\t},\n'
         outputFile.writelines(line)    
+        
+        line = '\t\t{\n\t\t\t\"type\":\"Insomnia|depression\",\n'+'\t\t\t\"value\":'+str(round(probabilityInsomnia_depression,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)   
+        
+        line = '\t\t{\n\t\t\t\"type\":\"Insomnia|medicalCondition\",\n'+'\t\t\t\"value\":'+str(round(probabilityInsomnia_medicalCondition,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)
         
         line = '\t\t{\n\t\t\t\"type\":\"sleepDisorders\",\n'+'\t\t\t\"value\":'+str(round(insomniaProb,3)) + '\n\t\t},\n'
         outputFile.writelines(line)
@@ -965,12 +1077,18 @@ class MultimodalFusion():
         line = '\t\t{\n\t\t\t\"type\":\"Incontinence|visitsBathroom\",\n'+'\t\t\t\"value\":'+str(round(probabilityIncontinence_visitsBathroom,3)) + '\n\t\t},\n'
         outputFile.writelines(line)    
         
-        line = '\t\t{\n\t\t\t\"type\":\"Incontinence\",\n'+'\t\t\t\"value\":'+str(round(incontinenceProb,3)) + '\n\t\t},\n'
-        outputFile.writelines(line)
+        line = '\t\t{\n\t\t\t\"type\":\"Incontinence|medicalCondition\",\n'+'\t\t\t\"value\":'+str(round( probabilityIncontinence_medicalCondition,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)  
         
+        line = '\t\t{\n\t\t\t\"type\":\"Incontinence\",\n'+'\t\t\t\"value\":'+str(round(incontinenceProb,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)              
+                      
         line = '\t\t{\n\t\t\t\"type\":\"digitalAddiction|digitalTimeUsage\",\n'+'\t\t\t\"value\":'+str(round(probabilityDigitalAddiction_timeDit,3)) + '\n\t\t},\n'
         outputFile.writelines(line)            
         
+        line = '\t\t{\n\t\t\t\"type\":\"digitalAddiction|depression\",\n'+'\t\t\t\"value\":'+str(round(probabilityDigitalAddiction_depression,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)            
+                
         line = '\t\t{\n\t\t\t\"type\":\"digitalAddiction\",\n'+'\t\t\t\"value\":'+str(round(probDigitalAddiction,3)) + '\n\t\t},\n'
         outputFile.writelines(line)
         
@@ -1048,11 +1166,9 @@ class MultimodalFusion():
         line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour\",\n'+'\t\t\t\"value\":'+str(round(probImprovedBehaviour,3)) + '\n\t\t}\n'                                    
         outputFile.writelines(line)  
         
-        line = '\t\t]\n\t}\n]'
-        outputFile.writelines(line)
-    
-        outputFile.close()  
-        
+        line = '\t\t]\n\t}\n'
+        outputFile.writelines(line)    
+       
     def evaluateAlzheimersActivities(self,outputFile,investigatedPeriodinDays):    
         
         halfInterval = int(investigatedPeriodinDays/2) 
@@ -1233,12 +1349,10 @@ class MultimodalFusion():
             probabilityImprovedBehaviour_nightMotion = -0.2*percent_nightMotion
                       
         if(insomnia):
-            probabilityInsomnia_nightMotion = 0.5*probabilityInsomnia_nightMotion
-            insomniaProb = 0.5*insomnia + probabilityInsomnia_nightMotion
+            probabilityInsomnia_nightMotion = 0.4*probabilityInsomnia_nightMotion           
             
         else:
-            probabilityInsomnia_nightMotion = 0.7*probabilityInsomnia_nightMotion
-            insomniaProb = 0.3*insomnia + probabilityInsomnia_nightMotion               
+            probabilityInsomnia_nightMotion = 0.6*probabilityInsomnia_nightMotion            
       
         #plot a graph of the night motion over the investigated days
         showGraph_nightMotion = 0
@@ -1453,8 +1567,8 @@ class MultimodalFusion():
         else:
             # for decreasing number of visits to the bathroom the probability of Parkinson events is very low
             probabilityIncontinence_visitsBathroom = 0.01 
-
-        incontinenceProb = 0.3*incontinence + probabilityIncontinence_visitsBathroom                        
+        probabilityIncontinence_medicalCondition = 0.3*incontinence    
+        incontinenceProb = probabilityIncontinence_medicalCondition + probabilityIncontinence_visitsBathroom                        
         
         #plot a graph of the number of visits to the bathroom over the investigated days
         showGraph_bathroom = 0
@@ -1501,13 +1615,14 @@ class MultimodalFusion():
         
         if(percent_time_dit>=0):            
             probabilityDigitalAddiction_timeDit = 0.6*(percent_time_dit)
-            probabilityApathy_timeDit = 0.2*(percent_time_dit)
+            probabilityApathy_timeDit = 0.2*(percent_time_dit)            
         else:
             # for decreasing digital time usage the probability of addiction is very low
             probabilityDigitalAddiction_timeDit = 0.01 
             probabilityApathy_timeDit = 0.01
 
-        probDigitalAddiction = 0.4*self.comorbiditesPsychiatrist + probabilityDigitalAddiction_timeDit      
+        probabilityDigitalAddiction_depression = 0.3*self.depression
+        probDigitalAddiction = probabilityDigitalAddiction_depression + probabilityDigitalAddiction_timeDit      
         
         #plot a graph of the time spent on dit over the investigated days
         showGraph_time = 0
@@ -1580,6 +1695,13 @@ class MultimodalFusion():
             probabilityDigitalConfusion_abnormalDigitalBehaviour = 0.7*probabilityDigitalConfusion_abnormalDigitalBehaviour		
             probDigitalConfusion = 0.7*percent_abnormal_dit + 0.3*(1-int(cognitiveFunctions))
         
+        probabilityInsomnia_digitalAddiction = 0.2*probDigitalAddiction
+        probabilityInsomnia_depression = 0.2*self.depression
+        probabilityInsomnia_medicalCondition = 0.3*insomnia
+        insomniaProb = probabilityInsomnia_medicalCondition + probabilityInsomnia_nightMotion + probabilityInsomnia_depression + probabilityInsomnia_digitalAddiction
+        if(insomniaProb>1):
+            insomniaProb = 0.9
+        
         line = '\t\t\"probabilities\":[\n' 
         outputFile.writelines(line)
        
@@ -1592,10 +1714,22 @@ class MultimodalFusion():
         line = '\t\t{\n\t\t\t\"type\":\"Insomnia|nightMotion\",\n'+'\t\t\t\"value\":'+str(round(probabilityInsomnia_nightMotion,3)) + '\n\t\t},\n'
         outputFile.writelines(line)    
         
+        line = '\t\t{\n\t\t\t\"type\":\"Insomnia|digitalAddiction\",\n'+'\t\t\t\"value\":'+str(round(probabilityInsomnia_digitalAddiction,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)    
+        
+        line = '\t\t{\n\t\t\t\"type\":\"Insomnia|depression\",\n'+'\t\t\t\"value\":'+str(round(probabilityInsomnia_depression,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)    
+        
+        line = '\t\t{\n\t\t\t\"type\":\"Insomnia|medicalCondition\",\n'+'\t\t\t\"value\":'+str(round(probabilityInsomnia_medicalCondition,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)
+        
         line = '\t\t{\n\t\t\t\"type\":\"sleepDisorders\",\n'+'\t\t\t\"value\":'+str(round(insomniaProb,3)) + '\n\t\t},\n'
         outputFile.writelines(line)
         
         line = '\t\t{\n\t\t\t\"type\":\"Incontinence|visitsBathroom\",\n'+'\t\t\t\"value\":'+str(round(probabilityIncontinence_visitsBathroom,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)    
+        
+        line = '\t\t{\n\t\t\t\"type\":\"Incontinence|nedicalCondition\",\n'+'\t\t\t\"value\":'+str(round(probabilityIncontinence_medicalCondition,3)) + '\n\t\t},\n'
         outputFile.writelines(line)    
         
         line = '\t\t{\n\t\t\t\"type\":\"Incontinence\",\n'+'\t\t\t\"value\":'+str(round(incontinenceProb,3)) + '\n\t\t},\n'
@@ -1604,6 +1738,9 @@ class MultimodalFusion():
         line = '\t\t{\n\t\t\t\"type\":\"digitalAddiction|digitalTimeUsage\",\n'+'\t\t\t\"value\":'+str(round(probabilityDigitalAddiction_timeDit,3)) + '\n\t\t},\n'
         outputFile.writelines(line)            
         
+        line = '\t\t{\n\t\t\t\"type\":\"digitalAddiction|depression\",\n'+'\t\t\t\"value\":'+str(round(probabilityDigitalAddiction_depression,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)            
+
         line = '\t\t{\n\t\t\t\"type\":\"digitalAddiction\",\n'+'\t\t\t\"value\":'+str(round(probDigitalAddiction,3)) + '\n\t\t},\n'
         outputFile.writelines(line)
         
@@ -1682,168 +1819,171 @@ class MultimodalFusion():
         line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour\",\n'+'\t\t\t\"value\":'+str(round(probImprovedBehaviour,3)) + '\n\t\t}\n'                                    
         outputFile.writelines(line)  
         
-        line = '\t\t]\n\t}\n]'
-        outputFile.writelines(line) 
+        line = '\t\t]\n\t}\n'
+        outputFile.writelines(line)        
+          
         
-        outputFile.close()    
-        
-    def multimodalFusionalgorithms(self,patientId,currentDate):
+    def multimodalFusionalgorithms(self,outputFile,patientId,currentDate,investigatedPeriodinDays,inputFileEHR,inputFileHETRA,inputFileDIT):
     
-        # define the investigated time interval 
-        investigatedPeriodinDays = 10 # analyze the variables over the last n days            
-        commentsEnabled = 1
-        
-        #output file of the MF module containing the results of the analysis          
-        outputMFpath = '../output/ehr'
-        #outputMF_File =  'participantID' + str(patientId) + '_' + str(currentDate) + '_outputResultsMF.txt'              
-        outputMF_File =  str(patientId) + '_' + str(currentDate) + '.txt'              
-        outputFileMF = outputMFpath + '/' + outputMF_File   
-        outputFile = open(outputFileMF,'w')
-       
-        # obtain the medical data of the patient with the provided patientId 
-        inputEHRpath = '../input/EHR'
-        inputEHRFile =  'participantID' + str(patientId) + '_EHR.txt'              
-        inputEHRFileMF =inputEHRpath + '/' + inputEHRFile  
-                              
-        main_diagnosis, disease_level, age, gender, civilStatus, bmi, active, mobility, gradeDependence, autonomousWalk, independenceDailyActivities, comorbiditesNeurologist, comorbiditesPsychiatrist, cognitiveFunctions, comorbiditesCardiovascular, hipertension, comorbiditesUrinary, incontinence, insomnia  = self.parseEHRFile(inputEHRFileMF)
-        
-        self.mainDiagnose = main_diagnosis # the main diagnose is 1 for Parkinson's and 0 for Alzheimer's 
-        self.disease_level = disease_level
-        self.insomnia = insomnia
-        self.incontinence = incontinence
-        self.comorbiditesNeurologist = comorbiditesNeurologist
-        self.comorbiditesUrinary= comorbiditesUrinary
-        self.comorbiditesPsychiatrist= comorbiditesPsychiatrist
-        self.cognitiveFunctions = cognitiveFunctions
-        
-        if self.mainDiagnose==1:
-            str_patient = 'The patient has Parkinsons level ' + str(self.disease_level)  
-            if commentsEnabled: 
-                print str_patient
-        else:
-            str_patient = 'The patient has Alzheimers level ' + str(self.disease_level)  
-            if commentsEnabled: 
-                print str_patient
-                
-        #currentDay = currentDate.day
-        startDate = currentDate + timedelta(days= -investigatedPeriodinDays)
-        if commentsEnabled: 
-            print startDate
-    
-        line = '[\n\t{\n'+'\t\t\"patientID\":\"patient'+str(patientId)+ '\",\n'
-        outputFile.writelines(line)
-    
-        line = '\t\t\"startDate\":\"' + str(startDate) + '\",\n' 
-        outputFile.writelines(line)
-        line = '\t\t\"endDate\":\"' + str(currentDate) + '\",\n' 
-        outputFile.writelines(line)
-     
-        #downloadFileFromCloud.downloadFile_Cloud(inputEHRPath,inputEHRFileMF) 
-     
-        # call the digital abnormal behaviour module for finding the number of abnormal events and the total interaction time
-        inputDITpath = '../input/DIT'
-        
-        ## current implementation of the DIT
-        inputDITFiletoMF = inputDITpath + '/' + 'inputDITfile.txt'
-        date_from = str(startDate) 
-        date_to = str(currentDate) 
-        response = getDIT.get_dataABD(date_from, date_to, inputDITFiletoMF)
-        if response>0:
-            abnormalUsageTime, nrAbnormalEvents, type_events_T, type_events_S, type_events_ST = self.parseDITFile_allEvents(inputDITFiletoMF)
-            print "Dit parsed"
-        else:
-            print "No file received in DIT"                
-                
-        # extract the ABD parameters for each of the investigated day in the predefined period
-        stationary = np.zeros(shape= (investigatedPeriodinDays))
-        dailyMotion = np.zeros(shape= (investigatedPeriodinDays))
-        nr_visits_bathroom = np.zeros(shape= (investigatedPeriodinDays))
-        nr_leaving_the_house = np.zeros(shape= (investigatedPeriodinDays))
-    
-        freezing_events = np.zeros(shape= (investigatedPeriodinDays))
-        festination_events = np.zeros(shape= (investigatedPeriodinDays))
-        loss_of_balance_events = np.zeros(shape= (investigatedPeriodinDays))
-        fall_down_events = np.zeros(shape= (investigatedPeriodinDays))
-        #movement_evolution_events = np.zeros(shape= (investigatedPeriodinDays))
-        nr_night_visits = np.zeros(shape= (investigatedPeriodinDays))
-        # parameters for DIT analysis
-        time_dit = np.zeros(shape= (investigatedPeriodinDays))
-        abnormalEvents = np.zeros(shape= (investigatedPeriodinDays))
-        nr_abnormalBehaviours_attachment = np.zeros(shape= (investigatedPeriodinDays))
-        nr_abnormalBehaviours_medication = np.zeros(shape= (investigatedPeriodinDays))
-        nr_abnormalBehaviours_appointment = np.zeros(shape= (investigatedPeriodinDays))
-                
-        inputPath = '../input'                      
-        for i in range(0,investigatedPeriodinDays):    
-            #print i
-            currentdate = startDate + timedelta(days= +i)
-            str_date = currentdate.strftime('%d-%m-%Y')
-            
-            # files will be loaded from the input folder, while the results will be stored in the output folder          
-            inputABDFileMF = 'participantID' + str(patientId) + '_' + str_date + '.txt'              
-            inputABDFilePath =  inputPath + '/ABD' + '/' + inputABDFileMF  
-            
-            #downloadFileFromCloud.downloadFile_Cloud(inputABDFilePath,inputFileMF)    
-            #print inputABDFilePath
-            
-            if (os.path.isfile(inputABDFilePath)):                    
-                station, dailyMov, freezing_nr, festination_nr, loss_of_balance_nr, fall_down_nr, nr_visits_bath, nr_leaving_house, nr_night_visit, confusion_nr = self.parseABDFile(inputABDFilePath)                                       
-            else:    
-                station = 0
-                dailyMov = 0
-                nr_visits_bath = 0
-                festination_nr = 0
-                freezing_nr = 0
-                fall_down_nr = 0
-                loss_of_balance_nr = 0
-                nr_leaving_house = 0                    
-                nr_night_visit = 0
-                confusion_nr = 0
-                print 'File ' + inputABDFilePath + ' not found.\n'              
-            
-            stationary[i] = station
-            abnormalEvents[i] = confusion_nr
-            dailyMotion[i] = round(dailyMov,2)
-            nr_visits_bathroom[i] = nr_visits_bath
-            festination_events[i] = festination_nr
-            freezing_events[i] = freezing_nr
-            fall_down_events[i] = fall_down_nr
-            loss_of_balance_events[i] = loss_of_balance_nr
-            nr_leaving_the_house[i] = nr_leaving_house                    
-            nr_night_visits[i] = nr_night_visit
-            
-            inputDITFiletoMF = inputDITpath + '/' + 'participantID' + str(patientId) + '_' + str_date + '.txt'   
-            if (os.path.isfile(inputDITFiletoMF)):
-                time_dit[i], nr_abnormalBehaviours_attachment[i], nr_abnormalBehaviours_medication[i], nr_abnormalBehaviours_appointment[i]  = self.parseDITFile(inputDITFiletoMF)                                    
-            else:
-                time_dit[i] = 0
-                nr_abnormalBehaviours_attachment[i] = 0
-                nr_abnormalBehaviours_medication[i] = 0
-                nr_abnormalBehaviours_appointment[i] = 0
-                print 'File ' + inputDITFiletoMF + ' not found.\n'       
-               
-        #assess the stationary behaviour and leaving the house events for detecting signs of apathy     
-        nr_abnormal_dit_behaviours = nr_abnormalBehaviours_attachment + nr_abnormalBehaviours_medication + nr_abnormalBehaviours_appointment
-                
-        self.stationaryEvents = stationary
-        self.abnormalEvents = abnormalEvents
-        self.dailyMotion = dailyMotion
-        self.freezing = freezing_events
-        self.festination = festination_events
-        self.nightMotion = nr_night_visits
-        self.fallDown = fall_down_events
-        self.lossOfBalance = loss_of_balance_events
-        self.visitsBathroom = nr_visits_bathroom
-        self.leavingHouse = nr_leaving_the_house
-        self.digitalTime = time_dit
-        self.abnormalDigitalEvents = nr_abnormal_dit_behaviours
-        
-        #Different sets of functionalities are evaluated in the case of Parkinson's or Alzheimer's disease
-        if (self.mainDiagnose==1):
-            self.evaluateParkinsonsActivities(outputFile,investigatedPeriodinDays)
-        else:
-            self.evaluateAlzheimersActivities(outputFile,investigatedPeriodinDays)                   
+        commentsEnabled = 1   
               
+        # parse the EHR File
+        foundPatient, main_diagnosis, disease_level, age, gender, civilStatus, bmi, active, mobility, gradeDependence, autonomousWalk, independenceDailyActivities, comorbiditesNeurologist, comorbiditesPsychiatrist, cognitiveFunctions, comorbiditesCardiovascular, hipertension, comorbiditesUrinary, incontinence, insomnia, depression  = self.parseEHRFile(inputFileEHR,patientId)
+        
+        if(foundPatient):
+            self.mainDiagnose = main_diagnosis # the main diagnose is 1 for Parkinson's and 0 for Alzheimer's 
+            self.disease_level = disease_level
+            self.insomnia = insomnia
+            self.incontinence = incontinence
+            self.depression = depression
+            self.comorbiditesNeurologist = comorbiditesNeurologist
+            self.comorbiditesUrinary= comorbiditesUrinary
+            self.comorbiditesPsychiatrist= comorbiditesPsychiatrist
+            self.cognitiveFunctions = cognitiveFunctions
+        
+            if self.mainDiagnose==1:
+                str_patient = 'The patient has Parkinsons level ' + str(self.disease_level)  
+                if commentsEnabled: 
+                    print str_patient
+            elif (self.mainDiagnose==0):
+                str_patient = 'The patient has Alzheimers level ' + str(self.disease_level)  
+                if commentsEnabled: 
+                    print str_patient
+                
+            #currentDay = currentDate.day
+            startDate = currentDate + timedelta(days= -investigatedPeriodinDays)
+           
+            line = '\t{\n'+'\t\t\"patientID\":\"patient'+str(patientId)+ '\",\n'
+            outputFile.writelines(line)
+    
+            line = '\t\t\"startDate\":\"' + str(startDate) + '\",\n' 
+            outputFile.writelines(line)
+            line = '\t\t\"endDate\":\"' + str(currentDate) + '\",\n' 
+            outputFile.writelines(line)
+          
+            # call the digital abnormal behaviour module for finding the number of abnormal events and the total interaction time  
+            ## current implementation of the DIT
+            inputDITpath = '../input/DIT'
+            date_from = str(startDate) 
+            date_to = str(currentDate)                   
+        
+            # parameters for DIT analysis
+            time_dit = np.zeros(shape= (investigatedPeriodinDays))
+            nr_abnormalBehaviours_S = np.zeros(shape= (investigatedPeriodinDays))
+            nr_abnormalBehaviours_T = np.zeros(shape= (investigatedPeriodinDays))
+            nr_abnormalBehaviours_ST = np.zeros(shape= (investigatedPeriodinDays))
+            nr_abnormal_dit_behaviours = np.zeros(shape= (investigatedPeriodinDays))
+            
+            inputDITABDFiletoMF = inputDITpath + '/' + 'inputEventABDfile_.txt'    
+            typeAnalysis = "ABD"
+            response_abd = getDIT.get_data(patientId, date_from, date_to, inputDITABDFiletoMF,typeAnalysis)                                                                                             
+            if response_abd>0:
+                time_dit, nr_abnormal_dit_behaviours, nr_abnormalBehaviours_S, nr_abnormalBehaviours_T, nr_abnormalBehaviours_ST = self.parseDITFile_ABD(inputDITABDFiletoMF,date_from,investigatedPeriodinDays)                                    
+                print "Dit abnormal events parsed"
+            else:           
+                print "No file received in DIT with abnormal events"          
+        
+            # extract the ABD parameters for each of the investigated day in the predefined period
+            stationary = np.zeros(shape= (investigatedPeriodinDays))
+            dailyMotion = np.zeros(shape= (investigatedPeriodinDays))
+            nr_visits_bathroom = np.zeros(shape= (investigatedPeriodinDays))
+            nr_leaving_the_house = np.zeros(shape= (investigatedPeriodinDays))
+    
+            freezing_events = np.zeros(shape= (investigatedPeriodinDays))
+            festination_events = np.zeros(shape= (investigatedPeriodinDays))
+            loss_of_balance_events = np.zeros(shape= (investigatedPeriodinDays))
+            fall_down_events = np.zeros(shape= (investigatedPeriodinDays))
+            abnormalEvents = np.zeros(shape= (investigatedPeriodinDays))
+            nr_night_visits = np.zeros(shape= (investigatedPeriodinDays))
+            #movement_evolution_events = np.zeros(shape= (investigatedPeriodinDays))                  
+                     
+            foundPatientId, stationary, dailyMotion, freezing_events, festination_events, loss_of_balance_events, fall_down_events, nr_visits_bathroom, nr_leaving_the_house, nr_night_visits, abnormalEvents = self.parseHETRAFile(inputFileHETRA,patientId,startDate,investigatedPeriodinDays)                                                                                                    
+        
+            if(foundPatientId>0):
+                self.stationaryEvents = stationary
+                self.abnormalEvents = abnormalEvents
+                self.dailyMotion = dailyMotion
+                self.freezing = freezing_events
+                self.festination = festination_events
+                self.nightMotion = nr_night_visits
+                self.fallDown = fall_down_events
+                self.lossOfBalance = loss_of_balance_events
+                self.visitsBathroom = nr_visits_bathroom
+                self.leavingHouse = nr_leaving_the_house
+                self.digitalTime = time_dit
+                self.abnormalDigitalEvents = nr_abnormal_dit_behaviours
+        
+                #Different sets of functionalities are evaluated in the case of Parkinson's or Alzheimer's disease
+                if (self.mainDiagnose==1):
+                    self.evaluateParkinsonsActivities(outputFile,investigatedPeriodinDays)
+                elif(self.mainDiagnose==0):
+                    self.evaluateAlzheimersActivities(outputFile,investigatedPeriodinDays)                   
+                else:
+                    print "A correct diagnosis wasn't found. The analysis will not be performed.\n"
+                    
+            else:              
+                print 'The HETRA data for patient with id: ' + str(patientId) + ' was not found.'
+        else:
+            print 'The EHR data for patient with id: ' + str(patientId) + ' was not found.'
+               
+if __name__ == '__main__':
+    
+    # define the set of parameters
+    #the list of patienIds need to be updated
+    listPatientIds = ['2','3','4']
+    nrPatients = len(listPatientIds)
+    
+    investigatedPeriodinDays = 10  #interval for MF analysis
+    analysisDate = datetime.date.today()   
+    
+    str_date = analysisDate.strftime('%d-%m-%Y')        
+    analysisDate = analysisDate.replace(2017,11,25) #this date is used for testing purposes
+    
+    year = analysisDate.year
+    month= analysisDate.month
+    day = analysisDate.day
+    
+    #output file of the MF module containing the results of the analysis          
+    outputMFpath = '../output/ehr'
+    inputEHRpath = '../input/EHR'
+    inputHETRApath = '../input/HETRA'
+    inputDITpath = '../input/DIT'
+    
+    if (day<10):
+        outputMF_File =  'MF_' + str(year) + str(month) + '0'+ str(day) + '.json'                                      
+        inputEHR_File = 'EHR_' + str(year) + str(month) + '0'+ str(day) + '.json'                                      
+        inputHETRA_File = 'HETRA_' + str(year) + str(month) + '0'+ str(day) + '.json'                                      
+        inputDIT_File =   'DitML_' + str(year) + str(month) + '0'+ str(day) + '.json'                                      
+    else:
+        outputMF_File =  'MF_' + str(year) + str(month) + str(day) + '.json'                                                              
+        inputEHR_File = 'EHR_' + str(year) + str(month) + str(day) + '.json'                                      
+        inputHETRA_File = 'HETRA_' + str(year) + str(month) + str(day) + '.json'                                      
+        inputDIT_File =   'DitML_' + str(year) + str(month) + str(day) + '.json'      
+                                       
+    outputFileMF = outputMFpath + '/' + outputMF_File   
+    
+    #check if all the input files are available 
+    inputFileEHR = inputEHRpath + '/' + inputEHR_File   
+    inputFileHETRA = inputHETRApath + '/' + inputHETRA_File   
+    inputFileDIT = inputDITpath + '/' + inputDIT_File   
+     
+    if (os.path.isfile(inputFileEHR) & os.path.isfile(inputFileHETRA) & os.path.isfile(inputFileDIT)):
+    
+        print 'all input files are received'
+        outputFile = open(outputFileMF,'w')     
+        line = '[\n'
+        outputFile.writelines(line)	
+        
+        for i in range(nrPatients):
+            patientId = listPatientIds[i]        
+            mf=MultimodalFusion()
+            mf.multimodalFusionalgorithms(outputFile,patientId,analysisDate,investigatedPeriodinDays,inputFileEHR,inputFileHETRA,inputFileDIT)        
+        
+        #close the MF output file
+        line = ']'
+        outputFile.writelines(line)    
+        outputFile.close()  
+        
         # upload the output file to the cloud containing the analysis results
         uploadResults = 0
         if(uploadResults):
@@ -1852,16 +1992,7 @@ class MultimodalFusion():
             outFilePath =  outputPath + '/ehr' + '/' + outputMF_File
             uploadFileToCloud.uploadFile_Cloud(outFilePath,outputMF_File)
     
-        print('Multimodal Fusion module completed.')       
-    
-if __name__ == '__main__':
-    
-    # define the set of parameters
-    patientId = 2      
-    currentDate = datetime.date.today() # the MF module will be called using the current date   
-    str_date = currentDate.strftime('%d-%m-%Y')        
-    currentDate = currentDate.replace(2017,5,12) #this date is used for testing purposes
-
-    mf=MultimodalFusion()
-    mf.multimodalFusionalgorithms(patientId,currentDate)
-    
+        print('Multimodal Fusion module completed.')    
+        
+    else:
+        print 'not all input files are received, analysis is postponed'
