@@ -1930,7 +1930,7 @@ if __name__ == '__main__':
     
     # define the set of parameters
     #the list of patienIds need to be updated
-    listPatientIds = ['2','3','4']
+    listPatientIds = ['2','3','4']    
     nrPatients = len(listPatientIds)
     
     investigatedPeriodinDays = 10  #interval for MF analysis
