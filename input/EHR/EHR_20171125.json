@@ -24,10 +24,9 @@
 		"depression":0,
 		"MMSE":24,
 		"SPMSQ":5,
-		"medication":{
-			"number":2,
-			{"Name": "Levodopa", "time": [0,1,0], "dosage": [0,2,0]},
-			{"Name": "Anticholinergic", "time": [1,0,0], "dosage": [1,0,0]},
-		}
+		"medications":[			
+			{"Name": "Levodopa", "time": ["12:00:","13:00","13:30"], "dosage":2},
+			{"Name": "Anticholinergic", "time": ["12:00:","13:00","13:30"], "dosage":2}
+		]
 	}
 ]	
