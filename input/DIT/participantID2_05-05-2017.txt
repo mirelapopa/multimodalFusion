@@ -1,4 +1,0 @@
-total_time_dit:	30
-new_attachments:	{'number':0, 'beggining': [], 'duration': []}
-add_medication:	{'number':0, 'beggining': [], 'duration': []}
-add_appointment:	{'number':4, 'beggining': [['11:09:29'], ['12:09:29'], ['11:09:29'], ['12:09:29']], 'duration': [['0:00:12'], ['0:00:11'], ['0:00:12'], ['0:00:11']]}
