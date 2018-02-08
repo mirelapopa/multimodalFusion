@@ -1,8 +1,8 @@
 [
 	{
 		"patientID":"2",
-		"mainDiagnosis":"Alzheimers",
-		"ParkinsonHoehnAndYard":0,
+		"mainDiagnosis":"Parkinsons",
+		"ParkinsonHoehnAndYard":3,
 		"dateBirth":"1931-03-14",
 		"gender":1,
 		"civilStatus":"single",
@@ -22,7 +22,7 @@
 		"incontinence":1,
 		"insomnia":1,
 		"depression":0,
-		"MMSE":10,
+		"MMSE":24,
 		"SPMSQ":5,
 		"medications":[			
 			{"Name": "Levodopa", "time": ["12:00:","13:00","13:30"], "dosage":2},
