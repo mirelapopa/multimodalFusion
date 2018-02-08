@@ -323,16 +323,18 @@ class MultimodalFusion():
                     elif (functionalityName.find('MMSE')>0):
                         mmse = int(obj)
                         if(mmse<=10):
-        					  	 disease_level = 5					   
+        					  	 mmse_score = 5					   
                         elif(mmse<=19):
-    						    disease_level = 4					   
+    						    mmse_score = 4					   
                         elif(mmse<=24):
-    						    disease_level = 3					   
+    						    mmse_score = 3					   
                         elif(mmse<=27):
-    						    disease_level = 2					   
+    						    mmse_score = 2					   
                         else:
-    						    disease_level = 1
-                    					
+    						    mmse_score = 1
+                        if(main_diagnosis==0):
+                            disease_level = mmse_score
+                                
                     elif (functionalityName.find('dateBirth')>0):  
            
                         datepatient = obj
