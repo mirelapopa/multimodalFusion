@@ -1,4 +1,0 @@
-[{
-	"patientID":"patient2",
-	"startDate":"2017-05-02",
-	"endDate":"2017-05-12",
