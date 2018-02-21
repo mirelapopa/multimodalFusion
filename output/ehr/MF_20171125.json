@@ -170,6 +170,37 @@
 				0.0
 			]
 		},
+		"medication":[
+		{
+			"name":Levodopa,
+			"changes":[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+		},
+		{
+			"name":Anticholinergic,
+			"changes":[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0]
+		}
+		],
+		"movementEvaluations":[
+		{
+			"date":2008-02-29,
+			"totalScore":30.0625,
+			"partScores":[3.0, 3.0, 9.5, 3.0, 3.0, 2.0, 6.5625]
+		},
+		{
+			"date":2008-09-12,
+			"totalScore":38.375,
+			"partScores":[4.0, 3.0, 19.0, 2.0, 4.0, 0.0, 6.375]
+		},
+		{
+			"date":2017-11-24,
+			"totalScore":27.3125,
+			"partScores":[4.0, 3.0, 10.5, 2.0, 2.5, 0.0, 5.3125]
+		},
+		{
+			"totalScoreDeviation":-0.168,
+			"partsDeviation":[0.0, 0.0, -0.29, 0.0, -0.23, 0.0, -0.09]
+		}
+		],
 		"probabilities":[
 		{
 			"type":"Insomnia|nightMotion",
@@ -260,6 +291,10 @@
 			"value":0.0
 		},
 		{
+			"type":"ParkinsonsEvents|medicationChange",
+			"value":0.01
+		},
+		{
 			"type":"ParkinsonsEvents",
 			"value":0.0
 		},
@@ -300,9 +335,17 @@
 			"value":0.001
 		},
 		{
+			"type":"ImprovedBehaviour|movementEvolution",
+			"value":0.01
+		},
+		{
 			"type":"ImprovedBehaviour",
-			"value":0.026
+			"value":0.036
 		}
+		{
+			"type":"ImprovedBehaviour|medicationChange",
+			"value":0.01
+		},
 		]
 	}
 ]
