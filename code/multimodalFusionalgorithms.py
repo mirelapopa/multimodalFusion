@@ -13,7 +13,7 @@ from pprint import pprint
         
 class MultimodalFusion():
     
-    def __init__(self,mainDiagnose=0,stationaryEvents=[],disease_level=0,dailyMotion=[],nightMotion=[],visitsBathroom=[],abnormalEvents=[],freezing=[],festination=[],lossOfBalance=[],fallDown=[],incontinence=[],leavingHouse=[],digitalTime=[],abnormalDigitalEvents=[],insomnia=0,comorbiditesNeurologist=0,comorbiditesUrinary=0,cognitiveFunctions=0,comorbiditesPsychiatrist=0,depression=0):
+    def __init__(self,mainDiagnose=0,stationaryEvents=[],disease_level=0,dailyMotion=[],nightMotion=[],visitsBathroom=[],abnormalEvents=[],freezing=[],festination=[],lossOfBalance=[],fallDown=[],incontinence=[],leavingHouse=[],digitalTime=[],abnormalDigitalEvents=[],insomnia=0,comorbiditesNeurologist=0,comorbiditesUrinary=0,cognitiveFunctions=0,comorbiditesPsychiatrist=0,depression=0,medications=[],medicationName=[],evaluationsExercises=[],evaluationsScore=[],evaluationDates=[],evaluationDateList=[]):
         
         self.mainDiagnose = mainDiagnose
         self.stationaryEvents= stationaryEvents      
@@ -36,6 +36,12 @@ class MultimodalFusion():
         self.comorbiditesUrinary= comorbiditesUrinary
         self.comorbiditesPsychiatrist= comorbiditesPsychiatrist
         self.cognitiveFunctions = cognitiveFunctions
+        self.medications = medications
+        self.medicationName = medicationName
+        self.evaluationsExercises = evaluationsExercises
+        self.evaluationsScore = evaluationsScore
+        self.evaluationDates = evaluationDates
+        self.evaluationDateList = evaluationDateList
               
     def parseHETRAFile(self,filePath,patientId,startDate,nrDays):
        
@@ -95,7 +101,9 @@ class MultimodalFusion():
                             toilet_events = toilet_dict.get('event')
                             toiletNr = len(toilet_events)
                             if(toiletNr>0):
-                                toilet_duration = np.zeros(shape=toiletNr)
+                                toilet_duration = np.zeros(shape=
+								
+								toiletNr)
                                 for i in range(toiletNr):
                                     dictToilet = toilet_events[i]                            
                                     toilet_duration[i] = dictToilet.get('duration')                                                               
@@ -267,8 +275,9 @@ class MultimodalFusion():
             
         return foundPatientId, stationary, dailyMotion, freezing_events, festination_events, loss_of_balance_events, fall_down_events, nr_visits_bathroom, nr_leaving_the_house, nr_night_visits, abnormalEvents    
 
-    def parseEHRFile(self,filePath,patientId):
-       
+    def parseEHRFile(self,filePath,patientId,nrDays,startDate,currentDate):
+
+        nrParts = 7
         foundPatientId = 0
         main_diagnosis = -1
         disease_level = 0
@@ -290,73 +299,72 @@ class MultimodalFusion():
         comorbiditesUrinary = 0
         incontinence = 0
         insomnia = 0
-    
-        with open(filePath,'r') as inf:
-            for line in inf:  
+        medicationNames = []
+        medications = []
+        evaluations = []
+        evaluationsScore = []
+        evaluationDateList = np.zeros(shape=nrDays)
+        evaluationDates = []
+
+        startDate = datetime.datetime(startDate.year, startDate.month, startDate.day)
+        currentDate = datetime.datetime(currentDate.year, currentDate.month, currentDate.day)
+
+
+        with open(filePath) as f:
+            try:
+                d = json.load(f) 
+                #pprint(d)    
                 
-                index = line.find(':')                    
-                if(index>=0):
+            except ValueError,e:
+                print e
+                
+            for line in d:                   
+                
+                if ('patientID' in line.keys()):                    
+                    if(line['patientID']==patientId):
+                        foundPatientId = 1
+                        #print 'found patient'                                                                                
                     
-                    functionalityName = line.split(':')[0]
-                    valueObj = line.split(':')[1]                    
-                    obj = valueObj.split(',')[0]
-                                        
-                    if (functionalityName.find('patientID')>=0):
-                        
-                        patientId_ = obj.split('"')[1]                           
-                        if(patientId_==patientId):
-                            foundPatientId = 1
-                            #print 'found patient'
-                            
-                    if (functionalityName.find('mainDiagnosis')>0):
+                    if ('mainDiagnosis' in line.keys()):
            
-                        diagnosis = obj
-                        if diagnosis.find('Parkinsons') > 0:
+                        if (line['mainDiagnosis']=='Parkinsons'):
                             main_diagnosis = 1
-                        elif(diagnosis.find('Alzheimers')>0):
+                        elif(line['mainDiagnosis']=='Alzheimers'):
                             main_diagnosis = 0                              
                             #print main_diagnosis
            
-                    elif (functionalityName.find('ParkinsonHoehnAndYard')>0):           
-                        disease_level = int(obj)				
+                    if ('ParkinsonHoehnAndYard' in line.keys()):           
+                        disease_level = int(line['ParkinsonHoehnAndYard'])				
                         
-                    elif (functionalityName.find('MMSE')>0):
-                        mmse = int(obj)
+                    if ('MMSE' in line.keys()):
+                        mmse = int(line['MMSE'])
                         if(mmse<=10):
-        					  	 mmse_score = 5					   
+                            mmse_score = 5
                         elif(mmse<=19):
-    						    mmse_score = 4					   
+                            mmse_score = 4
                         elif(mmse<=24):
-    						    mmse_score = 3					   
+                            mmse_score = 3
                         elif(mmse<=27):
-    						    mmse_score = 2					   
+                            mmse_score = 2
                         else:
-    						    mmse_score = 1
+                            mmse_score = 1
                         if(main_diagnosis==0):
                             disease_level = mmse_score
                                 
-                    elif (functionalityName.find('dateBirth')>0):  
-           
-                        datepatient = obj
-                        datepatient = datepatient.replace('"', '')
-                        datepatient = datepatient.replace('\n', '')
-                        datepatient = datepatient.replace('\r', '')
-                        datepatient = datepatient.replace('\'', '')
-		    
-                        date_birth = datetime.datetime.strptime(datepatient, "%Y-%m-%d")                 
-                        
+                    if ('dateBirth' in line.keys()):
+                        #print line['dateBirth']
+                        date_birth = datetime.datetime.strptime(line['dateBirth'],'%Y-%m-%d')
                         currentDay =  datetime.date.today()
                         currentYear = currentDay.year
-                        age = currentYear - date_birth.year           
-                        #print age
-           
-                    elif (functionalityName.find('gender')>0):  
+                        age = currentYear - date_birth.year
+
+                    if ('gender' in line.keys()):  
           
-                        gender = int(obj)
+                        gender = int(line['gender'])
            
-                    elif (functionalityName.find('civilStatus')>0):  
+                    if ('civilStatus' in line.keys()):  
            
-                        civil_Status = obj
+                        civil_Status = line['civilStatus']
                         if civil_Status.find('single') > 0:
                             civilStatus = 0
                         elif civil_Status.find('married') > 0:
@@ -367,67 +375,125 @@ class MultimodalFusion():
                             civilStatus = 3                
                             #print civilStatus    
                 
-                    elif (functionalityName.find('bmi')>0):  
+                    if ('bmi' in line.keys()):  
                         
-                        bmi = int(obj)           
+                        bmi = int(line['bmi'])           
        
-                    elif (functionalityName.find('active')>0):             
-                        active = int(obj)                        
-                    elif (functionalityName.find('mobility')>0):  
+                    if ('active' in line.keys()):             
+                        active = int(line['active'])                        
+                    if ('mobility' in line.keys()):  
           
-                        mobility = int(obj)
+                        mobility = int(line['mobility'])
                         
-                    elif (functionalityName.find('depression')>0):  
+                    if ('depression' in line.keys()):  
           
-                        depression = int(obj)
+                        depression = int(line['depression'])
                         
-                    elif (functionalityName.find('gradeDependence')>0):  
+                    if ('gradeDependence' in line.keys()):
                         
-                        gradeDependence = int(obj)                      
-                    elif (functionalityName.find('autonomousWalk')>0):  
+                        gradeDependence = int(line['gradeDependence'])
+
+                    if ('autonomousWalk' in line.keys()):
           
-                        autonomousWalk = int(obj)
-                    elif (functionalityName.find('independenceDailyActivities')>0):  
+                        autonomousWalk = int(line['autonomousWalk'])
+                    if ('independenceDailyActivities' in line.keys()):
           
-                        independenceDailyActivities = int(obj)
+                        independenceDailyActivities = int(line['independenceDailyActivities'])
        
-                    elif (functionalityName.find('comorbiditiesNeurologist')>0):  
-          
-                        comorbiditesNeurologist = int(obj)
+                    if ('comorbiditiesNeurologist' in line.keys()):
+
+                        comorbiditesNeurologist = int(line['comorbiditiesNeurologist'])
            
-                    elif (functionalityName.find('comorbiditiesPsychiatrist')>0):  
+                    if ('comorbiditiesPsychiatrist' in line.keys()):
           
-                        comorbiditesPsychiatrist = int(obj)
+                        comorbiditesPsychiatrist = int(line['comorbiditiesPsychiatrist'])
                     
-                    elif (functionalityName.find('comorbiditiesCardiovascular')>0):  
+                    if ('comorbiditiesCardiovascular' in line.keys()):
           
-                        comorbiditesCardiovascular = int(obj)
+                        comorbiditesCardiovascular = int(line['comorbiditiesCardiovascular'])
            
-                    elif (functionalityName.find('preserveCognitiveFunctions')>0):  
+                    if ('preserveCognitiveFunctions' in line.keys()):
           
-                        cognitiveFunctions = int(obj)                                 
-                    elif (functionalityName.find('hipertension')>0):  
-                        hipertension = int(obj)
+                        cognitiveFunctions = int(line['preserveCognitiveFunctions'])
+
+                    if ('hipertension' in line.keys()):
+                        hipertension = int(line['hipertension'])
            
-                    elif (functionalityName.find('comorbiditiesUrinary')>0):  
+                    if ('comorbiditiesUrinary' in line.keys()):
           
-                        comorbiditesUrinary = int(obj)
+                        comorbiditesUrinary = int(line['comorbiditiesUrinary'])
            
-                    elif (functionalityName.find('incontinence')>0):  
+                    if ('incontinence' in line.keys()):
           
-                        incontinence = int(obj)    
+                        incontinence = int(line['incontinence'])
        
-                    elif (functionalityName.find('insomnia')>0):  
+                    if ('insomnia' in line.keys()):
           
-                        insomnia = int(obj)    
+                        insomnia = int(line['insomnia'])
                     
-                    elif (functionalityName.find('SPMSQ')>0):                    
-                        spmsq = int(obj)
+                    if ('SPMSQ' in line.keys()):
+                        spmsq = int(line['SPMSQ'])
+
+                    if ('medications' in line.keys()):
+                        medication_dict = line['medications']
+                        nrMedication = len(medication_dict)
+                        medications = np.zeros(shape=(nrMedication,nrDays))
+                        if(nrMedication>0):
+                            for i in range (nrMedication):
+                                medicationItem = medication_dict[i]
+                                if('history' in medicationItem.keys()):
+                                    history_events = medicationItem.get('history')
+                                    historyNr = len(history_events)
+                                    if (historyNr > 0):
+                                        historyItem = history_events[0]
+                                        name = historyItem.get('name')
+                                        medicationNames.append(name)
+                                        for j in range(historyNr):
+                                            historyItem = history_events[j]
+                                            dosage = historyItem.get('dosage')
+                                            active = historyItem.get('active')
+                                            dateItem = historyItem.get('date')
+                                            ind = dateItem.find('T')
+                                            dateItem = datetime.datetime.strptime(dateItem[:ind],'%Y-%m-%d')
+                                            if((dateItem>=startDate)&(dateItem<=currentDate)):
+                                                indexMed = (dateItem-startDate).days
+                                                if(j==0):
+                                                    medications[i,indexMed] = 1
+                                                else:
+                                                    if(dosage!=dosageLastValue):
+                                                        medications[i, indexMed] = 2
+                                                    elif(active!=activeLastValue):
+                                                        medications[i, indexMed] = 3
+                                            dosageLastValue = dosage
+                                            activeLastValue = active
+                        #print medications
+                        #print medicationNames
+                    if ('evaluations' in line.keys()):
+                        evaluation_dict = line['evaluations']
+                        nrEvaluations = len(evaluation_dict)
+                        evaluations = np.zeros(shape=(nrEvaluations, nrParts))
+                        evaluationsScore = np.zeros(shape=nrEvaluations)
+                        if (nrEvaluations > 0):
+                            for i in range(nrEvaluations):
+                                evaluationItem = evaluation_dict[i]
+                                date = evaluationItem.get('date')
+                                evaluationDates.append(date)
+                                dateItem = datetime.datetime.strptime(date, '%Y-%m-%d')
+                                if ((dateItem >= startDate) & (dateItem <= currentDate)):
+                                    indexEval = (dateItem - startDate).days
+                                    evaluationDateList[indexEval] = i+1
+                                score = evaluationItem.get('total')
+                                parts = evaluationItem.get('parts')
+                                evaluations[i,:]=parts
+                                evaluationsScore[i]=score
+                        #print evaluations
+                        #print evaluationsScore
+                        #print evaluationDateList
                     else:
                         str = 'process other functionalities'
                         #print obj
                         
-        return foundPatientId, main_diagnosis, disease_level, age, gender, civilStatus, bmi, active, mobility, gradeDependence, autonomousWalk, independenceDailyActivities, comorbiditesNeurologist, comorbiditesPsychiatrist, cognitiveFunctions, comorbiditesCardiovascular, hipertension, comorbiditesUrinary, incontinence, insomnia, depression       
+        return foundPatientId, main_diagnosis, disease_level, age, gender, civilStatus, bmi, active, mobility, gradeDependence, autonomousWalk, independenceDailyActivities, comorbiditesNeurologist, comorbiditesPsychiatrist, cognitiveFunctions, comorbiditesCardiovascular, hipertension, comorbiditesUrinary, incontinence, insomnia, depression, medications, medicationNames, evaluations, evaluationsScore, evaluationDates, evaluationDateList
     
     def parseDITFile_ABD(self,filePath,nrDays):
     
@@ -988,7 +1054,7 @@ class MultimodalFusion():
             plt.axis(days_axis)
             plt.xlabel('Amount of time spent on the digital platform over the investigated days')
             plt.show()
-        
+
         #assess deviations in the number of dit abnormal behaviours
         nr_abnormal_dit_behaviours = self.abnormalDigitalEvents
         maxValue = max(nr_abnormal_dit_behaviours)
@@ -1032,7 +1098,7 @@ class MultimodalFusion():
             probabilityDigitalConfusion_abnormalDigitalBehaviour = 0.001 
             probabilityImprovedBehaviour_abnormalDigitalBehaviour = -0.2*percent_abnormal_dit
 
-	     #plot a graph of the digital abnormal behaviours over the investigated days
+        #plot a graph of the digital abnormal behaviours over the investigated days
         showGraph_abnormal = 0
         if showGraph_abnormal:
             #fig = plt.figure()              
@@ -1040,7 +1106,79 @@ class MultimodalFusion():
             plt.plot(nr_abnormal_dit_behaviours,'ro')
             plt.axis(days_axis)
             plt.xlabel('Number of digital abnormal behaviours events over the investigated days')
-            plt.show()   
+            plt.show()
+
+        # assess medication changes
+        nrMedications=len(self.medicationName)
+        changes = np.zeros(shape=nrMedications)
+        indexMedication = np.zeros(shape=nrMedications)
+        line = '\t\t\"medication\":[\n'
+        for i in range(nrMedications):
+            line = line + '\t\t{\n' +'\t\t\t\"name\":' + self.medicationName[i] +',\n'
+            line = line + '\t\t\t\"changes\":' + '['+', '.join(map(str,self.medications[i,:]))+']' +'\n'
+            changes[i] =np.sum(self.medications[i,:])
+            if(changes[i]>0):
+                indexMedication[i] = 1
+
+            if(i==nrMedications-1):
+                line= line + '\t\t}\n'
+            else:
+                line = line + '\t\t},\n'
+        line = line + '\t\t],\n'
+        outputFile.writelines(line)
+        changeMedication = np.sum(changes)
+
+        #check if in the analyzed period there was a change in any of the medications
+        if(changeMedication>0):
+            # compute the probability based on the number of changed medications
+            # in this version only Parkinsons medication is considered, and this is changed only one at a certain moment
+            # either by changing the ddosage, prescribing a new one or stopping a current one
+            probabilityImprovedBehaviour_medicationChange = 0.2*np.sum(indexMedication)
+            probabilityParkinsonsEvents_medicationChange = 0.2 * np.sum(indexMedication)
+        else:
+            probabilityImprovedBehaviour_medicationChange = 0.01
+            probabilityParkinsonsEvents_medicationChange = 0.01
+
+        # assess movement evaluation
+        nrEvaluations = len(self.evaluationDates)
+        line = '\t\t\"movementEvaluations\":[\n'
+        for i in range(nrEvaluations):
+            line = line + '\t\t{\n' + '\t\t\t\"date\":' + self.evaluationDates[i] + ',\n'
+            line = line + '\t\t\t\"totalScore\":' + str(self.evaluationsScore[i]) + ',\n'
+            line = line + '\t\t\t\"partScores\":' + '[' + ', '.join(map(str, self.evaluationsExercises[i, :])) + ']' + '\n'
+            line = line + '\t\t},\n'
+
+        outputFile.writelines(line)
+
+        # check if there are movement evaluations in the analyzed period
+        nrParts = self.evaluationsExercises.shape[1]
+        percentageParts = np.zeros(nrParts)
+        percentageEvaluation = 0
+
+        if(np.sum(self.evaluationDateList)>0):
+            #check if there at least 2 evaluations
+            if(nrEvaluations>1):
+                if(self.evaluationsScore[nrEvaluations-1]+self.evaluationsScore[nrEvaluations-2]>0):
+                    percentageEvaluation = (self.evaluationsScore[nrEvaluations-1]-self.evaluationsScore[nrEvaluations-2])/(self.evaluationsScore[nrEvaluations-1]+self.evaluationsScore[nrEvaluations-2])
+                else:
+                    percentageEvaluation = 0
+
+                for i in range(nrParts):
+                    if(self.evaluationsExercises[nrEvaluations - 1,i] + self.evaluationsExercises[nrEvaluations - 2,i]>0):
+                        percentageParts[i] = (self.evaluationsExercises[nrEvaluations - 1,i] - self.evaluationsExercises[nrEvaluations - 2,i]) / (self.evaluationsExercises[nrEvaluations - 1,i] + self.evaluationsExercises[nrEvaluations - 2,i])
+                    else:
+                        percentageParts[i] = 0
+                percentageParts = np.round(percentageParts,2)
+
+        line = '\t\t{\n' + '\t\t\t\"totalScoreDeviation\":' + str(round(percentageEvaluation,3)) + ',\n'
+        line = line + '\t\t\t\"partsDeviation\":' + '[' + ', '.join(map(str, percentageParts)) + ']' + '\n' + '\t\t}\n'
+        line = line + '\t\t],\n'
+        outputFile.writelines(line)
+
+        if (percentageEvaluation >= 0):
+            probabilityImprovedBehaviour_movementEvolution = 0.2 * percentageEvaluation
+        else:
+            probabilityImprovedBehaviour_movementEvolution = 0.01
 
         cognitiveFunctions = self.cognitiveFunctions
         if(cognitiveFunctions):
@@ -1129,11 +1267,19 @@ class MultimodalFusion():
         
         line = '\t\t{\n\t\t\t\"type\":\"ParkinsonsEvents|lossOfBalance\",\n'+'\t\t\t\"value\":'+str(round(probabilityParkinsonsEvents_lossBalance,3)) + '\n\t\t},\n'                                    
         outputFile.writelines(line)
-    
-        line = '\t\t{\n\t\t\t\"type\":\"ParkinsonsEvents\",\n'+'\t\t\t\"value\":'+str(round(probParkinsonsEvents,3)) + '\n\t\t},\n'                                    
-        outputFile.writelines(line)  
 
-        probImprovedBehaviour = probabilityImprovedBehaviour_abnormalDigitalBehaviour + probabilityImprovedBehaviour_dailyMotion + probabilityImprovedBehaviour_fallDown + probabilityImprovedBehaviour_festination + probabilityImprovedBehaviour_freezing + probabilityImprovedBehaviour_lossBalance + probabilityImprovedBehaviour_nightMotion + probabilityImprovedBehaviour_stationary + probabilityImprovedBehaviour_leavingHouse
+        # adjust the probability based on the p(ParkinsonsEvents)
+        if(probParkinsonsEvents<0.1):
+            probabilityParkinsonsEvents_medicationChange = 0.01
+        line = '\t\t{\n\t\t\t\"type\":\"ParkinsonsEvents|medicationChange\",\n' + '\t\t\t\"value\":' + str(round(probabilityParkinsonsEvents_medicationChange, 3)) + '\n\t\t},\n'
+        outputFile.writelines(line)
+        #line = '\t\t{\n\t\t\t\"type\":\"ParkinsonsEvents|movementEvaluation\",\n' + '\t\t\t\"value\":' + str(round(probabilityParkinsonsEvents_movementEvaluation, 3)) + '\n\t\t},\n'
+        #outputFile.writelines(line)
+
+        line = '\t\t{\n\t\t\t\"type\":\"ParkinsonsEvents\",\n'+'\t\t\t\"value\":'+str(round(probParkinsonsEvents,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)
+
+        probImprovedBehaviour = probabilityImprovedBehaviour_abnormalDigitalBehaviour + probabilityImprovedBehaviour_dailyMotion + probabilityImprovedBehaviour_fallDown + probabilityImprovedBehaviour_festination + probabilityImprovedBehaviour_freezing + probabilityImprovedBehaviour_lossBalance + probabilityImprovedBehaviour_nightMotion + probabilityImprovedBehaviour_stationary + probabilityImprovedBehaviour_leavingHouse + probabilityImprovedBehaviour_movementEvolution
         
         if(probImprovedBehaviour>1):
             probImprovedBehaviour = 1       
@@ -1161,13 +1307,27 @@ class MultimodalFusion():
         
         line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|lossOfBalance\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_lossBalance,3)) + '\n\t\t},\n'                                    
         outputFile.writelines(line)
-        
-        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|abnormalDigitalBehaviour\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_abnormalDigitalBehaviour,3)) + '\n\t\t},\n'                                    
+
+        #line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|movementEvaluation\",\n' + '\t\t\t\"value\":' + str(round(probabilityImprovedBehaviour_movementEvaluation, 3)) + '\n\t\t},\n'
+        #outputFile.writelines(line)
+
+        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|abnormalDigitalBehaviour\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_abnormalDigitalBehaviour,3)) + '\n\t\t},\n'
         outputFile.writelines(line)
-        
+
+        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|movementEvolution\",\n' + '\t\t\t\"value\":' + str(
+            round(probabilityImprovedBehaviour_movementEvolution, 3)) + '\n\t\t},\n'
+        outputFile.writelines(line)
+
         line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour\",\n'+'\t\t\t\"value\":'+str(round(probImprovedBehaviour,3)) + '\n\t\t}\n'                                    
-        outputFile.writelines(line)  
-        
+        outputFile.writelines(line)
+
+        if(probImprovedBehaviour < 0.1):
+            probabilityImprovedBehaviour_medicationChange = 0.01
+        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|medicationChange\",\n' + '\t\t\t\"value\":' + str(
+            round(probabilityImprovedBehaviour_medicationChange, 3)) + '\n\t\t},\n'
+        outputFile.writelines(line)
+
+
         line = '\t\t]\n\t}\n'
         outputFile.writelines(line)    
        
@@ -1827,10 +1987,12 @@ class MultimodalFusion():
         
     def multimodalFusionalgorithms(self,outputFile,patientId,currentDate,investigatedPeriodinDays,inputFileEHR,inputFileHETRA,inputFileDIT):
     
-        commentsEnabled = 1   
+        commentsEnabled = 1
+        # currentDay = currentDate.day
+        startDate = currentDate + timedelta(days=-investigatedPeriodinDays)
               
         # parse the EHR File
-        foundPatient, main_diagnosis, disease_level, age, gender, civilStatus, bmi, active, mobility, gradeDependence, autonomousWalk, independenceDailyActivities, comorbiditesNeurologist, comorbiditesPsychiatrist, cognitiveFunctions, comorbiditesCardiovascular, hipertension, comorbiditesUrinary, incontinence, insomnia, depression  = self.parseEHRFile(inputFileEHR,patientId)
+        foundPatient, main_diagnosis, disease_level, age, gender, civilStatus, bmi, active, mobility, gradeDependence, autonomousWalk, independenceDailyActivities, comorbiditesNeurologist, comorbiditesPsychiatrist, cognitiveFunctions, comorbiditesCardiovascular, hipertension, comorbiditesUrinary, incontinence, insomnia, depression, medications, medicationName, evaluations, evaluationsScore, evaluationDates, evaluationDateList  = self.parseEHRFile(inputFileEHR,patientId,investigatedPeriodinDays,startDate,currentDate)
         
         if(foundPatient):
             self.mainDiagnose = main_diagnosis # the main diagnose is 1 for Parkinson's and 0 for Alzheimer's 
@@ -1842,6 +2004,12 @@ class MultimodalFusion():
             self.comorbiditesUrinary= comorbiditesUrinary
             self.comorbiditesPsychiatrist= comorbiditesPsychiatrist
             self.cognitiveFunctions = cognitiveFunctions
+            self.medications = medications
+            self.medicationName = medicationName
+            self.evaluationsExercises = evaluations
+            self.evaluationsScore = evaluationsScore
+            self.evaluationDates = evaluationDates
+            self.evaluationDateList = evaluationDateList
         
             if self.mainDiagnose==1:
                 str_patient = 'The patient has Parkinsons level ' + str(self.disease_level)  
@@ -1851,10 +2019,7 @@ class MultimodalFusion():
                 str_patient = 'The patient has Alzheimers level ' + str(self.disease_level)  
                 if commentsEnabled: 
                     print str_patient
-                
-            #currentDay = currentDate.day
-            startDate = currentDate + timedelta(days= -investigatedPeriodinDays)
-           
+
             line = '\t{\n'+'\t\t\"patientID\":\"patient'+str(patientId)+ '\",\n'
             outputFile.writelines(line)
     
