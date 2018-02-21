@@ -1,8 +1,8 @@
 [
 	{
 		"patientID":"2",
-		"mainDiagnosis":"Alzheimers",
-		"ParkinsonHoehnAndYard":0,
+		"mainDiagnosis":"Parkinsons",
+		"ParkinsonHoehnAndYard":1,
 		"dateBirth":"1931-03-14",
 		"gender":1,
 		"civilStatus":"single",
@@ -23,10 +23,77 @@
 		"insomnia":1,
 		"depression":0,
 		"MMSE":10,
-		"SPMSQ":5,
-		"medications":[			
-			{"Name": "Levodopa", "time": ["12:00:","13:00","13:30"], "dosage":2},
-			{"Name": "Anticholinergic", "time": ["12:00:","13:00","13:30"], "dosage":2}
+		"SPMSQ":5,		
+		"medications":[
+			{
+				"uuid":"asdasdas-asdas-",
+				"history":[
+				{
+					"name":"Levodopa",
+					"dosage":1,
+					"active":1,
+					"time":["01:00","12:30"],
+					"date":"2017-09-27T06:03:53.931Z"
+				},
+				{
+					"name":"Levodopa",
+					"dosage":1,
+					"active":1,
+					"time":["01:00","12:30"],
+					"date":"2017-11-17T08:03:53.931Z"
+				},
+				{
+					"name":"Levodopa",
+					"dosage":1,
+					"active":1,
+					"time":["01:00","12:30"],
+					"date":"2017-11-24T06:03:53.931Z"
+				}
+				]
+			},
+			{
+				"uuid":"asdasdas-asdas-",
+				"history":[
+				{
+					"name":"Anticholinergic",
+					"dosage":1,
+					"active":1,
+					"time":["01:00","12:30"],
+					"date":"2017-09-27T06:03:53.931Z"
+				},
+				{
+					"name":"Anticholinergic",
+					"dosage":1,
+					"active":1,
+					"time":["01:00","12:30"],
+					"date":"2017-11-17T08:03:53.931Z"
+				},
+				{
+					"name":"Anticholinergic",
+					"dosage":2,
+					"active":1,
+					"time":["01:00","12:30"],
+					"date":"2017-11-24T06:03:53.931Z"
+				}
+				]
+			}
+		],
+		"evaluations": [
+			{
+				"date": "2008-02-29",
+				"total": 30.0625,
+				"parts": [3.0, 3.0, 9.5, 3.0, 3.0, 2.0, 6.5625]
+			},
+			{
+				"date": "2008-09-12",
+				"total": 38.375,
+				"parts": [4.0, 3.0, 19.0, 2.0, 4.0, 0.0, 6.375]
+			},
+			{
+				"date": "2017-11-24",
+				"total": 27.3125,
+				"parts": [4.0, 3.0, 10.5, 2.0, 2.5, 0.0, 5.3125]
+			}
 		]
 	}
 ]	
