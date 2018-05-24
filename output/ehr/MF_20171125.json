@@ -140,6 +140,60 @@
 			]
 		},
 		"incontinence":1, 
+		"heart_rate":{
+			"result":-2.0,
+			"events_50":[
+				94.0,
+				90.0,
+				92.0,
+				95.0,
+				92.0,
+				93.0,
+				90.0,
+				90.0,
+				90.0,
+				90.0
+			],
+			"events_25":[
+				83.0,
+				78.0,
+				82.0,
+				85.0,
+				83.0,
+				68.0,
+				78.0,
+				78.0,
+				78.0,
+				76.0
+			],
+			"events_75":[
+				116.0,
+				110.0,
+				115.0,
+				116.0,
+				110.0,
+				115.0,
+				110.0,
+				110.0,
+				110.0,
+				100.0
+			]
+		},
+		"galvanic skin response":{
+			"result":0.0,
+			"events":[
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			]
+		},
 		"digitalTimeSpent":{
 			"result":0.0,
 			"events":[
@@ -233,6 +287,30 @@
 		{
 			"type":"Incontinence",
 			"value":0.3
+		},
+		{
+			"type":"Hipertension|biologicalMeasurements",
+			"value":0.001
+		},
+		{
+			"type":"Hipertension|medicalCondition",
+			"value":0.3
+		},
+		{
+			"type":"Hipertension",
+			"value":0.301
+		},
+		{
+			"type":"Cardiovascular condition|biologicalMeasurements",
+			"value":0.001
+		},
+		{
+			"type":"Cardiovascular condition|medicalCondition",
+			"value":0.3
+		},
+		{
+			"type":"Cardiovascular condition",
+			"value":0.301
 		},
 		{
 			"type":"digitalAddiction|digitalTimeUsage",
