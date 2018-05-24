@@ -13,7 +13,7 @@ from pprint import pprint
         
 class MultimodalFusion():
     
-    def __init__(self,mainDiagnose=0,stationaryEvents=[],disease_level=0,dailyMotion=[],nightMotion=[],visitsBathroom=[],abnormalEvents=[],freezing=[],festination=[],lossOfBalance=[],fallDown=[],incontinence=[],leavingHouse=[],digitalTime=[],abnormalDigitalEvents=[],insomnia=0,comorbiditesNeurologist=0,comorbiditesUrinary=0,cognitiveFunctions=0,comorbiditesPsychiatrist=0,depression=0,medications=[],medicationName=[],evaluationsExercises=[],evaluationsScore=[],evaluationDates=[],evaluationDateList=[]):
+    def __init__(self,mainDiagnose=0,stationaryEvents=[],disease_level=0,dailyMotion=[],nightMotion=[],visitsBathroom=[],abnormalEvents=[],freezing=[],festination=[],lossOfBalance=[],fallDown=[],incontinence=[],leavingHouse=[],digitalTime=[],abnormalDigitalEvents=[],insomnia=0,comorbiditesNeurologist=0,comorbiditesUrinary=0,cognitiveFunctions=0,comorbiditesPsychiatrist=0,depression=0,hipertension=0,comorbiditesCardiovascular=0,medications=[],medicationName=[],evaluationsExercises=[],evaluationsScore=[],evaluationDates=[],evaluationDateList=[],heart_rate=[],heart_rate_25=[],heart_rate_75=[],heartRateLow=[],heartRateHigh=[],gsr=[]):
         
         self.mainDiagnose = mainDiagnose
         self.stationaryEvents= stationaryEvents      
@@ -28,10 +28,18 @@ class MultimodalFusion():
         self.fallDown = fallDown
         self.incontinence = incontinence
         self.leavingHouse = leavingHouse
+        self.heartRate = heart_rate 
+        self.heartRate_25 = heart_rate_25
+        self.heartRate_75 = heart_rate_75
+        self.heartRateLow = heartRateLow  
+        self.heartRateHigh = heartRateHigh 
+        self.galvanicSkinResponse = gsr
         self.digitalTime = digitalTime
         self.abnormalDigitalEvents = abnormalDigitalEvents    
         self.insomnia = insomnia 
         self.depression = depression
+        self.hipertension = hipertension
+        self.comorbiditesCardiovascular = comorbiditesCardiovascular
         self.comorbiditesNeurologist = comorbiditesNeurologist
         self.comorbiditesUrinary= comorbiditesUrinary
         self.comorbiditesPsychiatrist= comorbiditesPsychiatrist
@@ -54,7 +62,13 @@ class MultimodalFusion():
         nr_visits_bathroom = np.zeros(shape =nrDays)
         nr_leaving_the_house = np.zeros(shape =nrDays)
         nr_night_visits = np.zeros(shape =nrDays)
-        abnormalEvents = np.zeros(shape =nrDays)  
+        abnormalEvents = np.zeros(shape =nrDays)
+        heart_rate = np.zeros(shape =nrDays)
+        heart_rate_25 = np.zeros(shape =nrDays)
+        heart_rate_75 = np.zeros(shape =nrDays)
+        heartRateLow = np.zeros(shape =nrDays)
+        heartRateHigh = np.zeros(shape =nrDays)
+        gsr = np.zeros(shape =nrDays)  
         foundPatientId = 0
         indexAnalysis = 0
         startDate = startDate.strftime('%Y-%m-%d')    
@@ -90,8 +104,32 @@ class MultimodalFusion():
                         slowMov = daily_dict.get('slow_mov',0)  
                         dailyMov = round(fastMov + slowMov,2)        
                         dailyMotion[indexAnalysis] = dailyMov
-                        stationary[indexAnalysis] = stationary_                       
-                                  
+                        stationary[indexAnalysis] = stationary_      
+                    
+                    if('hr' in line.keys()):
+                        hr_dict = line['hr']
+                        heartRate = round(hr_dict.get('50'))   
+                        heartRate_25 = round(hr_dict.get('25'))   
+                        heartRate_75 = round(hr_dict.get('75'))   
+                        heart_rate[indexAnalysis] = heartRate
+                        heart_rate_25[indexAnalysis] = heartRate_25
+                        heart_rate_75[indexAnalysis] = heartRate_75
+                    
+                    if('gsr' in line.keys()):
+                        gsr_dict = line['gsr']
+                        gsrValue = round(gsr_dict.get('50'))                      
+                        gsr[indexAnalysis] = gsrValue
+                           
+                    if('heart_rate_low' in line.keys()):
+                        hrL_dict = line['heart_rate_low']
+                        heartRate_low = round(hrL_dict.get('number'))                                             
+                        heartRateLow[indexAnalysis] = heartRate_low
+                                    
+                    if('heart_rate_high' in line.keys()):
+                        hrH_dict = line['heart_rate_high']
+                        heartRate_high = round(hrH_dict.get('number'))                                             
+                        heartRateHigh[indexAnalysis] = heartRate_low              
+                                    
                     if('as_day_motion' in line.keys()):
            
                         daily_dict = line['as_day_motion']
@@ -271,9 +309,9 @@ class MultimodalFusion():
                             nr_leaving_the_house[indexAnalysis] = line['leave the house'] 
                                                         
                         if('leave_house_confused' in line.keys()):                            
-                            leavingHouseConfused = line['leave_house_confused']                                                                                                                        
-            
-        return foundPatientId, stationary, dailyMotion, freezing_events, festination_events, loss_of_balance_events, fall_down_events, nr_visits_bathroom, nr_leaving_the_house, nr_night_visits, abnormalEvents    
+                            leavingHouseConfused = line['leave_house_confused']                                                                                                                                                    
+             
+        return foundPatientId, stationary, dailyMotion, freezing_events, festination_events, loss_of_balance_events, fall_down_events, nr_visits_bathroom, nr_leaving_the_house, nr_night_visits, abnormalEvents, heart_rate, heart_rate_25, heart_rate_75, heartRateLow, heartRateHigh, gsr    
 
     def parseEHRFile(self,filePath,patientId,nrDays,startDate,currentDate):
 
@@ -1000,6 +1038,76 @@ class MultimodalFusion():
             plt.axis(days_axis)
             plt.xlabel('Number of visits to the bathroom over the investigated days')
             plt.show()
+                
+        #assess the heart rate events for detecting deviations 
+        hr_events = self.heartRate
+        hr_events_25 = self.heartRate_25
+        hr_events_75 = self.heartRate_75
+        maxValue = max(hr_events)
+        if maxValue>0:
+            hr_events_ = hr_events/maxValue
+        else:
+            hr_events_ = hr_events
+            
+        hr_period1 = np.mean(hr_events_[:halfInterval])
+        hr_period2 = np.mean(hr_events_[halfInterval:])
+        
+        percent_hr = hr_period2 - hr_period1
+       
+        if percent_hr > 0.2:
+        
+            line = 'Heart rate, increase of: ' + str(round(percent_hr*100))+ '%; ' + str(hr_events) + "\n"
+                    
+        elif percent_hr < -0.2:
+            line = 'Heart rate, decrease of: ' + str(round(-percent_hr*100)) + '%; ' + str(hr_events) + "\n"
+            
+        else:
+            line = 'Heart rate, no significant deviations; ' + str(hr_events) + "\n"
+        print line                
+        
+        line = '\t\t\"heart_rate\":{\n' + '\t\t\t\"result\":' + str(round(percent_hr*100)) + ',\n' + '\t\t\t\"events_50\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events))+'\n\t\t\t],\n' + '\t\t\t\"events_25\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events_25))+'\n\t\t\t],\n'+ '\t\t\t\"events_75\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events_75))+'\n\t\t\t]\n'+ '\t\t},\n'              
+        outputFile.writelines(line)
+        
+        if(abs(percent_hr)>=0.2):            
+            probabilityHipertension_hr= 0.7*(percent_hr)
+        else:
+            probabilityHipertension_hr = 0.001
+        probabilityHipertension_medicalCondition = 0.3*self.hipertension
+        hipertensionProb = probabilityHipertension_medicalCondition  + probabilityHipertension_hr                        
+        
+        if(abs(percent_hr)>=0.2):            
+            probabilityCardiovascular_hr= 0.7*(percent_hr)
+        else:
+            probabilityCardiovascular_hr = 0.001
+        probabilityCardiovascular_medicalCondition = 0.3*self.comorbiditesCardiovascular
+        cardiovascularProb = probabilityCardiovascular_medicalCondition  + probabilityCardiovascular_hr
+        
+         #assess the heart rate events for detecting deviations 
+        gsr_events = self.galvanicSkinResponse
+        maxValue = max(gsr_events)
+        if maxValue>0:
+            gsr_events_ = gsr_events/maxValue
+        else:
+            gsr_events_ = gsr_events
+            
+        gsr_period1 = np.mean(gsr_events_[:halfInterval])
+        gsr_period2 = np.mean(gsr_events_[halfInterval:])
+        
+        percent_gsr = gsr_period2 - gsr_period1
+       
+        if percent_gsr > 0.2:
+        
+            line = 'Galvanic skin response, increase of: ' + str(round(percent_gsr*100))+ '%; ' + str(gsr_events) + "\n"
+                    
+        elif percent_gsr < -0.2:
+            line = 'Galvanic skin response, decrease of: ' + str(round(-percent_gsr*100)) + '%; ' + str(gsr_events) + "\n"
+            
+        else:
+            line = 'Galvanic skin response, no significant deviations; ' + str(gsr_events) + "\n"
+        print line
+                
+        line = '\t\t\"galvanic skin response\":{\n' + '\t\t\t\"result\":' + str(round(percent_gsr*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,gsr_events))+'\n\t\t\t]\n' + '\t\t},\n'              
+        outputFile.writelines(line)
         
         #assess the deviations in the time spent on digital devices
         time_dit = self.digitalTime
@@ -1218,11 +1326,29 @@ class MultimodalFusion():
         outputFile.writelines(line)    
         
         line = '\t\t{\n\t\t\t\"type\":\"Incontinence|medicalCondition\",\n'+'\t\t\t\"value\":'+str(round( probabilityIncontinence_medicalCondition,3)) + '\n\t\t},\n'
-        outputFile.writelines(line)  
+        outputFile.writelines(line)          
         
         line = '\t\t{\n\t\t\t\"type\":\"Incontinence\",\n'+'\t\t\t\"value\":'+str(round(incontinenceProb,3)) + '\n\t\t},\n'
         outputFile.writelines(line)              
-                      
+             
+        line = '\t\t{\n\t\t\t\"type\":\"Hipertension|biologicalMeasurements\",\n'+'\t\t\t\"value\":'+str(round(probabilityHipertension_hr,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)    
+        
+        line = '\t\t{\n\t\t\t\"type\":\"Hipertension|medicalCondition\",\n'+'\t\t\t\"value\":'+str(round( probabilityHipertension_medicalCondition,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)  
+
+        line = '\t\t{\n\t\t\t\"type\":\"Hipertension\",\n'+'\t\t\t\"value\":'+str(round(hipertensionProb,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)              
+        
+        line = '\t\t{\n\t\t\t\"type\":\"Cardiovascular condition|biologicalMeasurements\",\n'+'\t\t\t\"value\":'+str(round(probabilityCardiovascular_hr,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)    
+        
+        line = '\t\t{\n\t\t\t\"type\":\"Cardiovascular condition|medicalCondition\",\n'+'\t\t\t\"value\":'+str(round(probabilityCardiovascular_medicalCondition,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)  
+
+        line = '\t\t{\n\t\t\t\"type\":\"Cardiovascular condition\",\n'+'\t\t\t\"value\":'+str(round(cardiovascularProb,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)    
+        
         line = '\t\t{\n\t\t\t\"type\":\"digitalAddiction|digitalTimeUsage\",\n'+'\t\t\t\"value\":'+str(round(probabilityDigitalAddiction_timeDit,3)) + '\n\t\t},\n'
         outputFile.writelines(line)            
         
@@ -1459,6 +1585,76 @@ class MultimodalFusion():
     
         line = '\t\t\"leavingHouse\":{\n' + '\t\t\t\"result\":' + str(round(percent_leavingHouse*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,nr_leaving_the_house))+'\n\t\t\t]\n' + '\t\t},\n'              
         outputFile.writelines(line)
+        
+          #assess the heart rate events for detecting deviations 
+        hr_events = self.heartRate
+        hr_events_25 = self.heartRate_25
+        hr_events_75 = self.heartRate_75
+        maxValue = max(hr_events)
+        if maxValue>0:
+            hr_events_ = hr_events/maxValue
+        else:
+            hr_events_ = hr_events
+            
+        hr_period1 = np.mean(hr_events_[:halfInterval])
+        hr_period2 = np.mean(hr_events_[halfInterval:])
+        
+        percent_hr = hr_period2 - hr_period1
+       
+        if percent_hr > 0.2:
+        
+            line = 'Heart rate, increase of: ' + str(round(percent_hr*100))+ '%; ' + str(hr_events) + "\n"
+                    
+        elif percent_hr < -0.2:
+            line = 'Heart rate, decrease of: ' + str(round(-percent_hr*100)) + '%; ' + str(hr_events) + "\n"
+            
+        else:
+            line = 'Heart rate, no significant deviations; ' + str(hr_events) + "\n"
+        print line
+                
+        line = '\t\t\"heart_rate\":{\n' + '\t\t\t\"result\":' + str(round(percent_hr*100)) + ',\n' + '\t\t\t\"events_50\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events))+'\n\t\t\t],\n' + '\t\t\t\"events_25\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events_25))+'\n\t\t\t],\n'+ '\t\t\t\"events_75\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events_75))+'\n\t\t\t]\n'+ '\t\t},\n'              
+        outputFile.writelines(line)
+        
+        if(abs(percent_hr)>=0.2):            
+            probabilityHipertension_hr= 0.7*(percent_hr)
+        else:
+            probabilityHipertension_hr = 0.001
+        probabilityHipertension_medicalCondition = 0.3*self.hipertension
+        hipertensionProb = probabilityHipertension_medicalCondition  + probabilityHipertension_hr                        
+        
+        if(abs(percent_hr)>=0.2):            
+            probabilityCardiovascular_hr= 0.7*(percent_hr)
+        else:
+            probabilityCardiovascular_hr = 0.001
+        probabilityCardiovascular_medicalCondition = 0.3*self.comorbiditesCardiovascular
+        cardiovascularProb = probabilityCardiovascular_medicalCondition  + probabilityCardiovascular_hr
+        
+         #assess the heart rate events for detecting deviations 
+        gsr_events = self.galvanicSkinResponse
+        maxValue = max(gsr_events)
+        if maxValue>0:
+            gsr_events_ = gsr_events/maxValue
+        else:
+            gsr_events_ = gsr_events
+            
+        gsr_period1 = np.mean(gsr_events_[:halfInterval])
+        gsr_period2 = np.mean(gsr_events_[halfInterval:])
+        
+        percent_gsr = gsr_period2 - gsr_period1
+       
+        if percent_gsr > 0.2:
+        
+            line = 'Galvanic skin response, increase of: ' + str(round(percent_gsr*100))+ '%; ' + str(gsr_events) + "\n"
+                    
+        elif percent_gsr < -0.2:
+            line = 'Galvanic skin response, decrease of: ' + str(round(-percent_gsr*100)) + '%; ' + str(gsr_events) + "\n"
+            
+        else:
+            line = 'Galvanic skin response, no significant deviations; ' + str(gsr_events) + "\n"
+        print line
+                
+        line = '\t\t\"galvanic skin response\":{\n' + '\t\t\t\"result\":' + str(round(percent_gsr*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,gsr_events))+'\n\t\t\t]\n' + '\t\t},\n'              
+        outputFile.writelines(line)
     
         #plot a graph of the leaving the house over the investigated days
         showGraph_leaving = 0
@@ -1561,18 +1757,23 @@ class MultimodalFusion():
         comorbiditesNeurologist= self.comorbiditesNeurologist 
         comorbiditesPsychiatrist = self.comorbiditesPsychiatrist
        
+        probabilityComorbiditesNeurologist = comorbiditesNeurologist
+        probabilityComorbiditesPsychiatrist = comorbiditesPsychiatrist            
+            
         if(comorbiditesPsychiatrist&comorbiditesNeurologist):
             probabilityConfusion_abnormalEvents = 0.5*probabilityConfusion_abnormalEvents
-            probConfusion = probabilityConfusion_abnormalEvents + 0.3*comorbiditesNeurologist + 0.3*comorbiditesPsychiatrist
+            probabilityComorbiditesNeurologist = 0.25*comorbiditesNeurologist
+            probabilityComorbiditesPsychiatrist = 0.25*comorbiditesPsychiatrist            
         elif(comorbiditesPsychiatrist):
             probabilityConfusion_abnormalEvents = 0.65*probabilityConfusion_abnormalEvents
-            probConfusion = probabilityConfusion_abnormalEvents + 0.35*comorbiditesPsychiatrist
+            probabilityComorbiditesPsychiatrist = 0.4*comorbiditesPsychiatrist                        
         elif(comorbiditesNeurologist):
             probabilityConfusion_abnormalEvents = 0.65*probabilityConfusion_abnormalEvents
-            probConfusion = probabilityConfusion_abnormalEvents + 0.35*comorbiditesNeurologist 
+            probabilityComorbiditesNeurologist = 0.3*comorbiditesNeurologist            
         else:
-            probabilityConfusion_abnormalEvents = 0.7*probabilityConfusion_abnormalEvents
-            probConfusion = probabilityConfusion_abnormalEvents 
+            probabilityConfusion_abnormalEvents = 0.7*probabilityConfusion_abnormalEvents            
+            
+        probConfusion = probabilityConfusion_abnormalEvents + probabilityComorbiditesNeurologist + probabilityComorbiditesPsychiatrist
                          
         #plot a graph of the confused behaviour over the investigated days
         showGraph_abnormalEvents = 0
@@ -1870,6 +2071,12 @@ class MultimodalFusion():
         line = '\t\t{\n\t\t\t\"type\":\"confusion|abnormalEvents\",\n'+'\t\t\t\"value\":'+str(round(probabilityConfusion_abnormalEvents,3)) + '\n\t\t},\n'
         outputFile.writelines(line)   
         
+        line = '\t\t{\n\t\t\t\"type\":\"confusion|psychiatricComorbidites\",\n'+'\t\t\t\"value\":'+str(round(probabilityComorbiditesPsychiatrist,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)   
+        
+        line = '\t\t{\n\t\t\t\"type\":\"confusion|neurologicComorbidites\",\n'+'\t\t\t\"value\":'+str(round(probabilityComorbiditesNeurologist,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)   
+        
         line = '\t\t{\n\t\t\t\"type\":\"Confusion\",\n'+'\t\t\t\"value\":'+str(round(probConfusion,3)) + '\n\t\t},\n'       
         outputFile.writelines(line)
         
@@ -1885,8 +2092,8 @@ class MultimodalFusion():
         line = '\t\t{\n\t\t\t\"type\":\"Insomnia|medicalCondition\",\n'+'\t\t\t\"value\":'+str(round(probabilityInsomnia_medicalCondition,3)) + '\n\t\t},\n'
         outputFile.writelines(line)
         
-        line = '\t\t{\n\t\t\t\"type\":\"sleepDisorders\",\n'+'\t\t\t\"value\":'+str(round(insomniaProb,3)) + '\n\t\t},\n'
-        outputFile.writelines(line)
+        line = '\t\t{\n\t\t\t\"type\":\"Insomnia\",\n'+'\t\t\t\"value\":'+str(round(insomniaProb,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)        
         
         line = '\t\t{\n\t\t\t\"type\":\"Incontinence|visitsBathroom\",\n'+'\t\t\t\"value\":'+str(round(probabilityIncontinence_visitsBathroom,3)) + '\n\t\t},\n'
         outputFile.writelines(line)    
@@ -1896,6 +2103,24 @@ class MultimodalFusion():
         
         line = '\t\t{\n\t\t\t\"type\":\"Incontinence\",\n'+'\t\t\t\"value\":'+str(round(incontinenceProb,3)) + '\n\t\t},\n'
         outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"Hipertension|biologicalMeasurements\",\n'+'\t\t\t\"value\":'+str(round(probabilityHipertension_hr,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)    
+        
+        line = '\t\t{\n\t\t\t\"type\":\"Hipertension|medicalCondition\",\n'+'\t\t\t\"value\":'+str(round( probabilityHipertension_medicalCondition,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)  
+
+        line = '\t\t{\n\t\t\t\"type\":\"Hipertension\",\n'+'\t\t\t\"value\":'+str(round(hipertensionProb,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)              
+        
+        line = '\t\t{\n\t\t\t\"type\":\"Cardiovascular condition|biologicalMeasurements\",\n'+'\t\t\t\"value\":'+str(round(probabilityCardiovascular_hr,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)    
+        
+        line = '\t\t{\n\t\t\t\"type\":\"Cardiovascular condition|medicalCondition\",\n'+'\t\t\t\"value\":'+str(round(probabilityCardiovascular_medicalCondition,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)  
+
+        line = '\t\t{\n\t\t\t\"type\":\"Cardiovascular condition\",\n'+'\t\t\t\"value\":'+str(round(cardiovascularProb,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)  
         
         line = '\t\t{\n\t\t\t\"type\":\"digitalAddiction|digitalTimeUsage\",\n'+'\t\t\t\"value\":'+str(round(probabilityDigitalAddiction_timeDit,3)) + '\n\t\t},\n'
         outputFile.writelines(line)            
@@ -2003,6 +2228,8 @@ class MultimodalFusion():
             self.comorbiditesNeurologist = comorbiditesNeurologist
             self.comorbiditesUrinary= comorbiditesUrinary
             self.comorbiditesPsychiatrist= comorbiditesPsychiatrist
+            self.comorbiditesCardiovascular = comorbiditesCardiovascular       
+            self.hipertension = hipertension
             self.cognitiveFunctions = cognitiveFunctions
             self.medications = medications
             self.medicationName = medicationName
@@ -2062,9 +2289,13 @@ class MultimodalFusion():
             fall_down_events = np.zeros(shape= (investigatedPeriodinDays))
             abnormalEvents = np.zeros(shape= (investigatedPeriodinDays))
             nr_night_visits = np.zeros(shape= (investigatedPeriodinDays))
+            heart_rate = np.zeros (shape= (investigatedPeriodinDays))
+            heartRateLow = np.zeros (shape= (investigatedPeriodinDays))
+            heartRateHigh = np.zeros (shape= (investigatedPeriodinDays))
+            gsr = np.zeros (shape= (investigatedPeriodinDays))
             #movement_evolution_events = np.zeros(shape= (investigatedPeriodinDays))                  
                      
-            foundPatientId, stationary, dailyMotion, freezing_events, festination_events, loss_of_balance_events, fall_down_events, nr_visits_bathroom, nr_leaving_the_house, nr_night_visits, abnormalEvents = self.parseHETRAFile(inputFileHETRA,patientId,startDate,investigatedPeriodinDays)                                                                                                    
+            foundPatientId, stationary, dailyMotion, freezing_events, festination_events, loss_of_balance_events, fall_down_events, nr_visits_bathroom, nr_leaving_the_house, nr_night_visits, abnormalEvents, heart_rate, heart_rate_25, heart_rate_75, heartRateLow, heartRateHigh, gsr = self.parseHETRAFile(inputFileHETRA,patientId,startDate,investigatedPeriodinDays)                                                                                                    
         
             if(foundPatientId>0):
                 self.stationaryEvents = stationary
@@ -2079,6 +2310,12 @@ class MultimodalFusion():
                 self.leavingHouse = nr_leaving_the_house
                 self.digitalTime = time_dit
                 self.abnormalDigitalEvents = nr_abnormal_dit_behaviours
+                self.heartRate = heart_rate #the Q2 value is considered
+                self.heartRate_25 = heart_rate_25 #the Q1 value is considered
+                self.heartRate_75 = heart_rate_75 #the Q3 value is considered
+                self.heartRateLow = heartRateLow  # the number of events is considered              
+                self.heartRateHigh = heartRateHigh # the number of events is considered              
+                self.galvanicSkinResponse = gsr #the Q2 value is considered
         
                 #Different sets of functionalities are evaluated in the case of Parkinson's or Alzheimer's disease
                 if (self.mainDiagnose==1):
