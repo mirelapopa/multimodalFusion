@@ -13,7 +13,7 @@ from pprint import pprint
         
 class MultimodalFusion():
     
-    def __init__(self,mainDiagnose=0,stationaryEvents=[],disease_level=0,dailyMotion=[],nightMotion=[],visitsBathroom=[],abnormalEvents=[],freezing=[],festination=[],lossOfBalance=[],fallDown=[],incontinence=[],leavingHouse=[],digitalTime=[],abnormalDigitalEvents=[],insomnia=0,comorbiditesNeurologist=0,comorbiditesUrinary=0,cognitiveFunctions=0,comorbiditesPsychiatrist=0,depression=0,hipertension=0,comorbiditesCardiovascular=0,medications=[],medicationName=[],evaluationsExercises=[],evaluationsScore=[],evaluationDates=[],evaluationDateList=[],heart_rate=[],heart_rate_25=[],heart_rate_75=[],heartRateLow=[],heartRateHigh=[],gsr=[]):
+    def __init__(self,mainDiagnose=0,stationaryEvents=[],disease_level=0,dailyMotion=[],nightMotion=[],visitsBathroom=[],abnormalEvents=[],freezing=[],festination=[],lossOfBalance=[],fallDown=[],incontinence=[],leavingHouse=[],digitalTime=[],abnormalDigitalEvents=[],insomnia=0,comorbiditesNeurologist=0,comorbiditesUrinary=0,cognitiveFunctions=0,comorbiditesPsychiatrist=0,depression=0,hipertension=0,comorbiditesCardiovascular=0,medications=[],medicationName=[],evaluationsExercises=[],evaluationsScore=[],evaluationDates=[],evaluationDateList=[],heart_rate_min=[],heart_rate_max=[],heart_rate_mean=[],heart_rate_median=[],heart_rate_mode=[],heart_rate_skewness=[],heart_rate_kurtosis=[],heartRateLow=[],heartRateHigh=[],gsr_min=[],gsr_max=[],gsr_mean=[],gsr_median=[],gsr_mode=[],gsr_skewness=[],gsr_kurtosis=[]):
         
         self.mainDiagnose = mainDiagnose
         self.stationaryEvents= stationaryEvents      
@@ -28,12 +28,22 @@ class MultimodalFusion():
         self.fallDown = fallDown
         self.incontinence = incontinence
         self.leavingHouse = leavingHouse
-        self.heartRate = heart_rate 
-        self.heartRate_25 = heart_rate_25
-        self.heartRate_75 = heart_rate_75
+        self.heartRate_min = heart_rate_min
+        self.heartRate_max = heart_rate_max
+        self.heartRate_mean = heart_rate_mean
+        self.heartRate_median = heart_rate_median
+        self.heartRate_mode = heart_rate_mode
+        self.heartRate_skewness = heart_rate_skewness
+        self.heartRate_kurtosis = heart_rate_kurtosis
         self.heartRateLow = heartRateLow  
         self.heartRateHigh = heartRateHigh 
-        self.galvanicSkinResponse = gsr
+        self.galvanicSkinResponse_min = gsr_min
+        self.galvanicSkinResponse_max = gsr_max
+        self.galvanicSkinResponse_mean = gsr_mean
+        self.galvanicSkinResponse_median = gsr_median
+        self.galvanicSkinResponse_mode = gsr_mode
+        self.galvanicSkinResponse_skewness = gsr_skewness
+        self.galvanicSkinResponse_kurtosis = gsr_kurtosis
         self.digitalTime = digitalTime
         self.abnormalDigitalEvents = abnormalDigitalEvents    
         self.insomnia = insomnia 
@@ -63,12 +73,25 @@ class MultimodalFusion():
         nr_leaving_the_house = np.zeros(shape =nrDays)
         nr_night_visits = np.zeros(shape =nrDays)
         abnormalEvents = np.zeros(shape =nrDays)
-        heart_rate = np.zeros(shape =nrDays)
-        heart_rate_25 = np.zeros(shape =nrDays)
-        heart_rate_75 = np.zeros(shape =nrDays)
-        heartRateLow = np.zeros(shape =nrDays)
-        heartRateHigh = np.zeros(shape =nrDays)
-        gsr = np.zeros(shape =nrDays)  
+        
+        heart_rate_min = np.zeros (shape= (investigatedPeriodinDays))
+        heart_rate_max = np.zeros (shape= (investigatedPeriodinDays))
+        heart_rate_mean = np.zeros (shape= (investigatedPeriodinDays))
+        heart_rate_median = np.zeros (shape= (investigatedPeriodinDays))
+        heart_rate_mode = np.zeros (shape= (investigatedPeriodinDays))
+        heart_rate_skewness = np.zeros (shape= (investigatedPeriodinDays))
+        heart_rate_kurtosis = np.zeros (shape= (investigatedPeriodinDays))
+        heartRateLow = np.zeros (shape= (investigatedPeriodinDays))
+        heartRateHigh = np.zeros (shape= (investigatedPeriodinDays))
+        
+        gsr_min = np.zeros (shape= (investigatedPeriodinDays))
+        gsr_max = np.zeros (shape= (investigatedPeriodinDays))
+        gsr_mean = np.zeros (shape= (investigatedPeriodinDays))
+        gsr_median = np.zeros (shape= (investigatedPeriodinDays))
+        gsr_mode = np.zeros (shape= (investigatedPeriodinDays))
+        gsr_skewness = np.zeros (shape= (investigatedPeriodinDays))
+        gsr_kurtosis = np.zeros (shape= (investigatedPeriodinDays))
+        
         foundPatientId = 0
         indexAnalysis = 0
         startDate = startDate.strftime('%Y-%m-%d')    
@@ -108,17 +131,23 @@ class MultimodalFusion():
                     
                     if('hr' in line.keys()):
                         hr_dict = line['hr']
-                        heartRate = round(hr_dict.get('50'))   
-                        heartRate_25 = round(hr_dict.get('25'))   
-                        heartRate_75 = round(hr_dict.get('75'))   
-                        heart_rate[indexAnalysis] = heartRate
-                        heart_rate_25[indexAnalysis] = heartRate_25
-                        heart_rate_75[indexAnalysis] = heartRate_75
+                        heart_rate_min[indexAnalysis] = round(hr_dict.get('min'))   
+                        heart_rate_max[indexAnalysis] = round(hr_dict.get('max'))   
+                        heart_rate_mean[indexAnalysis] = round(hr_dict.get('mean'))   
+                        heart_rate_median[indexAnalysis] = round(hr_dict.get('median'))   
+                        heart_rate_mode[indexAnalysis] = round(hr_dict.get('mode'))   
+                        heart_rate_skewness[indexAnalysis] = round(hr_dict.get('skew'))   
+                        heart_rate_kurtosis[indexAnalysis] = round(hr_dict.get('kurtosis'))   
                     
                     if('gsr' in line.keys()):
-                        gsr_dict = line['gsr']
-                        gsrValue = round(gsr_dict.get('50'))                      
-                        gsr[indexAnalysis] = gsrValue
+                        gsr_dict = line['gsr']                        
+                        gsr_min[indexAnalysis] = round(gsr_dict.get('min'))                      
+                        gsr_max[indexAnalysis] = round(gsr_dict.get('max'))
+                        gsr_mean[indexAnalysis] = round(gsr_dict.get('mean'))
+                        gsr_median[indexAnalysis] = round(gsr_dict.get('median'))
+                        gsr_mode[indexAnalysis] = round(gsr_dict.get('mode'))
+                        gsr_skewness[indexAnalysis] = round(gsr_dict.get('skew'))
+                        gsr_kurtosis[indexAnalysis] = round(gsr_dict.get('kurtosis'))
                            
                     if('heart_rate_low' in line.keys()):
                         hrL_dict = line['heart_rate_low']
@@ -311,7 +340,7 @@ class MultimodalFusion():
                         if('leave_house_confused' in line.keys()):                            
                             leavingHouseConfused = line['leave_house_confused']                                                                                                                                                    
              
-        return foundPatientId, stationary, dailyMotion, freezing_events, festination_events, loss_of_balance_events, fall_down_events, nr_visits_bathroom, nr_leaving_the_house, nr_night_visits, abnormalEvents, heart_rate, heart_rate_25, heart_rate_75, heartRateLow, heartRateHigh, gsr    
+        return foundPatientId, stationary, dailyMotion, freezing_events, festination_events, loss_of_balance_events, fall_down_events, nr_visits_bathroom, nr_leaving_the_house, nr_night_visits, abnormalEvents, heart_rate_min, heart_rate_max, heart_rate_mean, heart_rate_median, heart_rate_mode, heart_rate_skewness, heart_rate_kurtosis, heartRateLow, heartRateHigh, gsr_min, gsr_max, gsr_mean, gsr_median, gsr_mode, gsr_skewness, gsr_kurtosis    
 
     def parseEHRFile(self,filePath,patientId,nrDays,startDate,currentDate):
 
@@ -1040,9 +1069,13 @@ class MultimodalFusion():
             plt.show()
                 
         #assess the heart rate events for detecting deviations 
-        hr_events = self.heartRate
-        hr_events_25 = self.heartRate_25
-        hr_events_75 = self.heartRate_75
+        hr_events = self.heartRate_mean
+        hr_events_min = self.heartRate_min
+        hr_events_max = self.heartRate_max
+        hr_events_median = self.heartRate_median
+        hr_events_mode = self.heartRate_mode
+        hr_events_skewness = self.heartRate_skewness
+        hr_events_kurtosis = self.heartRate_kurtosis
         maxValue = max(hr_events)
         if maxValue>0:
             hr_events_ = hr_events/maxValue
@@ -1065,7 +1098,17 @@ class MultimodalFusion():
             line = 'Heart rate, no significant deviations; ' + str(hr_events) + "\n"
         print line                
         
-        line = '\t\t\"heart_rate\":{\n' + '\t\t\t\"result\":' + str(round(percent_hr*100)) + ',\n' + '\t\t\t\"events_50\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events))+'\n\t\t\t],\n' + '\t\t\t\"events_25\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events_25))+'\n\t\t\t],\n'+ '\t\t\t\"events_75\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events_75))+'\n\t\t\t]\n'+ '\t\t},\n'              
+        line = '\t\t\"heart_rate\":{\n' 
+        outputFile.writelines(line)
+        line='\t\t\t\"result\":' + str(round(percent_hr*100)) + ',\n' 
+        line = line + '\t\t\t\"meanHeartRate\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events))+'\n\t\t\t],\n' 
+        line = line + '\t\t\t\"minHeartRate\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events_min))+'\n\t\t\t],\n'
+        line = line + '\t\t\t\"maxHeartRate\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events_max))+'\n\t\t\t],\n'
+        line = line + '\t\t\t\"medianHeartRate\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events_median))+'\n\t\t\t],\n'
+        line = line + '\t\t\t\"modeHeartRate\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events_mode))+'\n\t\t\t],\n'
+        line = line + '\t\t\t\"skewnessHeartRate\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events_skewness))+'\n\t\t\t],\n'
+        line = line + '\t\t\t\"kurtosisHeartRate\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events_kurtosis))+'\n\t\t\t],\n'                                             
+        line = line + '\t\t},\n'              
         outputFile.writelines(line)
         
         if(abs(percent_hr)>=0.2):            
@@ -1083,7 +1126,14 @@ class MultimodalFusion():
         cardiovascularProb = probabilityCardiovascular_medicalCondition  + probabilityCardiovascular_hr
         
          #assess the heart rate events for detecting deviations 
-        gsr_events = self.galvanicSkinResponse
+        gsr_events = self.galvanicSkinResponse_mean
+        gsr_min = self.galvanicSkinResponse_min
+        gsr_max = self.galvanicSkinResponse_max
+        gsr_median = self.galvanicSkinResponse_median
+        gsr_mode = self.galvanicSkinResponse_mode
+        gsr_skewness = self.galvanicSkinResponse_skewness
+        gsr_kurtosis = self.galvanicSkinResponse_kurtosis
+        
         maxValue = max(gsr_events)
         if maxValue>0:
             gsr_events_ = gsr_events/maxValue
@@ -1104,9 +1154,19 @@ class MultimodalFusion():
             
         else:
             line = 'Galvanic skin response, no significant deviations; ' + str(gsr_events) + "\n"
-        print line
-                
-        line = '\t\t\"galvanic skin response\":{\n' + '\t\t\t\"result\":' + str(round(percent_gsr*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,gsr_events))+'\n\t\t\t]\n' + '\t\t},\n'              
+        print line                     
+        
+        line = '\t\t\"galvanic skin response\":{\n' 
+        outputFile.writelines(line)
+        line='\t\t\t\"result\":' + str(round(percent_gsr*100)) + ',\n' 
+        line = line + '\t\t\t\"meanGSR\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,gsr_events))+'\n\t\t\t],\n' 
+        line = line + '\t\t\t\"minGSR\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,gsr_min))+'\n\t\t\t],\n'
+        line = line + '\t\t\t\"maxGSR\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,gsr_max))+'\n\t\t\t],\n'
+        line = line + '\t\t\t\"medianGSR\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,gsr_median))+'\n\t\t\t],\n'
+        line = line + '\t\t\t\"modeGSR\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,gsr_mode))+'\n\t\t\t],\n'
+        line = line + '\t\t\t\"skewnessGSR\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,gsr_skewness))+'\n\t\t\t],\n'
+        line = line + '\t\t\t\"kurtosisGSR\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,gsr_kurtosis))+'\n\t\t\t],\n'                                             
+        line = line + '\t\t},\n'              
         outputFile.writelines(line)
         
         #assess the deviations in the time spent on digital devices
@@ -1586,10 +1646,14 @@ class MultimodalFusion():
         line = '\t\t\"leavingHouse\":{\n' + '\t\t\t\"result\":' + str(round(percent_leavingHouse*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,nr_leaving_the_house))+'\n\t\t\t]\n' + '\t\t},\n'              
         outputFile.writelines(line)
         
-          #assess the heart rate events for detecting deviations 
-        hr_events = self.heartRate
-        hr_events_25 = self.heartRate_25
-        hr_events_75 = self.heartRate_75
+        #assess the heart rate events for detecting deviations 
+        hr_events = self.heartRate_mean
+        hr_events_min = self.heartRate_min
+        hr_events_max = self.heartRate_max
+        hr_events_median = self.heartRate_median
+        hr_events_mode = self.heartRate_mode
+        hr_events_skewness = self.heartRate_skewness
+        hr_events_kurtosis = self.heartRate_kurtosis
         maxValue = max(hr_events)
         if maxValue>0:
             hr_events_ = hr_events/maxValue
@@ -1610,9 +1674,19 @@ class MultimodalFusion():
             
         else:
             line = 'Heart rate, no significant deviations; ' + str(hr_events) + "\n"
-        print line
-                
-        line = '\t\t\"heart_rate\":{\n' + '\t\t\t\"result\":' + str(round(percent_hr*100)) + ',\n' + '\t\t\t\"events_50\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events))+'\n\t\t\t],\n' + '\t\t\t\"events_25\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events_25))+'\n\t\t\t],\n'+ '\t\t\t\"events_75\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events_75))+'\n\t\t\t]\n'+ '\t\t},\n'              
+        print line                
+        
+        line = '\t\t\"heart_rate\":{\n' 
+        outputFile.writelines(line)
+        line='\t\t\t\"result\":' + str(round(percent_hr*100)) + ',\n' 
+        line = line + '\t\t\t\"meanHeartRate\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events))+'\n\t\t\t],\n' 
+        line = line + '\t\t\t\"minHeartRate\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events_min))+'\n\t\t\t],\n'
+        line = line + '\t\t\t\"maxHeartRate\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events_max))+'\n\t\t\t],\n'
+        line = line + '\t\t\t\"medianHeartRate\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events_median))+'\n\t\t\t],\n'
+        line = line + '\t\t\t\"modeHeartRate\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events_mode))+'\n\t\t\t],\n'
+        line = line + '\t\t\t\"skewnessHeartRate\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events_skewness))+'\n\t\t\t],\n'
+        line = line + '\t\t\t\"kurtosisHeartRate\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events_kurtosis))+'\n\t\t\t],\n'                                             
+        line = line + '\t\t},\n'              
         outputFile.writelines(line)
         
         if(abs(percent_hr)>=0.2):            
@@ -1630,7 +1704,14 @@ class MultimodalFusion():
         cardiovascularProb = probabilityCardiovascular_medicalCondition  + probabilityCardiovascular_hr
         
          #assess the heart rate events for detecting deviations 
-        gsr_events = self.galvanicSkinResponse
+        gsr_events = self.galvanicSkinResponse_mean
+        gsr_min = self.galvanicSkinResponse_min
+        gsr_max = self.galvanicSkinResponse_max
+        gsr_median = self.galvanicSkinResponse_median
+        gsr_mode = self.galvanicSkinResponse_mode
+        gsr_skewness = self.galvanicSkinResponse_skewness
+        gsr_kurtosis = self.galvanicSkinResponse_kurtosis
+        
         maxValue = max(gsr_events)
         if maxValue>0:
             gsr_events_ = gsr_events/maxValue
@@ -1651,11 +1732,21 @@ class MultimodalFusion():
             
         else:
             line = 'Galvanic skin response, no significant deviations; ' + str(gsr_events) + "\n"
-        print line
-                
-        line = '\t\t\"galvanic skin response\":{\n' + '\t\t\t\"result\":' + str(round(percent_gsr*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,gsr_events))+'\n\t\t\t]\n' + '\t\t},\n'              
+        print line                     
+        
+        line = '\t\t\"galvanic skin response\":{\n' 
         outputFile.writelines(line)
-    
+        line='\t\t\t\"result\":' + str(round(percent_gsr*100)) + ',\n' 
+        line = line + '\t\t\t\"meanGSR\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,gsr_events))+'\n\t\t\t],\n' 
+        line = line + '\t\t\t\"minGSR\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,gsr_min))+'\n\t\t\t],\n'
+        line = line + '\t\t\t\"maxGSR\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,gsr_max))+'\n\t\t\t],\n'
+        line = line + '\t\t\t\"medianGSR\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,gsr_median))+'\n\t\t\t],\n'
+        line = line + '\t\t\t\"modeGSR\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,gsr_mode))+'\n\t\t\t],\n'
+        line = line + '\t\t\t\"skewnessGSR\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,gsr_skewness))+'\n\t\t\t],\n'
+        line = line + '\t\t\t\"kurtosisGSR\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,gsr_kurtosis))+'\n\t\t\t],\n'                                             
+        line = line + '\t\t},\n'              
+        outputFile.writelines(line)     
+                       
         #plot a graph of the leaving the house over the investigated days
         showGraph_leaving = 0
         if showGraph_leaving:
@@ -2289,13 +2380,28 @@ class MultimodalFusion():
             fall_down_events = np.zeros(shape= (investigatedPeriodinDays))
             abnormalEvents = np.zeros(shape= (investigatedPeriodinDays))
             nr_night_visits = np.zeros(shape= (investigatedPeriodinDays))
-            heart_rate = np.zeros (shape= (investigatedPeriodinDays))
+            
+            heart_rate_min = np.zeros (shape= (investigatedPeriodinDays))
+            heart_rate_max = np.zeros (shape= (investigatedPeriodinDays))
+            heart_rate_mean = np.zeros (shape= (investigatedPeriodinDays))
+            heart_rate_median = np.zeros (shape= (investigatedPeriodinDays))
+            heart_rate_mode = np.zeros (shape= (investigatedPeriodinDays))
+            heart_rate_skewness = np.zeros (shape= (investigatedPeriodinDays))
+            heart_rate_kurtosis = np.zeros (shape= (investigatedPeriodinDays))
+            
             heartRateLow = np.zeros (shape= (investigatedPeriodinDays))
             heartRateHigh = np.zeros (shape= (investigatedPeriodinDays))
-            gsr = np.zeros (shape= (investigatedPeriodinDays))
+            
+            gsr_min = np.zeros (shape= (investigatedPeriodinDays))
+            gsr_max = np.zeros (shape= (investigatedPeriodinDays))
+            gsr_mean = np.zeros (shape= (investigatedPeriodinDays))
+            gsr_median = np.zeros (shape= (investigatedPeriodinDays))
+            gsr_mode = np.zeros (shape= (investigatedPeriodinDays))
+            gsr_skewness = np.zeros (shape= (investigatedPeriodinDays))
+            gsr_kurtosis = np.zeros (shape= (investigatedPeriodinDays))
             #movement_evolution_events = np.zeros(shape= (investigatedPeriodinDays))                  
                      
-            foundPatientId, stationary, dailyMotion, freezing_events, festination_events, loss_of_balance_events, fall_down_events, nr_visits_bathroom, nr_leaving_the_house, nr_night_visits, abnormalEvents, heart_rate, heart_rate_25, heart_rate_75, heartRateLow, heartRateHigh, gsr = self.parseHETRAFile(inputFileHETRA,patientId,startDate,investigatedPeriodinDays)                                                                                                    
+            foundPatientId, stationary, dailyMotion, freezing_events, festination_events, loss_of_balance_events, fall_down_events, nr_visits_bathroom, nr_leaving_the_house, nr_night_visits, abnormalEvents, heart_rate_min, heart_rate_max, heart_rate_mean, heart_rate_mode, heart_rate_median, heart_rate_kurtosis, heart_rate_skewness, heartRateLow, heartRateHigh, gsr_min, gsr_max, gsr_mean, gsr_mode, gsr_median, gsr_kurtosis, gsr_skewness  = self.parseHETRAFile(inputFileHETRA,patientId,startDate,investigatedPeriodinDays)                                                                                                    
         
             if(foundPatientId>0):
                 self.stationaryEvents = stationary
@@ -2310,12 +2416,22 @@ class MultimodalFusion():
                 self.leavingHouse = nr_leaving_the_house
                 self.digitalTime = time_dit
                 self.abnormalDigitalEvents = nr_abnormal_dit_behaviours
-                self.heartRate = heart_rate #the Q2 value is considered
-                self.heartRate_25 = heart_rate_25 #the Q1 value is considered
-                self.heartRate_75 = heart_rate_75 #the Q3 value is considered
+                self.heartRate_mean = heart_rate_mean 
+                self.heartRate_min = heart_rate_min 
+                self.heartRate_max = heart_rate_max
+                self.heartRate_median = heart_rate_median
+                self.heartRate_mode = heart_rate_mode
+                self.heartRate_skewness = heart_rate_skewness
+                self.heartRate_kurtosis= heart_rate_kurtosis
                 self.heartRateLow = heartRateLow  # the number of events is considered              
                 self.heartRateHigh = heartRateHigh # the number of events is considered              
-                self.galvanicSkinResponse = gsr #the Q2 value is considered
+                self.galvanicSkinResponse_mean = gsr_mean
+                self.galvanicSkinResponse_min = gsr_min
+                self.galvanicSkinResponse_max = gsr_max
+                self.galvanicSkinResponse_mode = gsr_mode
+                self.galvanicSkinResponse_median = gsr_median
+                self.galvanicSkinResponse_skewness = gsr_skewness
+                self.galvanicSkinResponse_kurtosis = gsr_kurtosis
         
                 #Different sets of functionalities are evaluated in the case of Parkinson's or Alzheimer's disease
                 if (self.mainDiagnose==1):
@@ -2400,3 +2516,4 @@ if __name__ == '__main__':
         
     else:
         print 'not all input files are received, analysis is postponed'
+        
