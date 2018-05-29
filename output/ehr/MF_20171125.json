@@ -48,6 +48,180 @@
 				1.0
 			]
 		},
+		"heart_rate":{
+			"result":0.0,
+			"meanHeartRate":[
+				91.0,
+				89.0,
+				92.0,
+				94.0,
+				93.0,
+				87.0,
+				95.0,
+				90.0,
+				95.0,
+				92.0
+			],
+			"minHeartRate":[
+				68.0,
+				68.0,
+				68.0,
+				68.0,
+				68.0,
+				68.0,
+				68.0,
+				68.0,
+				68.0,
+				68.0
+			],
+			"maxHeartRate":[
+				150.0,
+				150.0,
+				150.0,
+				150.0,
+				150.0,
+				150.0,
+				150.0,
+				150.0,
+				150.0,
+				150.0
+			],
+			"medianHeartRate":[
+				80.0,
+				80.0,
+				80.0,
+				80.0,
+				80.0,
+				80.0,
+				80.0,
+				80.0,
+				80.0,
+				80.0
+			],
+			"modeHeartRate":[
+				87.0,
+				87.0,
+				87.0,
+				87.0,
+				87.0,
+				87.0,
+				87.0,
+				87.0,
+				87.0,
+				87.0
+			],
+			"skewnessHeartRate":[
+				3.0,
+				3.0,
+				3.0,
+				3.0,
+				3.0,
+				3.0,
+				3.0,
+				3.0,
+				3.0,
+				3.0
+			],
+			"kurtosisHeartRate":[
+				2.0,
+				2.0,
+				2.0,
+				2.0,
+				2.0,
+				2.0,
+				2.0,
+				2.0,
+				2.0,
+				2.0
+			],
+		},
+		"galvanic skin response":{
+			"result":0.0,
+			"meanGSR":[
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"minGSR":[
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"maxGSR":[
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"medianGSR":[
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"modeGSR":[
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"skewnessGSR":[
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+			"kurtosisGSR":[
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			],
+		},
 		"nightMotion":{
 			"result":-10.0,
 			"events":[
@@ -64,34 +238,19 @@
 			]
 		},
 		"insomnia":1,
-		"freezing":{
+		"abnormalEvents":{
 			"result":0.0,
 			"events":[
-				3.0,
-				3.0,
-				3.0,
-				3.0,
-				3.0,
-				3.0,
-				3.0,
-				3.0,
-				3.0,
-				3.0
-			]
-		},
-		"festination":{
-			"result":0.0,
-			"events":[
-				3.0,
-				3.0,
-				3.0,
-				3.0,
-				3.0,
-				3.0,
-				3.0,
-				3.0,
-				3.0,
-				3.0
+				1.0,
+				1.0,
+				1.0,
+				1.0,
+				1.0,
+				1.0,
+				1.0,
+				1.0,
+				1.0,
+				1.0
 			]
 		},
 		"fallDown":{
@@ -140,60 +299,6 @@
 			]
 		},
 		"incontinence":1, 
-		"heart_rate":{
-			"result":-2.0,
-			"events_50":[
-				94.0,
-				90.0,
-				92.0,
-				95.0,
-				92.0,
-				93.0,
-				90.0,
-				90.0,
-				90.0,
-				90.0
-			],
-			"events_25":[
-				83.0,
-				78.0,
-				82.0,
-				85.0,
-				83.0,
-				68.0,
-				78.0,
-				78.0,
-				78.0,
-				76.0
-			],
-			"events_75":[
-				116.0,
-				110.0,
-				115.0,
-				116.0,
-				110.0,
-				115.0,
-				110.0,
-				110.0,
-				110.0,
-				100.0
-			]
-		},
-		"galvanic skin response":{
-			"result":0.0,
-			"events":[
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0
-			]
-		},
 		"digitalTimeSpent":{
 			"result":0.0,
 			"events":[
@@ -224,38 +329,23 @@
 				0.0
 			]
 		},
-		"medication":[
-		{
-			"name":Levodopa,
-			"changes":[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-		},
-		{
-			"name":Anticholinergic,
-			"changes":[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0]
-		}
-		],
-		"movementEvaluations":[
-		{
-			"date":2008-02-29,
-			"totalScore":30.0625,
-			"partScores":[3.0, 3.0, 9.5, 3.0, 3.0, 2.0, 6.5625]
-		},
-		{
-			"date":2008-09-12,
-			"totalScore":38.375,
-			"partScores":[4.0, 3.0, 19.0, 2.0, 4.0, 0.0, 6.375]
-		},
-		{
-			"date":2017-11-24,
-			"totalScore":27.3125,
-			"partScores":[4.0, 3.0, 10.5, 2.0, 2.5, 0.0, 5.3125]
-		},
-		{
-			"totalScoreDeviation":-0.168,
-			"partsDeviation":[0.0, 0.0, -0.29, 0.0, -0.23, 0.0, -0.09]
-		}
-		],
 		"probabilities":[
+		{
+			"type":"confusion|abnormalEvents",
+			"value":0.0
+		},
+		{
+			"type":"confusion|psychiatricComorbidites",
+			"value":0.25
+		},
+		{
+			"type":"confusion|neurologicComorbidites",
+			"value":0.25
+		},
+		{
+			"type":"Confusion",
+			"value":0.5
+		},
 		{
 			"type":"Insomnia|nightMotion",
 			"value":0.0
@@ -273,7 +363,7 @@
 			"value":0.3
 		},
 		{
-			"type":"sleepDisorders",
+			"type":"Insomnia",
 			"value":0.3
 		},
 		{
@@ -281,7 +371,7 @@
 			"value":0.0
 		},
 		{
-			"type":"Incontinence|medicalCondition",
+			"type":"Incontinence|nedicalCondition",
 			"value":0.3
 		},
 		{
@@ -353,28 +443,32 @@
 			"value":0.002
 		},
 		{
-			"type":"ParkinsonsEvents|freezing",
+			"type":"MovementIssues|fallDown",
 			"value":0.0
 		},
 		{
-			"type":"ParkinsonsEvents|festination",
+			"type":"MovementIssues|lossOfBalance",
 			"value":0.0
 		},
 		{
-			"type":"ParkinsonsEvents|fallDown",
+			"type":"MovementIssues|stationaryBehaviour",
 			"value":0.0
 		},
 		{
-			"type":"ParkinsonsEvents|lossOfBalance",
-			"value":0.0
+			"type":"MovementIssues|dailyMotion",
+			"value":0.001
 		},
 		{
-			"type":"ParkinsonsEvents|medicationChange",
-			"value":0.01
+			"type":"MovementIssues|leavingHouse",
+			"value":0.001
 		},
 		{
-			"type":"ParkinsonsEvents",
-			"value":0.0
+			"type":"MovementIssues",
+			"value":0.002
+		},
+		{
+			"type":"ImprovedBehaviour|confusedBehaviours",
+			"value":0.001
 		},
 		{
 			"type":"ImprovedBehaviour|stationary",
@@ -397,14 +491,6 @@
 			"value":0.001
 		},
 		{
-			"type":"ImprovedBehaviour|festination",
-			"value":0.001
-		},
-		{
-			"type":"ImprovedBehaviour|freezing",
-			"value":0.001
-		},
-		{
 			"type":"ImprovedBehaviour|lossOfBalance",
 			"value":0.001
 		},
@@ -413,17 +499,9 @@
 			"value":0.001
 		},
 		{
-			"type":"ImprovedBehaviour|movementEvolution",
-			"value":0.01
-		},
-		{
 			"type":"ImprovedBehaviour",
-			"value":0.036
+			"value":0.025
 		}
-		{
-			"type":"ImprovedBehaviour|medicationChange",
-			"value":0.01
-		},
 		]
 	}
 ]
