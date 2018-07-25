@@ -13,56 +13,57 @@ from pprint import pprint
         
 class MultimodalFusion():
     
-    def __init__(self,mainDiagnose=0,stationaryEvents=[],disease_level=0,dailyMotion=[],nightMotion=[],visitsBathroom=[],abnormalEvents=[],freezing=[],festination=[],lossOfBalance=[],fallDown=[],incontinence=[],leavingHouse=[],digitalTime=[],abnormalDigitalEvents=[],insomnia=0,comorbiditesNeurologist=0,comorbiditesUrinary=0,cognitiveFunctions=0,comorbiditesPsychiatrist=0,depression=0,hipertension=0,comorbiditesCardiovascular=0,medications=[],medicationName=[],evaluationsExercises=[],evaluationsScore=[],evaluationDates=[],evaluationDateList=[],heart_rate_min=[],heart_rate_max=[],heart_rate_mean=[],heart_rate_median=[],heart_rate_mode=[],heart_rate_skewness=[],heart_rate_kurtosis=[],heartRateLow=[],heartRateHigh=[],gsr_min=[],gsr_max=[],gsr_mean=[],gsr_median=[],gsr_mode=[],gsr_skewness=[],gsr_kurtosis=[]):
-        
-        self.mainDiagnose = mainDiagnose
-        self.stationaryEvents= stationaryEvents      
-        self.disease_level = disease_level
-        self.dailyMotion = dailyMotion
-        self.nightMotion = nightMotion
-        self.visitsBathroom = visitsBathroom
-        self.abnormalEvents = abnormalEvents
-        self.freezing = freezing
-        self.festination = festination
-        self.lossOfBalance = lossOfBalance
-        self.fallDown = fallDown
-        self.incontinence = incontinence
-        self.leavingHouse = leavingHouse
-        self.heartRate_min = heart_rate_min
-        self.heartRate_max = heart_rate_max
-        self.heartRate_mean = heart_rate_mean
-        self.heartRate_median = heart_rate_median
-        self.heartRate_mode = heart_rate_mode
-        self.heartRate_skewness = heart_rate_skewness
-        self.heartRate_kurtosis = heart_rate_kurtosis
-        self.heartRateLow = heartRateLow  
-        self.heartRateHigh = heartRateHigh 
-        self.galvanicSkinResponse_min = gsr_min
-        self.galvanicSkinResponse_max = gsr_max
-        self.galvanicSkinResponse_mean = gsr_mean
-        self.galvanicSkinResponse_median = gsr_median
-        self.galvanicSkinResponse_mode = gsr_mode
-        self.galvanicSkinResponse_skewness = gsr_skewness
-        self.galvanicSkinResponse_kurtosis = gsr_kurtosis
-        self.digitalTime = digitalTime
-        self.abnormalDigitalEvents = abnormalDigitalEvents    
-        self.insomnia = insomnia 
-        self.depression = depression
-        self.hipertension = hipertension
-        self.comorbiditesCardiovascular = comorbiditesCardiovascular
-        self.comorbiditesNeurologist = comorbiditesNeurologist
-        self.comorbiditesUrinary= comorbiditesUrinary
-        self.comorbiditesPsychiatrist= comorbiditesPsychiatrist
-        self.cognitiveFunctions = cognitiveFunctions
-        self.medications = medications
-        self.medicationName = medicationName
-        self.evaluationsExercises = evaluationsExercises
-        self.evaluationsScore = evaluationsScore
-        self.evaluationDates = evaluationDates
-        self.evaluationDateList = evaluationDateList
-              
+    def __init__(self,mainDiagnose=0,stationaryEvents=[],disease_level=0,dailyMotion=[],nightMotion=[],visitsBathroom=[],abnormalEvents=[],freezing=[],festination=[],lossOfBalance=[],fallDown=[],incontinence=[],leavingHouse=[],digitalTime=[],abnormalDigitalEvents=[],insomnia=0,comorbiditesNeurologist=0,comorbiditesUrinary=0,cognitiveFunctions=0,comorbiditesPsychiatrist=0,depression=0,hipertension=0,comorbiditesCardiovascular=0,medications=[],medicationName=[],evaluationsExercises=[],evaluationsScore=[],evaluationDates=[],evaluationDateList=[],heart_rate_min=[],heart_rate_max=[],heart_rate_mean=[],heart_rate_median=[],heart_rate_mode=[],heart_rate_skewness=[],heart_rate_kurtosis=[],heartRateLow=[],heartRateHigh=[],gsr_min=[],gsr_max=[],gsr_mean=[],gsr_median=[],gsr_mode=[],gsr_skewness=[],gsr_kurtosis=[],steps=[]):
+	
+		self.mainDiagnose = mainDiagnose
+		self.stationaryEvents= stationaryEvents
+		self.disease_level = disease_level
+		self.dailyMotion = dailyMotion
+		self.nightMotion = nightMotion
+		self.visitsBathroom = visitsBathroom
+		self.abnormalEvents = abnormalEvents
+		self.freezing = freezing
+		self.festination = festination
+		self.lossOfBalance = lossOfBalance
+		self.fallDown = fallDown
+		self.incontinence = incontinence
+		self.leavingHouse = leavingHouse
+		self.heartRate_min = heart_rate_min
+		self.heartRate_max = heart_rate_max
+		self.heartRate_mean = heart_rate_mean
+		self.heartRate_median = heart_rate_median
+		self.heartRate_mode = heart_rate_mode
+		self.heartRate_skewness = heart_rate_skewness
+		self.heartRate_kurtosis = heart_rate_kurtosis
+		self.heartRateLow = heartRateLow
+		self.heartRateHigh = heartRateHigh
+		self.steps = steps
+		self.galvanicSkinResponse_min = gsr_min
+		self.galvanicSkinResponse_max = gsr_max
+		self.galvanicSkinResponse_mean = gsr_mean
+		self.galvanicSkinResponse_median = gsr_median
+		self.galvanicSkinResponse_mode = gsr_mode
+		self.galvanicSkinResponse_skewness = gsr_skewness
+		self.galvanicSkinResponse_kurtosis = gsr_kurtosis
+		self.digitalTime = digitalTime
+		self.abnormalDigitalEvents = abnormalDigitalEvents
+		self.insomnia = insomnia
+		self.depression = depression
+		self.hipertension = hipertension
+		self.comorbiditesCardiovascular = comorbiditesCardiovascular
+		self.comorbiditesNeurologist = comorbiditesNeurologist
+		self.comorbiditesUrinary= comorbiditesUrinary
+		self.comorbiditesPsychiatrist= comorbiditesPsychiatrist
+		self.cognitiveFunctions = cognitiveFunctions
+		self.medications = medications
+		self.medicationName = medicationName
+		self.evaluationsExercises = evaluationsExercises
+		self.evaluationsScore = evaluationsScore
+		self.evaluationDates = evaluationDates
+		self.evaluationDateList = evaluationDateList
+		
     def parseHETRAFile(self,filePath,patientId,startDate,nrDays):
-       
+	
         stationary = np.zeros(shape =nrDays)
         dailyMotion =  np.zeros(shape =nrDays)
         freezing_events = np.zeros(shape =nrDays)
@@ -73,17 +74,15 @@ class MultimodalFusion():
         nr_leaving_the_house = np.zeros(shape =nrDays)
         nr_night_visits = np.zeros(shape =nrDays)
         abnormalEvents = np.zeros(shape =nrDays)
-        
         heart_rate_min = np.zeros (shape= (investigatedPeriodinDays))
         heart_rate_max = np.zeros (shape= (investigatedPeriodinDays))
         heart_rate_mean = np.zeros (shape= (investigatedPeriodinDays))
         heart_rate_median = np.zeros (shape= (investigatedPeriodinDays))
         heart_rate_mode = np.zeros (shape= (investigatedPeriodinDays))
         heart_rate_skewness = np.zeros (shape= (investigatedPeriodinDays))
-        heart_rate_kurtosis = np.zeros (shape= (investigatedPeriodinDays))
-        heartRateLow = np.zeros (shape= (investigatedPeriodinDays))
-        heartRateHigh = np.zeros (shape= (investigatedPeriodinDays))
-        
+        heart_rate_kurtosis = np.zeros(shape= (investigatedPeriodinDays))
+        heartRateLow = np.zeros(shape= (investigatedPeriodinDays))
+        heartRateHigh = np.zeros(shape= (investigatedPeriodinDays))
         gsr_min = np.zeros (shape= (investigatedPeriodinDays))
         gsr_max = np.zeros (shape= (investigatedPeriodinDays))
         gsr_mean = np.zeros (shape= (investigatedPeriodinDays))
@@ -91,256 +90,229 @@ class MultimodalFusion():
         gsr_mode = np.zeros (shape= (investigatedPeriodinDays))
         gsr_skewness = np.zeros (shape= (investigatedPeriodinDays))
         gsr_kurtosis = np.zeros (shape= (investigatedPeriodinDays))
-        
         foundPatientId = 0
         indexAnalysis = 0
-        startDate = startDate.strftime('%Y-%m-%d')    
-        startDate =  datetime.datetime.strptime(startDate,'%Y-%m-%d')       
-        
+        startDate = startDate.strftime('%Y-%m-%d')
+        startDate =  datetime.datetime.strptime(startDate,'%Y-%m-%d')
+        entranceNr_night = 0
+        bedroomNr_night = 0
+        toiletNr_night = 0
+        steps = np.zeros (shape= (investigatedPeriodinDays))
+		
         with open(filePath) as f:
-       
             try:
-                d = json.load(f) 
-                #pprint(d)    
-                
+                d = json.load(f)
             except ValueError,e:
-                print e
-                
-            for line in d:                   
-                
-                if ('patientID' in line.keys()):                    
+				print e
+            
+            for line in d:
+                if ('patientID' in line.keys()):
                     if(line['patientID']==patientId):
                         foundPatientId = 1
                         #print 'found patient'
-                        
-                    if ('date' in line.keys()):
-                        
-                        dateFile = datetime.datetime.strptime(str(line['date']),'%Y-%m-%d')
-                        difDays = (dateFile-startDate).days                          
-                        indexAnalysis = difDays                        
-                        
-                    if ('daily_motion' in line.keys()):
-                        
-                        daily_dict = line['daily_motion']
-                        stationary_ = round(daily_dict.get('stationary',0),2)
-                        fastMov = daily_dict.get('fast_mov',0)  
-                        slowMov = daily_dict.get('slow_mov',0)  
-                        dailyMov = round(fastMov + slowMov,2)        
-                        dailyMotion[indexAnalysis] = dailyMov
-                        stationary[indexAnalysis] = stationary_      
-                    
-                    if('hr' in line.keys()):
-                        hr_dict = line['hr']
-                        heart_rate_min[indexAnalysis] = round(hr_dict.get('min'))   
-                        heart_rate_max[indexAnalysis] = round(hr_dict.get('max'))   
-                        heart_rate_mean[indexAnalysis] = round(hr_dict.get('mean'))   
-                        heart_rate_median[indexAnalysis] = round(hr_dict.get('median'))   
-                        heart_rate_mode[indexAnalysis] = round(hr_dict.get('mode'))   
-                        heart_rate_skewness[indexAnalysis] = round(hr_dict.get('skew'))   
-                        heart_rate_kurtosis[indexAnalysis] = round(hr_dict.get('kurtosis'))   
-                    
-                    if('gsr' in line.keys()):
-                        gsr_dict = line['gsr']                        
-                        gsr_min[indexAnalysis] = round(gsr_dict.get('min'))                      
-                        gsr_max[indexAnalysis] = round(gsr_dict.get('max'))
-                        gsr_mean[indexAnalysis] = round(gsr_dict.get('mean'))
-                        gsr_median[indexAnalysis] = round(gsr_dict.get('median'))
-                        gsr_mode[indexAnalysis] = round(gsr_dict.get('mode'))
-                        gsr_skewness[indexAnalysis] = round(gsr_dict.get('skew'))
-                        gsr_kurtosis[indexAnalysis] = round(gsr_dict.get('kurtosis'))
-                           
-                    if('heart_rate_low' in line.keys()):
-                        hrL_dict = line['heart_rate_low']
-                        heartRate_low = round(hrL_dict.get('number'))                                             
-                        heartRateLow[indexAnalysis] = heartRate_low
+                        if ('date' in line.keys()):
+                            dateFile = datetime.datetime.strptime(str(line['date']),'%Y-%m-%d')
+                            difDays = (dateFile-startDate).days
+                            indexAnalysis = difDays
+                            if ('daily_motion' in line.keys()):
+                                daily_dict = line['daily_motion']
+                            if (len(daily_dict)!=0):
+                                stationary_ = round(daily_dict.get('stationary',0),2)
+                                fastMov = daily_dict.get('fast_mov',0)
+                                slowMov = daily_dict.get('slow_mov',0)
+                                dailyMov = round(fastMov + slowMov,2)
+                                dailyMotion[indexAnalysis] = dailyMov
+                                stationary[indexAnalysis] = stationary_
+                        if('steps' in line.keys()):
+                            listSteps = line['steps']
+                            if(len(listSteps)>0):
+                                listSteps_ = listSteps[0]
+                                if(len(listSteps_)>0):
+                                    steps[indexAnalysis] = listSteps_[1]                                   
+                                else:
+                                    print "the structure of the steps field is not correct ([[v1, v2]])"
                                     
-                    if('heart_rate_high' in line.keys()):
-                        hrH_dict = line['heart_rate_high']
-                        heartRate_high = round(hrH_dict.get('number'))                                             
-                        heartRateHigh[indexAnalysis] = heartRate_low              
-                                    
-                    if('as_day_motion' in line.keys()):
-           
-                        daily_dict = line['as_day_motion']
-                    
-                        toilet_dict = daily_dict.get('toilet') 
-                        if('event' in toilet_dict.keys()):
-                            toilet_events = toilet_dict.get('event')
-                            toiletNr = len(toilet_events)
-                            if(toiletNr>0):
-                                toilet_duration = np.zeros(shape=
-								
-								toiletNr)
-                                for i in range(toiletNr):
-                                    dictToilet = toilet_events[i]                            
-                                    toilet_duration[i] = dictToilet.get('duration')                                                               
-                        else:
-                            toiletNr = 0                        
-                        
-                        entrance_dict = daily_dict.get('entrance')
-                        if('event' in entrance_dict.keys()):
-                            entrance_events = entrance_dict.get('event')
-                            entranceNr = len(entrance_events)                            
-                            if(entranceNr>0):
-                                entrance_duration = np.zeros(shape=entranceNr)
-                                for i in range(entranceNr):
-                                    dictEntrance = entrance_events[i]                            
-                                    entrance_duration[i] = dictEntrance.get('duration')
-                        else:
-                            entranceNr = 0                        
-                        
-                        bedroom_dict = daily_dict.get('bedroom')  
-                        if('event' in bedroom_dict.keys()):
-                            bedroom_events = bedroom_dict.get('event')
-                            bedroomNr = len(bedroom_events)
-                        
-                            if(bedroomNr>0):
-                                bedroom_duration = np.zeros(shape=bedroomNr)
-                                for i in range(bedroomNr):
-                                    dictBedroom = bedroom_events[i]                            
-                                    bedroom_duration[i] = dictBedroom.get('duration')
-                        else:
-                            bedroomNr = 0                                                    
-                        
-                    if('as_night_motion' in line.keys()):
-           
-                        daily_dict = line['as_day_motion']
-                    
-                        toilet_dict = daily_dict.get('toilet') 
-                        if('event' in toilet_dict.keys()):
-                            toilet_events = toilet_dict.get('event')
-                            toiletNr = len(toilet_events)
-                            if(toiletNr>0):
-                                toilet_duration = np.zeros(shape=toiletNr)
-                                for i in range(toiletNr):
-                                    dictToilet = toilet_events[i]                            
-                                    toilet_duration[i] = dictToilet.get('duration')                                                               
-                        else:
-                            toiletNr = 0                        
-                        
-                        entrance_dict = daily_dict.get('entrance')
-                        if('event' in entrance_dict.keys()):
-                            entrance_events = entrance_dict.get('event')
-                            entranceNr = len(entrance_events)                            
-                            if(entranceNr>0):
-                                entrance_duration = np.zeros(shape=entranceNr)
-                                for i in range(entranceNr):
-                                    dictEntrance = entrance_events[i]                            
-                                    entrance_duration[i] = dictEntrance.get('duration')
-                        else:
+                        if('hr' in line.keys()):
+                            hr_dict = line['hr']
+                            if (len(hr_dict)!=0):
+                                heart_rate_min[indexAnalysis] = round(hr_dict.get('min'))
+                                heart_rate_max[indexAnalysis] = round(hr_dict.get('max'))
+                                heart_rate_mean[indexAnalysis] = round(hr_dict.get('mean'))
+                                heart_rate_median[indexAnalysis] = round(hr_dict.get('median'))
+                                heart_rate_mode[indexAnalysis] = round(hr_dict.get('mode'))
+                                heart_rate_skewness[indexAnalysis] = round(hr_dict.get('skew'))
+                                heart_rate_kurtosis[indexAnalysis] = round(hr_dict.get('kurtosis'))
+                        if('gsr' in line.keys()):
+                            gsr_dict = line['gsr']
+                            if (len(gsr_dict)!=0):
+                                gsr_min[indexAnalysis] = round(gsr_dict.get('min'))
+                                gsr_max[indexAnalysis] = round(gsr_dict.get('max'))
+                                gsr_mean[indexAnalysis] = round(gsr_dict.get('mean'))
+                                gsr_median[indexAnalysis] = round(gsr_dict.get('median'))
+                                gsr_mode[indexAnalysis] = round(gsr_dict.get('mode'))
+                                gsr_skewness[indexAnalysis] = round(gsr_dict.get('skew'))
+                                gsr_kurtosis[indexAnalysis] = round(gsr_dict.get('kurtosis'))
+                        if('heart_rate_low' in line.keys()):
+                            hrL_dict = line['heart_rate_low']
+                            if (len(hrL_dict)!=0):
+                                heartRate_low = round(hrL_dict.get('number'))
+                                heartRateLow[indexAnalysis] = heartRate_low
+                        if('heart_rate_high' in line.keys()):
+                            hrH_dict = line['heart_rate_high']
+                            if (len(hrH_dict)!=0):
+                                heartRate_high = round(hrH_dict.get('number'))
+                                heartRateHigh[indexAnalysis] = heartRate_high
+                        if('as_day_motion' in line.keys()):
+                            daily_dict = line['as_day_motion']
+                            toilet_dict = daily_dict.get('toilet')
+                            toiletNr = 0
+                            if (len(toilet_dict)!=0):
+                                if('event' in toilet_dict.keys()):
+                                    toilet_events = toilet_dict.get('event')
+                                    toiletNr = len(toilet_events)
+                                    if(toiletNr>0):
+                                        toilet_duration = np.zeros(shape=toiletNr)
+                                        for i in range(toiletNr):
+                                            dictToilet = toilet_events[i]
+                                            toilet_duration[i] = dictToilet.get('duration')
+                            entrance_dict = daily_dict.get('entrance')
                             entranceNr = 0
-                                                
-                        bedroom_dict = daily_dict.get('bedroom')  
-                        if('event' in bedroom_dict.keys()):
-                            bedroom_events = bedroom_dict.get('event')
-                            bedroomNr = len(bedroom_events)
-                        
-                            if(bedroomNr>0):
-                                bedroom_duration = np.zeros(shape=bedroomNr)
-                                for i in range(bedroomNr):
-                                    dictBedroom = bedroom_events[i]                            
-                                    bedroom_duration[i] = dictBedroom.get('duration')
-                        else:
-                            bedroomNr = 0                                                    
-                        nr_night_visits[indexAnalysis] = toiletNr + entranceNr + bedroomNr
-                       
+                            if (len(entrance_dict)!=0):
+                                if('event' in entrance_dict.keys()):
+                                    entrance_events = entrance_dict.get('event')
+                                    entranceNr = len(entrance_events)
+                                    if(entranceNr>0):
+                                        entrance_duration = np.zeros(shape=entranceNr)
+                                        for i in range(entranceNr):
+                                            dictEntrance = entrance_events[i]
+                                            entrance_duration[i] = dictEntrance.get('duration')
+                            bedroom_dict = daily_dict.get('bedroom')
+                            bedroomNr = 0
+                            if (len(bedroom_dict)!=0):
+                                if('event' in bedroom_dict.keys()):
+                                    bedroom_events = bedroom_dict.get('event')
+                                    bedroomNr = len(bedroom_events)
+                                    if(bedroomNr>0):
+                                        bedroom_duration = np.zeros(shape=bedroomNr)
+                                        for i in range(bedroomNr):
+                                            dictBedroom = bedroom_events[i]
+                                            bedroom_duration[i] = dictBedroom.get('duration')
+                        if('as_night_motion' in line.keys()):
+                            daily_dict = line['as_day_motion']
+                            toilet_dict = daily_dict.get('toilet')
+                            if (len(toilet_dict)!=0):
+                                if('event' in toilet_dict.keys()):
+                                    toilet_events = toilet_dict.get('event')
+                                    toiletNr_night = len(toilet_events)
+                                    if(toiletNr_night>0):
+                                        toilet_duration = np.zeros(shape=toiletNr)
+                                        for i in range(toiletNr_night):
+                                            dictToilet = toilet_events[i]
+                                            toilet_duration[i] = dictToilet.get('duration')
+                            entrance_dict = daily_dict.get('entrance')
+                            if (len(entrance_dict)!=0):
+                                if('event' in entrance_dict.keys()):
+                                    entrance_events = entrance_dict.get('event')
+                                    entranceNr_night = len(entrance_events)
+                                    if(entranceNr_night>0):
+                                        entrance_duration = np.zeros(shape=entranceNr)
+                                        for i in range(entranceNr_night):
+                                            dictEntrance = entrance_events[i]
+                                            entrance_duration[i] = dictEntrance.get('duration')
+                            bedroom_dict = daily_dict.get('bedroom')
+                            if (len(bedroom_dict)!=0):
+                                if('event' in bedroom_dict.keys()):
+                                    bedroom_events = bedroom_dict.get('event')
+                                    bedroomNr_night = len(bedroom_events)
+                                    if(bedroomNr_night>0):
+                                        bedroom_duration = np.zeros(shape=bedroomNr)
+                                        for i in range(bedroomNr_night):
+                                            dictBedroom = bedroom_events[i]
+                                            bedroom_duration[i] = dictBedroom.get('duration')
+                        nr_night_visits[indexAnalysis] = toiletNr_night + entranceNr_night + bedroomNr_night
                         if('freezing' in line.keys()):
-                            
                             freezing_dict = line['freezing']
-                            if('number' in freezing_dict.keys()):                                
-                                freezing_events[indexAnalysis] = freezing_dict.get('number')  
-                            if('event' in freezing_dict.keys()):
-                                freezingEvents = freezing_dict.get('event')
-                                freezingNr = len(freezingEvents)
-                        
-                                if(freezingNr>0):
-                                    freezing_duration = np.zeros(shape=freezingNr)
-                                    for i in range(freezingNr):
-                                        dictfreezing = freezingEvents[i]                            
-                                        freezing_duration[i] = dictfreezing.get('duration')
-                        
+                            if (len(freezing_dict)!=0):
+                                if('number' in freezing_dict.keys()):
+                                    freezing_events[indexAnalysis] = freezing_dict.get('number')
+                                if('event' in freezing_dict.keys()):
+                                    freezingEvents = freezing_dict.get('event')
+                                    freezingNr = len(freezingEvents)
+                                    if(freezingNr>0):
+                                        freezing_duration = np.zeros(shape=freezingNr)
+                                        for i in range(freezingNr):
+                                            dictfreezing = freezingEvents[i]
+                                            freezing_duration[i] = dictfreezing.get('duration')
                         if('festination' in line.keys()):
-                            
                             festination_dict = line['festination']
-                            if('number' in festination_dict.keys()):                                
-                                festination_events[indexAnalysis] = festination_dict.get('number')  
-                            if('event' in festination_dict.keys()):
-                                festinationEvents = festination_dict.get('event')
-                                festinationNr = len(festinationEvents)
-                        
-                                if(festinationNr>0):
-                                    festination_duration = np.zeros(shape=festinationNr)
-                                    for i in range(festinationNr):
-                                        dictfestination = festinationEvents[i]                            
-                                        festination_duration[i] = dictfestination.get('duration')     
-                            
+                            if (len(festination_dict)!=0):
+                                if('number' in festination_dict.keys()):
+                                    festination_events[indexAnalysis] = festination_dict.get('number')
+                                    if('event' in festination_dict.keys()):
+                                        festinationEvents = festination_dict.get('event')
+                                        festinationNr = len(festinationEvents)
+                                        if(festinationNr>0):
+                                            festination_duration = np.zeros(shape=festinationNr)
+                                        for i in range(festinationNr):
+                                            dictfestination = festinationEvents[i]
+                                            festination_duration[i] = dictfestination.get('duration')
                         if('loss_of_balance' in line.keys()):
-                            
                             loss_of_balance_dict = line['loss_of_balance']
-                            if('number' in loss_of_balance_dict.keys()):                                
-                                loss_of_balance_events[indexAnalysis] = loss_of_balance_dict.get('number')  
-                            if('event' in loss_of_balance_dict.keys()):
-                                loss_of_balanceEvents = loss_of_balance_dict.get('event')
-                                loss_of_balanceNr = len(loss_of_balanceEvents)
-                        
-                                if(loss_of_balanceNr>0):
-                                    loss_of_balance_duration = np.zeros(shape=loss_of_balanceNr)
-                                    for i in range(loss_of_balanceNr):
-                                        dictloss_of_balance = loss_of_balanceEvents[i]                            
-                                        loss_of_balance_duration[i] = dictloss_of_balance.get('duration')                                     
-                        
+                            if (len(loss_of_balance_dict)!=0):
+                                if('number' in loss_of_balance_dict.keys()):
+                                    loss_of_balance_events[indexAnalysis] = loss_of_balance_dict.get('number')
+                                    if('event' in loss_of_balance_dict.keys()):
+                                        loss_of_balanceEvents = loss_of_balance_dict.get('event')
+                                        loss_of_balanceNr = len(loss_of_balanceEvents)
+                                        if(loss_of_balanceNr>0):
+                                            loss_of_balance_duration = np.zeros(shape=loss_of_balanceNr)
+                                            for i in range(loss_of_balanceNr):
+                                                dictloss_of_balance = loss_of_balanceEvents[i]
+                                                loss_of_balance_duration[i] = dictloss_of_balance.get('duration')
                         if('fall_down' in line.keys()):
-                            
                             fall_down_dict = line['fall_down']
-                            if('number' in fall_down_dict.keys()):                                
-                                fall_down_events[indexAnalysis] = fall_down_dict.get('number')  
-                            if('event' in fall_down_dict.keys()):
-                                fall_downEvents = fall_down_dict.get('event')
-                                fall_downNr = len(fall_downEvents)
-                        
-                                if(fall_downNr>0):
-                                    fall_down_duration = np.zeros(shape=fall_downNr)
-                                    for i in range(fall_downNr):
-                                        dictfall_down = fall_downEvents[i]                            
-                                        fall_down_duration[i] = dictfall_down.get('duration')                                                                     
-
+                            if (len(fall_down_dict)!=0):
+                                if('number' in fall_down_dict.keys()):
+                                    fall_down_events[indexAnalysis] = fall_down_dict.get('number')
+                                    if('event' in fall_down_dict.keys()):
+                                        fall_downEvents = fall_down_dict.get('event')
+                                        fall_downNr = len(fall_downEvents)
+                                        if(fall_downNr>0):
+                                            fall_down_duration = np.zeros(shape=fall_downNr)
+                                            for i in range(fall_downNr):
+                                                dictfall_down = fall_downEvents[i]
+                                                fall_down_duration[i] = dictfall_down.get('duration')
                         if('visit_bathroom' in line.keys()):
-                            
                             visit_bathroom_dict = line['visit_bathroom']
-                            if('number' in visit_bathroom_dict.keys()):                                
-                                nr_visits_bathroom[indexAnalysis] = visit_bathroom_dict.get('number')  
-                            if('event' in visit_bathroom_dict.keys()):
-                                visit_bathroomEvents = visit_bathroom_dict.get('event')
-                                visit_bathroomNr = len(visit_bathroomEvents)
-                        
-                                if(visit_bathroomNr>0):
-                                    visit_bathroom_duration = np.zeros(shape=visit_bathroomNr)
-                                    for i in range(visit_bathroomNr):
-                                        dictvisit_bathroom = visit_bathroomEvents[i]                            
-                                        visit_bathroom_duration[i] = dictvisit_bathroom.get('duration')                                     
-                                
+                            if (len(visit_bathroom_dict)!=0):
+                                if('number' in visit_bathroom_dict.keys()):
+                                    nr_visits_bathroom[indexAnalysis] = visit_bathroom_dict.get('number')
+                                if('event' in visit_bathroom_dict.keys()):
+                                    visit_bathroomEvents = visit_bathroom_dict.get('event')
+                                    visit_bathroomNr = len(visit_bathroomEvents)
+                                    if(visit_bathroomNr>0):
+                                        visit_bathroom_duration = np.zeros(shape=visit_bathroomNr)
+                                        for i in range(visit_bathroomNr):
+                                            dictvisit_bathroom = visit_bathroomEvents[i]
+                                            visit_bathroom_duration[i] = dictvisit_bathroom.get('duration')
                         if('confusion_behavior_detection' in line.keys()):
-                            
                             confusion_behavior_detection_dict = line['confusion_behavior_detection']
-                            if('number' in confusion_behavior_detection_dict.keys()):                                
+                            if('number' in confusion_behavior_detection_dict.keys()):
                                 abnormalEvents[indexAnalysis] = confusion_behavior_detection_dict.get('number')  
                             if('event' in confusion_behavior_detection_dict.keys()):
                                 confusion_behavior_detectionEvents = confusion_behavior_detection_dict.get('event')
-                                confusion_behavior_detectionNr = len(confusion_behavior_detectionEvents)
-                        
+                                confusion_behavior_detectionNr = len(confusion_behavior_detectionEvents)                        
                                 if(confusion_behavior_detectionNr>0):
                                     confusion_behavior_detection_duration = np.zeros(shape=confusion_behavior_detectionNr)
                                     for i in range(confusion_behavior_detectionNr):
                                         dictconfusion_behavior_detection = confusion_behavior_detectionEvents[i]                            
-                                        confusion_behavior_detection_duration[i] = dictconfusion_behavior_detection.get('duration')     
-                                                                
+                                        confusion_behavior_detection_duration[i] = dictconfusion_behavior_detection.get('duration')
                         if('leave the house' in line.keys()):
-                            nr_leaving_the_house[indexAnalysis] = line['leave the house'] 
-                                                        
-                        if('leave_house_confused' in line.keys()):                            
-                            leavingHouseConfused = line['leave_house_confused']                                                                                                                                                    
-             
-        return foundPatientId, stationary, dailyMotion, freezing_events, festination_events, loss_of_balance_events, fall_down_events, nr_visits_bathroom, nr_leaving_the_house, nr_night_visits, abnormalEvents, heart_rate_min, heart_rate_max, heart_rate_mean, heart_rate_median, heart_rate_mode, heart_rate_skewness, heart_rate_kurtosis, heartRateLow, heartRateHigh, gsr_min, gsr_max, gsr_mean, gsr_median, gsr_mode, gsr_skewness, gsr_kurtosis    
+                            nr_leaving_the_house[indexAnalysis] = line['leave the house']
+                        if('leave_house_confused' in line.keys()):
+                            leavingHouseConfused = line['leave_house_confused']
+                        
+        return foundPatientId, stationary, dailyMotion, freezing_events, festination_events, loss_of_balance_events, fall_down_events, nr_visits_bathroom, nr_leaving_the_house, nr_night_visits, abnormalEvents, heart_rate_min, heart_rate_max, heart_rate_mean, heart_rate_median, heart_rate_mode, heart_rate_skewness, heart_rate_kurtosis, heartRateLow, heartRateHigh, gsr_min, gsr_max, gsr_mean, gsr_median, gsr_mode, gsr_skewness, gsr_kurtosis, steps    
 
     def parseEHRFile(self,filePath,patientId,nrDays,startDate,currentDate):
 
@@ -372,6 +344,7 @@ class MultimodalFusion():
         evaluationsScore = []
         evaluationDateList = np.zeros(shape=nrDays)
         evaluationDates = []
+        nrMedication = 0
 
         startDate = datetime.datetime(startDate.year, startDate.month, startDate.day)
         currentDate = datetime.datetime(currentDate.year, currentDate.month, currentDate.day)
@@ -379,18 +352,19 @@ class MultimodalFusion():
 
         with open(filePath) as f:
             try:
-                d = json.load(f) 
-                #pprint(d)    
-                
+                d = json.load(f)              
+                #pprint(d)                    
             except ValueError,e:
                 print e
                 
-            for line in d:                   
-                
+            for l in range(len(d)):                   
+                line = d[l]
                 if ('patientID' in line.keys()):                    
                     if(line['patientID']==patientId):
                         foundPatientId = 1
-                        #print 'found patient'                                                                                
+                        #print patientId
+                    else:
+                        continue                        
                     
                     if ('mainDiagnosis' in line.keys()):
            
@@ -502,7 +476,7 @@ class MultimodalFusion():
                         spmsq = int(line['SPMSQ'])
 
                     if ('medications' in line.keys()):
-                        medication_dict = line['medications']
+                        medication_dict = line['medications']                       
                         nrMedication = len(medication_dict)
                         medications = np.zeros(shape=(nrMedication,nrDays))
                         if(nrMedication>0):
@@ -533,8 +507,7 @@ class MultimodalFusion():
                                                         medications[i, indexMed] = 3
                                             dosageLastValue = dosage
                                             activeLastValue = active
-                        #print medications
-                        #print medicationNames
+                        
                     if ('evaluations' in line.keys()):
                         evaluation_dict = line['evaluations']
                         nrEvaluations = len(evaluation_dict)
@@ -558,8 +531,8 @@ class MultimodalFusion():
                         #print evaluationDateList
                     else:
                         str = 'process other functionalities'
-                        #print obj
-                        
+                        #print obj                        
+                   
         return foundPatientId, main_diagnosis, disease_level, age, gender, civilStatus, bmi, active, mobility, gradeDependence, autonomousWalk, independenceDailyActivities, comorbiditesNeurologist, comorbiditesPsychiatrist, cognitiveFunctions, comorbiditesCardiovascular, hipertension, comorbiditesUrinary, incontinence, insomnia, depression, medications, medicationNames, evaluations, evaluationsScore, evaluationDates, evaluationDateList
     
     def parseDITFile_ABD(self,filePath,nrDays):
@@ -668,6 +641,38 @@ class MultimodalFusion():
             plt.xlabel('Amount of stationary behaviour over the investigated days')
             plt.show()    
    
+        #assess the steps received from the band
+        steps = self.steps
+        maxValue = max(steps)
+        if maxValue>0:
+            steps_ = steps/maxValue
+        else:
+            steps_ = steps
+            
+        steps_period1 = np.mean(steps_[:halfInterval])
+        steps_period2 = np.mean(steps_[halfInterval:])
+    
+        percent_steps = steps_period2 - steps_period1        
+        if percent_steps > 0.1:
+            line = 'General daily motion increase of: ' + str(round(percent_steps*100)) + '%; ' + str(steps) + "\n"           
+        elif percent_steps < -0.1:
+            line = 'General daily motion decrease of: ' + str(round(-percent_steps*100)) + '%; ' + str(steps) +  "\n"            
+        else:
+            line = "General daily motion no deviations; "  + str(steps) +  "\n"           
+        print line
+                
+        line = '\t\t\"overallMotion\":{\n' + '\t\t\t\"result\":' + str(round(percent_steps*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,steps))+'\n\t\t\t]\n' + '\t\t},\n'
+        outputFile.writelines(line)
+        
+        #in the case daily motion calculated using the nr of steps decreases, the probability of apathy increases
+        if(percent_steps<0):
+            probabilityApathy_steps = -percent_dailyMotion*0.2
+            probabilityImprovedBehaviour_steps = 0.001
+        else:
+            # for increasing daily motion the probability of apathy is very low
+            probabilityApathy_steps = 0.001
+            probabilityImprovedBehaviour_steps= 0.2*percent_steps
+        
         #assess the daily motion
         dailyMotion = self.dailyMotion
         maxValue = max(dailyMotion)
@@ -693,13 +698,13 @@ class MultimodalFusion():
         
         #in the case daily motion decreases, the probability of apathy increases
         if(percent_dailyMotion<0):
-            probabilityApathy_dailyMotion = -percent_dailyMotion*0.3
+            probabilityApathy_dailyMotion = -percent_dailyMotion*0.15
             probabilityImprovedBehaviour_dailyMotion = 0.001
         else:
             # for increasing daily motion the probability of apathy is very low
             probabilityApathy_dailyMotion = 0.001
-            probabilityImprovedBehaviour_dailyMotion= 0.3*percent_dailyMotion
-            
+            probabilityImprovedBehaviour_dailyMotion= 0.15*percent_dailyMotion
+                
         #plot a graph of the daily motion behaviour over the investigated days
         showGraph_dailyMotion = 0
         if showGraph_dailyMotion:
@@ -1269,28 +1274,29 @@ class MultimodalFusion():
         #plot a graph of the digital abnormal behaviours over the investigated days
         showGraph_abnormal = 0
         if showGraph_abnormal:
-            #fig = plt.figure()              
-            days_axis = [1,investigatedPeriodinDays,int(min(nr_abnormal_dit_behaviours)),int(max(nr_abnormal_dit_behaviours))]
-            plt.plot(nr_abnormal_dit_behaviours,'ro')
-            plt.axis(days_axis)
-            plt.xlabel('Number of digital abnormal behaviours events over the investigated days')
-            plt.show()
-
+			#fig = plt.figure()
+			days_axis = [1,investigatedPeriodinDays,int(min(nr_abnormal_dit_behaviours)),int(max(nr_abnormal_dit_behaviours))]
+			plt.plot(nr_abnormal_dit_behaviours,'ro')
+			plt.axis(days_axis)
+			plt.xlabel('Number of digital abnormal behaviours events over the investigated days')
+			plt.show()
+		
         # assess medication changes
-        nrMedications=len(self.medicationName)
-        changes = np.zeros(shape=nrMedications)
+        nrMedications=len(self.medicationName)        
+        changes = np.zeros(shape=nrMedications)       
         indexMedication = np.zeros(shape=nrMedications)
         line = '\t\t\"medication\":[\n'
-        for i in range(nrMedications):
+      
+        for i in range(nrMedications):            
             line = line + '\t\t{\n' +'\t\t\t\"name\":' + self.medicationName[i] +',\n'
             line = line + '\t\t\t\"changes\":' + '['+', '.join(map(str,self.medications[i,:]))+']' +'\n'
+            
             changes[i] =np.sum(self.medications[i,:])
             if(changes[i]>0):
                 indexMedication[i] = 1
-
             if(i==nrMedications-1):
                 line= line + '\t\t}\n'
-            else:
+            else:	
                 line = line + '\t\t},\n'
         line = line + '\t\t],\n'
         outputFile.writelines(line)
@@ -1424,11 +1430,17 @@ class MultimodalFusion():
         line = '\t\t{\n\t\t\t\"type\":\"digitalConfusion\",\n'+'\t\t\t\"value\":'+str(round(probDigitalConfusion,3)) + '\n\t\t},\n'
         outputFile.writelines(line)
         
-        probApathy = probabilityApathy_stationary + probabilityApathy_dailyMotion + probabilityApathy_leavingHouse + probabilityApathy_timeDit                      
+        probApathy = probabilityApathy_stationary + probabilityApathy_dailyMotion + probabilityApathy_leavingHouse + probabilityApathy_timeDit + probabilityApathy_steps
+        if(probApathy>1):
+            probApathy = 1
+                  
         line = '\t\t{\n\t\t\t\"type\":\"Apathy|stationaryBehaviour\",\n'+'\t\t\t\"value\":'+str(round(probabilityApathy_stationary,3)) + '\n\t\t},\n'
         outputFile.writelines(line)
         
         line = '\t\t{\n\t\t\t\"type\":\"Apathy|dailyMotion\",\n'+'\t\t\t\"value\":'+str(round(probabilityApathy_dailyMotion,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"Apathy|overallMotion\",\n'+'\t\t\t\"value\":'+str(round(probabilityApathy_steps,3)) + '\n\t\t},\n'
         outputFile.writelines(line)
         
         line = '\t\t{\n\t\t\t\"type\":\"Apathy|leavingHouse\",\n'+'\t\t\t\"value\":'+str(round(probabilityApathy_leavingHouse,3)) + '\n\t\t},\n'
@@ -1465,7 +1477,7 @@ class MultimodalFusion():
         line = '\t\t{\n\t\t\t\"type\":\"ParkinsonsEvents\",\n'+'\t\t\t\"value\":'+str(round(probParkinsonsEvents,3)) + '\n\t\t},\n'
         outputFile.writelines(line)
 
-        probImprovedBehaviour = probabilityImprovedBehaviour_abnormalDigitalBehaviour + probabilityImprovedBehaviour_dailyMotion + probabilityImprovedBehaviour_fallDown + probabilityImprovedBehaviour_festination + probabilityImprovedBehaviour_freezing + probabilityImprovedBehaviour_lossBalance + probabilityImprovedBehaviour_nightMotion + probabilityImprovedBehaviour_stationary + probabilityImprovedBehaviour_leavingHouse + probabilityImprovedBehaviour_movementEvolution
+        probImprovedBehaviour = probabilityImprovedBehaviour_abnormalDigitalBehaviour + probabilityImprovedBehaviour_dailyMotion + probabilityImprovedBehaviour_fallDown + probabilityImprovedBehaviour_festination + probabilityImprovedBehaviour_freezing + probabilityImprovedBehaviour_lossBalance + probabilityImprovedBehaviour_nightMotion + probabilityImprovedBehaviour_stationary + probabilityImprovedBehaviour_leavingHouse + probabilityImprovedBehaviour_movementEvolution + probabilityImprovedBehaviour_steps
         
         if(probImprovedBehaviour>1):
             probImprovedBehaviour = 1       
@@ -1474,6 +1486,9 @@ class MultimodalFusion():
         outputFile.writelines(line)
         
         line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|dailyMotion\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_dailyMotion,3)) + '\n\t\t},\n'                                    
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|overallMotion\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_steps,3)) + '\n\t\t},\n'                                    
         outputFile.writelines(line)
         
         line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|nightMotion\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_nightMotion,3)) + '\n\t\t},\n'                                    
@@ -1514,7 +1529,7 @@ class MultimodalFusion():
         outputFile.writelines(line)
 
 
-        line = '\t\t]\n\t}\n'
+        line = '\t\t]\n'
         outputFile.writelines(line)    
        
     def evaluateAlzheimersActivities(self,outputFile,investigatedPeriodinDays):    
@@ -1911,7 +1926,7 @@ class MultimodalFusion():
         outputFile.writelines(line)
         
         if(percent_fall_down>=0):            
-            probabilityMovementIssues_fall_down = 0.5*percent_fall_down
+            probabilityMovementIssues_fall_down = 0.4*percent_fall_down
             probabilityImprovedBehaviour_fallDown = 0.001
         else:
             # for decreasing falling down events the probability of Parkinson events is very low
@@ -1970,7 +1985,7 @@ class MultimodalFusion():
             plt.show()
 
         if(percent_loss_of_balance>=0):            
-            probabilityMovementIssues_lossBalance = 0.5*percent_loss_of_balance
+            probabilityMovementIssues_lossBalance = 0.3*percent_loss_of_balance
             probabilityImprovedBehaviour_lossBalance = 0.001
         else:
             # for decreasing loss of balance events the probability of Parkinson events is very low
@@ -2297,19 +2312,19 @@ class MultimodalFusion():
         line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour\",\n'+'\t\t\t\"value\":'+str(round(probImprovedBehaviour,3)) + '\n\t\t}\n'                                    
         outputFile.writelines(line)  
         
-        line = '\t\t]\n\t}\n'
+        line = '\t\t]\n'
         outputFile.writelines(line)        
           
         
     def multimodalFusionalgorithms(self,outputFile,patientId,currentDate,investigatedPeriodinDays,inputFileEHR,inputFileHETRA,inputFileDIT):
     
-        commentsEnabled = 1
+        commentsEnabled = 1        
         # currentDay = currentDate.day
         startDate = currentDate + timedelta(days=-investigatedPeriodinDays)
               
         # parse the EHR File
         foundPatient, main_diagnosis, disease_level, age, gender, civilStatus, bmi, active, mobility, gradeDependence, autonomousWalk, independenceDailyActivities, comorbiditesNeurologist, comorbiditesPsychiatrist, cognitiveFunctions, comorbiditesCardiovascular, hipertension, comorbiditesUrinary, incontinence, insomnia, depression, medications, medicationName, evaluations, evaluationsScore, evaluationDates, evaluationDateList  = self.parseEHRFile(inputFileEHR,patientId,investigatedPeriodinDays,startDate,currentDate)
-        
+     
         if(foundPatient):
             self.mainDiagnose = main_diagnosis # the main diagnose is 1 for Parkinson's and 0 for Alzheimer's 
             self.disease_level = disease_level
@@ -2321,7 +2336,7 @@ class MultimodalFusion():
             self.comorbiditesPsychiatrist= comorbiditesPsychiatrist
             self.comorbiditesCardiovascular = comorbiditesCardiovascular       
             self.hipertension = hipertension
-            self.cognitiveFunctions = cognitiveFunctions
+            self.cognitiveFunctions = cognitiveFunctions  
             self.medications = medications
             self.medicationName = medicationName
             self.evaluationsExercises = evaluations
@@ -2330,22 +2345,23 @@ class MultimodalFusion():
             self.evaluationDateList = evaluationDateList
         
             if self.mainDiagnose==1:
-                str_patient = 'The patient has Parkinsons level ' + str(self.disease_level)  
+                str_patient = 'The patient with id '+str(patientId)+ ' has Parkinsons level ' + str(self.disease_level)  
                 if commentsEnabled: 
                     print str_patient
             elif (self.mainDiagnose==0):
-                str_patient = 'The patient has Alzheimers level ' + str(self.disease_level)  
+                str_patient = 'The patient with id '+str(patientId)+ ' has Alzheimers level ' + str(self.disease_level)  
                 if commentsEnabled: 
                     print str_patient
 
-            line = '\t{\n'+'\t\t\"patientID\":\"patient'+str(patientId)+ '\",\n'
-            outputFile.writelines(line)
-    
-            line = '\t\t\"startDate\":\"' + str(startDate) + '\",\n' 
-            outputFile.writelines(line)
-            line = '\t\t\"endDate\":\"' + str(currentDate) + '\",\n' 
-            outputFile.writelines(line)
+#            line = '\t{\n'+'\t\t\"patientID\":\"'+str(patientId)+ '\",\n'
+#            outputFile.writelines(line)
+#    
+#            line = '\t\t\"startDate\":\"' + str(startDate) + '\",\n' 
+#            outputFile.writelines(line)
+#            line = '\t\t\"endDate\":\"' + str(currentDate) + '\",\n' 
+#            outputFile.writelines(line)
           
+            
             # call the digital abnormal behaviour module for finding the number of abnormal events and the total interaction time  
             ## current implementation of the DIT
             inputDITpath = '../input/DIT'
@@ -2391,7 +2407,7 @@ class MultimodalFusion():
             
             heartRateLow = np.zeros (shape= (investigatedPeriodinDays))
             heartRateHigh = np.zeros (shape= (investigatedPeriodinDays))
-            
+            steps = np.zeros (shape= (investigatedPeriodinDays))
             gsr_min = np.zeros (shape= (investigatedPeriodinDays))
             gsr_max = np.zeros (shape= (investigatedPeriodinDays))
             gsr_mean = np.zeros (shape= (investigatedPeriodinDays))
@@ -2401,45 +2417,46 @@ class MultimodalFusion():
             gsr_kurtosis = np.zeros (shape= (investigatedPeriodinDays))
             #movement_evolution_events = np.zeros(shape= (investigatedPeriodinDays))                  
                      
-            foundPatientId, stationary, dailyMotion, freezing_events, festination_events, loss_of_balance_events, fall_down_events, nr_visits_bathroom, nr_leaving_the_house, nr_night_visits, abnormalEvents, heart_rate_min, heart_rate_max, heart_rate_mean, heart_rate_mode, heart_rate_median, heart_rate_kurtosis, heart_rate_skewness, heartRateLow, heartRateHigh, gsr_min, gsr_max, gsr_mean, gsr_mode, gsr_median, gsr_kurtosis, gsr_skewness  = self.parseHETRAFile(inputFileHETRA,patientId,startDate,investigatedPeriodinDays)                                                                                                    
-        
+            foundPatientId, stationary, dailyMotion, freezing_events, festination_events, loss_of_balance_events, fall_down_events, nr_visits_bathroom, nr_leaving_the_house, nr_night_visits, abnormalEvents, heart_rate_min, heart_rate_max, heart_rate_mean, heart_rate_mode, heart_rate_median, heart_rate_kurtosis, heart_rate_skewness, heartRateLow, heartRateHigh, gsr_min, gsr_max, gsr_mean, gsr_mode, gsr_median, gsr_kurtosis, gsr_skewness, steps  = self.parseHETRAFile(inputFileHETRA,patientId,startDate,investigatedPeriodinDays)                                                                                                    
+            
             if(foundPatientId>0):
-                self.stationaryEvents = stationary
-                self.abnormalEvents = abnormalEvents
-                self.dailyMotion = dailyMotion
-                self.freezing = freezing_events
-                self.festination = festination_events
-                self.nightMotion = nr_night_visits
-                self.fallDown = fall_down_events
-                self.lossOfBalance = loss_of_balance_events
-                self.visitsBathroom = nr_visits_bathroom
-                self.leavingHouse = nr_leaving_the_house
-                self.digitalTime = time_dit
-                self.abnormalDigitalEvents = nr_abnormal_dit_behaviours
-                self.heartRate_mean = heart_rate_mean 
-                self.heartRate_min = heart_rate_min 
-                self.heartRate_max = heart_rate_max
-                self.heartRate_median = heart_rate_median
-                self.heartRate_mode = heart_rate_mode
-                self.heartRate_skewness = heart_rate_skewness
-                self.heartRate_kurtosis= heart_rate_kurtosis
-                self.heartRateLow = heartRateLow  # the number of events is considered              
-                self.heartRateHigh = heartRateHigh # the number of events is considered              
-                self.galvanicSkinResponse_mean = gsr_mean
-                self.galvanicSkinResponse_min = gsr_min
-                self.galvanicSkinResponse_max = gsr_max
-                self.galvanicSkinResponse_mode = gsr_mode
-                self.galvanicSkinResponse_median = gsr_median
-                self.galvanicSkinResponse_skewness = gsr_skewness
-                self.galvanicSkinResponse_kurtosis = gsr_kurtosis
-        
-                #Different sets of functionalities are evaluated in the case of Parkinson's or Alzheimer's disease
-                if (self.mainDiagnose==1):
-                    self.evaluateParkinsonsActivities(outputFile,investigatedPeriodinDays)
-                elif(self.mainDiagnose==0):
-                    self.evaluateAlzheimersActivities(outputFile,investigatedPeriodinDays)                   
-                else:
-                    print "A correct diagnosis wasn't found. The analysis will not be performed.\n"
+				self.stationaryEvents = stationary
+				self.abnormalEvents = abnormalEvents
+				self.dailyMotion = dailyMotion
+				self.freezing = freezing_events
+				self.festination = festination_events
+				self.nightMotion = nr_night_visits
+				self.fallDown = fall_down_events
+				self.lossOfBalance = loss_of_balance_events
+				self.visitsBathroom = nr_visits_bathroom
+				self.leavingHouse = nr_leaving_the_house
+				self.digitalTime = time_dit
+				self.abnormalDigitalEvents = nr_abnormal_dit_behaviours
+				self.heartRate_mean = heart_rate_mean
+				self.heartRate_min = heart_rate_min
+				self.heartRate_max = heart_rate_max
+				self.heartRate_median = heart_rate_median
+				self.heartRate_mode = heart_rate_mode
+				self.heartRate_skewness = heart_rate_skewness
+				self.heartRate_kurtosis= heart_rate_kurtosis
+				self.heartRateLow = heartRateLow  # the number of events is considered
+				self.heartRateHigh = heartRateHigh # the number of events is considered
+				self.steps = steps
+				self.galvanicSkinResponse_mean = gsr_mean
+				self.galvanicSkinResponse_min = gsr_min
+				self.galvanicSkinResponse_max = gsr_max
+				self.galvanicSkinResponse_mode = gsr_mode
+				self.galvanicSkinResponse_median = gsr_median
+				self.galvanicSkinResponse_skewness = gsr_skewness
+				self.galvanicSkinResponse_kurtosis = gsr_kurtosis
+				
+				#Different sets of functionalities are evaluated in the case of Parkinson's or Alzheimer's disease
+				if(self.mainDiagnose==1):
+					self.evaluateParkinsonsActivities(outputFile,investigatedPeriodinDays)
+				elif(self.mainDiagnose==0):
+					self.evaluateAlzheimersActivities(outputFile,investigatedPeriodinDays)
+				else:
+					print "A correct diagnosis wasn't found. The analysis will not be performed.\n"
                     
             else:              
                 print 'The HETRA data for patient with id: ' + str(patientId) + ' was not found.'
@@ -2450,7 +2467,8 @@ if __name__ == '__main__':
     
     # define the set of parameters
     #the list of patienIds need to be updated
-    listPatientIds = ['2','3','4']    
+    listPatientIds = ['50baff5b-7898-436d-8eb6-543600cc86c3', '99815373-2355-4898-9eaa-ca54caec85e1']    
+    
     nrPatients = len(listPatientIds)
     
     investigatedPeriodinDays = 10  #interval for MF analysis
@@ -2485,7 +2503,9 @@ if __name__ == '__main__':
     #check if all the input files are available 
     inputFileEHR = inputEHRpath + '/' + inputEHR_File   
     inputFileHETRA = inputHETRApath + '/' + inputHETRA_File   
-    inputFileDIT = inputDITpath + '/' + inputDIT_File   
+    inputFileDIT = inputDITpath + '/' + inputDIT_File
+    
+    startDate = analysisDate + timedelta(days=-investigatedPeriodinDays)
      
     if (os.path.isfile(inputFileEHR) & os.path.isfile(inputFileHETRA) & os.path.isfile(inputFileDIT)):
     
@@ -2495,9 +2515,22 @@ if __name__ == '__main__':
         outputFile.writelines(line)	
         
         for i in range(nrPatients):
-            patientId = listPatientIds[i]        
+            patientId = listPatientIds[i]  
+            line = '\t{\n'+'\t\t\"patientID\":\"'+str(patientId)+ '\",\n'
+            outputFile.writelines(line)
+    
+            line = '\t\t\"startDate\":\"' + str(startDate) + '\",\n' 
+            outputFile.writelines(line)
+            line = '\t\t\"endDate\":\"' + str(analysisDate) + '\",\n' 
+            outputFile.writelines(line)
+            
             mf=MultimodalFusion()
             mf.multimodalFusionalgorithms(outputFile,patientId,analysisDate,investigatedPeriodinDays,inputFileEHR,inputFileHETRA,inputFileDIT)        
+            if(i==nrPatients-1):
+                line = '\t}\n'                
+            else:
+                line = '\t},\n'                                
+            outputFile.writelines(line)  
         
         #close the MF output file
         line = ']'
