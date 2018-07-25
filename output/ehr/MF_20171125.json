@@ -1,126 +1,233 @@
 [
 	{
-		"patientID":"patient2",
+		"patientID":"50baff5b-7898-436d-8eb6-543600cc86c3",
 		"startDate":"2017-11-15",
 		"endDate":"2017-11-25",
 		"stationaryBehaviour":{
 			"result":0.0,
 			"events":[
-				6.34,
-				6.34,
-				6.34,
-				6.34,
-				6.34,
-				6.34,
-				6.34,
-				6.34,
-				6.34,
-				6.34
+				0.77,
+				0.77,
+				0.77,
+				0.77,
+				0.77,
+				0.77,
+				0.77,
+				0.77,
+				0.77,
+				0.77
+			]
+		},
+		"overallMotion":{
+			"result":0.0,
+			"events":[
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0
 			]
 		},
 		"dailyMotion":{
 			"result":0.0,
 			"events":[
-				0.03,
-				0.03,
-				0.03,
-				0.03,
-				0.03,
-				0.03,
-				0.03,
-				0.03,
-				0.03,
-				0.03
+				0.23,
+				0.23,
+				0.23,
+				0.23,
+				0.23,
+				0.23,
+				0.23,
+				0.23,
+				0.23,
+				0.23
 			]
 		},
 		"leavingHouse":{
 			"result":0.0,
 			"events":[
-				1.0,
-				1.0,
-				1.0,
-				1.0,
-				1.0,
-				1.0,
-				1.0,
-				1.0,
-				1.0,
-				1.0
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0
 			]
 		},
+		"nightMotion":{
+			"result":0.0,
+			"events":[
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			]
+		},
+		"insomnia":0,
+		"freezing":{
+			"result":0.0,
+			"events":[
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			]
+		},
+		"festination":{
+			"result":0.0,
+			"events":[
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			]
+		},
+		"fallDown":{
+			"result":0.0,
+			"events":[
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			]
+		},
+		"lossBalance":{
+			"result":0.0,
+			"events":[
+				85.0,
+				85.0,
+				85.0,
+				85.0,
+				85.0,
+				85.0,
+				85.0,
+				85.0,
+				85.0,
+				85.0
+			]
+		},
+		"visitBathroom":{
+			"result":0.0,
+			"events":[
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0
+			]
+		},
+		"incontinence":0, 
 		"heart_rate":{
 			"result":0.0,
 			"meanHeartRate":[
-				91.0,
-				89.0,
-				92.0,
-				94.0,
-				93.0,
-				87.0,
-				95.0,
-				90.0,
-				95.0,
-				92.0
+				76.0,
+				76.0,
+				76.0,
+				76.0,
+				76.0,
+				76.0,
+				76.0,
+				76.0,
+				76.0,
+				76.0
 			],
 			"minHeartRate":[
-				68.0,
-				68.0,
-				68.0,
-				68.0,
-				68.0,
-				68.0,
-				68.0,
-				68.0,
-				68.0,
-				68.0
+				35.0,
+				35.0,
+				35.0,
+				35.0,
+				35.0,
+				35.0,
+				35.0,
+				35.0,
+				35.0,
+				35.0
 			],
 			"maxHeartRate":[
-				150.0,
-				150.0,
-				150.0,
-				150.0,
-				150.0,
-				150.0,
-				150.0,
-				150.0,
-				150.0,
-				150.0
+				105.0,
+				105.0,
+				105.0,
+				105.0,
+				105.0,
+				105.0,
+				105.0,
+				105.0,
+				105.0,
+				105.0
 			],
 			"medianHeartRate":[
-				80.0,
-				80.0,
-				80.0,
-				80.0,
-				80.0,
-				80.0,
-				80.0,
-				80.0,
-				80.0,
-				80.0
+				76.0,
+				76.0,
+				76.0,
+				76.0,
+				76.0,
+				76.0,
+				76.0,
+				76.0,
+				76.0,
+				76.0
 			],
 			"modeHeartRate":[
-				87.0,
-				87.0,
-				87.0,
-				87.0,
-				87.0,
-				87.0,
-				87.0,
-				87.0,
-				87.0,
-				87.0
+				75.0,
+				75.0,
+				75.0,
+				75.0,
+				75.0,
+				75.0,
+				75.0,
+				75.0,
+				75.0,
+				75.0
 			],
 			"skewnessHeartRate":[
-				3.0,
-				3.0,
-				3.0,
-				3.0,
-				3.0,
-				3.0,
-				3.0,
-				3.0,
-				3.0,
-				3.0
+				8.0,
+				8.0,
+				8.0,
+				8.0,
+				8.0,
+				8.0,
+				8.0,
+				8.0,
+				8.0,
+				8.0
 			],
 			"kurtosisHeartRate":[
 				2.0,
@@ -138,167 +245,90 @@
 		"galvanic skin response":{
 			"result":0.0,
 			"meanGSR":[
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0
+				276823.0,
+				276823.0,
+				276823.0,
+				276823.0,
+				276823.0,
+				276823.0,
+				276823.0,
+				276823.0,
+				276823.0,
+				276823.0
 			],
 			"minGSR":[
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0
+				75.0,
+				75.0,
+				75.0,
+				75.0,
+				75.0,
+				75.0,
+				75.0,
+				75.0,
+				75.0,
+				75.0
 			],
 			"maxGSR":[
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0
+				340330.0,
+				340330.0,
+				340330.0,
+				340330.0,
+				340330.0,
+				340330.0,
+				340330.0,
+				340330.0,
+				340330.0,
+				340330.0
 			],
 			"medianGSR":[
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0
+				340330.0,
+				340330.0,
+				340330.0,
+				340330.0,
+				340330.0,
+				340330.0,
+				340330.0,
+				340330.0,
+				340330.0,
+				340330.0
 			],
 			"modeGSR":[
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0
+				340330.0,
+				340330.0,
+				340330.0,
+				340330.0,
+				340330.0,
+				340330.0,
+				340330.0,
+				340330.0,
+				340330.0,
+				340330.0
 			],
 			"skewnessGSR":[
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0
+				1.0,
+				1.0,
+				1.0,
+				1.0,
+				1.0,
+				1.0,
+				1.0,
+				1.0,
+				1.0,
+				1.0
 			],
 			"kurtosisGSR":[
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0,
-				0.0
+				-2.0,
+				-2.0,
+				-2.0,
+				-2.0,
+				-2.0,
+				-2.0,
+				-2.0,
+				-2.0,
+				-2.0,
+				-2.0
 			],
 		},
-		"nightMotion":{
-			"result":-10.0,
-			"events":[
-				2.0,
-				1.0,
-				1.0,
-				1.0,
-				1.0,
-				1.0,
-				1.0,
-				1.0,
-				1.0,
-				1.0
-			]
-		},
-		"insomnia":1,
-		"abnormalEvents":{
-			"result":0.0,
-			"events":[
-				1.0,
-				1.0,
-				1.0,
-				1.0,
-				1.0,
-				1.0,
-				1.0,
-				1.0,
-				1.0,
-				1.0
-			]
-		},
-		"fallDown":{
-			"result":0.0,
-			"events":[
-				1.0,
-				1.0,
-				1.0,
-				1.0,
-				1.0,
-				1.0,
-				1.0,
-				1.0,
-				1.0,
-				1.0
-			]
-		},
-		"lossBalance":{
-			"result":0.0,
-			"events":[
-				4.0,
-				4.0,
-				4.0,
-				4.0,
-				4.0,
-				4.0,
-				4.0,
-				4.0,
-				4.0,
-				4.0
-			]
-		},
-		"visitBathroom":{
-			"result":0.0,
-			"events":[
-				2.0,
-				2.0,
-				2.0,
-				2.0,
-				2.0,
-				2.0,
-				2.0,
-				2.0,
-				2.0,
-				2.0
-			]
-		},
-		"incontinence":1, 
 		"digitalTimeSpent":{
 			"result":0.0,
 			"events":[
@@ -329,23 +359,58 @@
 				0.0
 			]
 		},
+		"medication":[
+		{
+			"name":Betimiga_50mg,
+			"changes":[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+		},
+		{
+			"name":MIRTAZAPINA_15mg,
+			"changes":[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+		},
+		{
+			"name":SINEMET_PLUS_25/100mg,
+			"changes":[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+		},
+		{
+			"name":SINEMET_25/250mg,
+			"changes":[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+		},
+		{
+			"name":OMNIC_OCAS_0,4mg,
+			"changes":[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+		},
+		{
+			"name":QUETIAPINA_25mg,
+			"changes":[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+		},
+		{
+			"name":ENALAPRIL_5mg,
+			"changes":[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+		}
+		],
+		"movementEvaluations":[
+		{
+			"date":2015-07-06,
+			"totalScore":34.19,
+			"partScores":[3.0, 6.0, 11.0, 3.0, 3.5, 1.0, 6.69]
+		},
+		{
+			"date":2016-08-25,
+			"totalScore":36.56,
+			"partScores":[3.0, 5.0, 14.0, 3.0, 4.0, 2.0, 5.56]
+		},
+		{
+			"date":2018-04-12,
+			"totalScore":36.13,
+			"partScores":[3.0, 5.0, 15.5, 0.0, 5.0, 1.0, 6.63]
+		},
+		{
+			"totalScoreDeviation":0.0,
+			"partsDeviation":[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+		}
+		],
 		"probabilities":[
-		{
-			"type":"confusion|abnormalEvents",
-			"value":0.0
-		},
-		{
-			"type":"confusion|psychiatricComorbidites",
-			"value":0.25
-		},
-		{
-			"type":"confusion|neurologicComorbidites",
-			"value":0.25
-		},
-		{
-			"type":"Confusion",
-			"value":0.5
-		},
 		{
 			"type":"Insomnia|nightMotion",
 			"value":0.0
@@ -360,23 +425,23 @@
 		},
 		{
 			"type":"Insomnia|medicalCondition",
-			"value":0.3
+			"value":0.0
 		},
 		{
-			"type":"Insomnia",
-			"value":0.3
+			"type":"sleepDisorders",
+			"value":0.0
 		},
 		{
 			"type":"Incontinence|visitsBathroom",
 			"value":0.0
 		},
 		{
-			"type":"Incontinence|nedicalCondition",
-			"value":0.3
+			"type":"Incontinence|medicalCondition",
+			"value":0.0
 		},
 		{
 			"type":"Incontinence",
-			"value":0.3
+			"value":0.0
 		},
 		{
 			"type":"Hipertension|biologicalMeasurements",
@@ -384,11 +449,11 @@
 		},
 		{
 			"type":"Hipertension|medicalCondition",
-			"value":0.3
+			"value":0.0
 		},
 		{
 			"type":"Hipertension",
-			"value":0.301
+			"value":0.001
 		},
 		{
 			"type":"Cardiovascular condition|biologicalMeasurements",
@@ -396,11 +461,11 @@
 		},
 		{
 			"type":"Cardiovascular condition|medicalCondition",
-			"value":0.3
+			"value":0.0
 		},
 		{
 			"type":"Cardiovascular condition",
-			"value":0.301
+			"value":0.001
 		},
 		{
 			"type":"digitalAddiction|digitalTimeUsage",
@@ -431,6 +496,10 @@
 			"value":0.001
 		},
 		{
+			"type":"Apathy|overallMotion",
+			"value":0.001
+		},
+		{
 			"type":"Apathy|leavingHouse",
 			"value":0.001
 		},
@@ -440,35 +509,31 @@
 		},
 		{
 			"type":"Apathy",
-			"value":0.002
+			"value":0.003
 		},
 		{
-			"type":"MovementIssues|fallDown",
+			"type":"ParkinsonsEvents|freezing",
 			"value":0.0
 		},
 		{
-			"type":"MovementIssues|lossOfBalance",
+			"type":"ParkinsonsEvents|festination",
 			"value":0.0
 		},
 		{
-			"type":"MovementIssues|stationaryBehaviour",
+			"type":"ParkinsonsEvents|fallDown",
 			"value":0.0
 		},
 		{
-			"type":"MovementIssues|dailyMotion",
-			"value":0.001
+			"type":"ParkinsonsEvents|lossOfBalance",
+			"value":0.0
 		},
 		{
-			"type":"MovementIssues|leavingHouse",
-			"value":0.001
+			"type":"ParkinsonsEvents|medicationChange",
+			"value":0.01
 		},
 		{
-			"type":"MovementIssues",
-			"value":0.002
-		},
-		{
-			"type":"ImprovedBehaviour|confusedBehaviours",
-			"value":0.001
+			"type":"ParkinsonsEvents",
+			"value":0.0
 		},
 		{
 			"type":"ImprovedBehaviour|stationary",
@@ -479,8 +544,12 @@
 			"value":0.0
 		},
 		{
+			"type":"ImprovedBehaviour|overallMotion",
+			"value":0.0
+		},
+		{
 			"type":"ImprovedBehaviour|nightMotion",
-			"value":0.02
+			"value":0.001
 		},
 		{
 			"type":"ImprovedBehaviour|leavingHouse",
@@ -488,6 +557,14 @@
 		},
 		{
 			"type":"ImprovedBehaviour|fallDown",
+			"value":0.001
+		},
+		{
+			"type":"ImprovedBehaviour|festination",
+			"value":0.001
+		},
+		{
+			"type":"ImprovedBehaviour|freezing",
 			"value":0.001
 		},
 		{
@@ -499,9 +576,22 @@
 			"value":0.001
 		},
 		{
+			"type":"ImprovedBehaviour|movementEvolution",
+			"value":0.0
+		},
+		{
 			"type":"ImprovedBehaviour",
-			"value":0.025
+			"value":0.007
 		}
+		{
+			"type":"ImprovedBehaviour|medicationChange",
+			"value":0.01
+		},
 		]
+	},
+	{
+		"patientID":"99815373-2355-4898-9eaa-ca54caec85e1",
+		"startDate":"2017-11-15",
+		"endDate":"2017-11-25",
 	}
 ]
