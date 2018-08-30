@@ -114,8 +114,10 @@ class MultimodalFusion():
                             dateFile = datetime.datetime.strptime(str(line['date']),'%Y-%m-%d')
                             difDays = (dateFile-startDate).days
                             indexAnalysis = difDays
+                            
                             if ('daily_motion' in line.keys()):
                                 daily_dict = line['daily_motion']
+                                
                             if (len(daily_dict)!=0):
                                 stationary_ = round(daily_dict.get('stationary',0),2)
                                 fastMov = daily_dict.get('fast_mov',0)
@@ -123,14 +125,9 @@ class MultimodalFusion():
                                 dailyMov = round(fastMov + slowMov,2)
                                 dailyMotion[indexAnalysis] = dailyMov
                                 stationary[indexAnalysis] = stationary_
+                                
                         if('steps' in line.keys()):
-                            listSteps = line['steps']
-                            if(len(listSteps)>0):
-                                listSteps_ = listSteps[0]
-                                if(len(listSteps_)>0):
-                                    steps[indexAnalysis] = listSteps_[1]                                   
-                                else:
-                                    print "the structure of the steps field is not correct ([[v1, v2]])"
+                            steps[indexAnalysis] = line['steps']
                                     
                         if('hr' in line.keys()):
                             hr_dict = line['hr']
@@ -162,74 +159,70 @@ class MultimodalFusion():
                             if (len(hrH_dict)!=0):
                                 heartRate_high = round(hrH_dict.get('number'))
                                 heartRateHigh[indexAnalysis] = heartRate_high
+                                
                         if('as_day_motion' in line.keys()):
                             daily_dict = line['as_day_motion']
-                            toilet_dict = daily_dict.get('toilet')
-                            toiletNr = 0
+                            toilet_dict = daily_dict.get('toilet')                        
+                            
+                            toiletNr = len(toilet_dict)
                             if (len(toilet_dict)!=0):
-                                if('event' in toilet_dict.keys()):
-                                    toilet_events = toilet_dict.get('event')
-                                    toiletNr = len(toilet_events)
-                                    if(toiletNr>0):
-                                        toilet_duration = np.zeros(shape=toiletNr)
-                                        for i in range(toiletNr):
-                                            dictToilet = toilet_events[i]
-                                            toilet_duration[i] = dictToilet.get('duration')
+                                toilet_duration = np.zeros(shape=toiletNr)
+                                for i in range(toiletNr):
+                                    toiletItem = toilet_dict[i]
+                                    if (len(toiletItem.get('duration'))!=0):
+                                        toilet_duration[i] = float(toiletItem.get('duration'))
+                                            
                             entrance_dict = daily_dict.get('entrance')
-                            entranceNr = 0
+                            entranceNr = len(entrance_dict)
+                            
                             if (len(entrance_dict)!=0):
-                                if('event' in entrance_dict.keys()):
-                                    entrance_events = entrance_dict.get('event')
-                                    entranceNr = len(entrance_events)
-                                    if(entranceNr>0):
-                                        entrance_duration = np.zeros(shape=entranceNr)
-                                        for i in range(entranceNr):
-                                            dictEntrance = entrance_events[i]
-                                            entrance_duration[i] = dictEntrance.get('duration')
+                                entrance_duration = np.zeros(shape=entranceNr)
+                                for i in range(entranceNr):
+                                    entranceItem = entrance_dict[i]
+                                    if (len(entranceItem.get('duration'))!=0):
+                                        entrance_duration[i] = float(entranceItem.get('duration'))
+                                        
                             bedroom_dict = daily_dict.get('bedroom')
-                            bedroomNr = 0
+                            bedroomNr = len(bedroom_dict)
                             if (len(bedroom_dict)!=0):
-                                if('event' in bedroom_dict.keys()):
-                                    bedroom_events = bedroom_dict.get('event')
-                                    bedroomNr = len(bedroom_events)
-                                    if(bedroomNr>0):
-                                        bedroom_duration = np.zeros(shape=bedroomNr)
-                                        for i in range(bedroomNr):
-                                            dictBedroom = bedroom_events[i]
-                                            bedroom_duration[i] = dictBedroom.get('duration')
+                                bedroom_duration = np.zeros(shape=bedroomNr)
+                                for i in range(bedroomNr):
+                                    bedroomItem = bedroom_dict[i]
+                                    if (len(bedroomItem.get('duration'))!=0):
+                                        bedroom_duration[i] = float(bedroomItem.get('duration'))                                            
+                                            
                         if('as_night_motion' in line.keys()):
                             daily_dict = line['as_day_motion']
                             toilet_dict = daily_dict.get('toilet')
-                            if (len(toilet_dict)!=0):
-                                if('event' in toilet_dict.keys()):
-                                    toilet_events = toilet_dict.get('event')
-                                    toiletNr_night = len(toilet_events)
-                                    if(toiletNr_night>0):
-                                        toilet_duration = np.zeros(shape=toiletNr)
-                                        for i in range(toiletNr_night):
-                                            dictToilet = toilet_events[i]
-                                            toilet_duration[i] = dictToilet.get('duration')
+                            toiletNr_night = len(toilet_dict)
+                            if (toiletNr_night!=0):
+                                toiletN_duration = np.zeros(shape=toiletNr_night)
+                                for i in range(toiletNr_night):
+                                    eventToilet = toilet_dict[i]
+                                    if (len(eventToilet.get('duration'))!=0):
+                                        toiletN_duration[i] = float(eventToilet.get('duration'))                                            
+                                            
                             entrance_dict = daily_dict.get('entrance')
+                            entranceNr_night = len(entrance_dict)
+                    
                             if (len(entrance_dict)!=0):
-                                if('event' in entrance_dict.keys()):
-                                    entrance_events = entrance_dict.get('event')
-                                    entranceNr_night = len(entrance_events)
-                                    if(entranceNr_night>0):
-                                        entrance_duration = np.zeros(shape=entranceNr)
-                                        for i in range(entranceNr_night):
-                                            dictEntrance = entrance_events[i]
-                                            entrance_duration[i] = dictEntrance.get('duration')
+                                entranceN_duration = np.zeros(shape=entranceNr_night)
+                                for i in range(entranceNr_night):
+                                    eventEntrance = entrance_dict[i]
+                                    if (len(eventEntrance.get('duration'))!=0):
+                                        entranceN_duration[i] = float(eventEntrance.get('duration'))                                            
+                                            
                             bedroom_dict = daily_dict.get('bedroom')
-                            if (len(bedroom_dict)!=0):
-                                if('event' in bedroom_dict.keys()):
-                                    bedroom_events = bedroom_dict.get('event')
-                                    bedroomNr_night = len(bedroom_events)
-                                    if(bedroomNr_night>0):
-                                        bedroom_duration = np.zeros(shape=bedroomNr)
-                                        for i in range(bedroomNr_night):
-                                            dictBedroom = bedroom_events[i]
-                                            bedroom_duration[i] = dictBedroom.get('duration')
+                            bedroomNr_night = len(bedroom_dict)
+                            if (bedroomNr_night!=0):
+                                bedroomN_duration = np.zeros(shape=bedroomNr_night)
+                                for i in range(bedroomNr_night):
+                                    eventBedroom = bedroom_dict[i]
+                                    if (len(eventBedroom.get('duration'))!=0):
+                                        bedroomN_duration[i] = float(eventBedroom.get('duration'))                                                                                        
+                                            
                         nr_night_visits[indexAnalysis] = toiletNr_night + entranceNr_night + bedroomNr_night
+                        
                         if('freezing' in line.keys()):
                             freezing_dict = line['freezing']
                             if (len(freezing_dict)!=0):
@@ -295,20 +288,28 @@ class MultimodalFusion():
                                         for i in range(visit_bathroomNr):
                                             dictvisit_bathroom = visit_bathroomEvents[i]
                                             visit_bathroom_duration[i] = dictvisit_bathroom.get('duration')
+                            else:
+                                nr_visits_bathroom[indexAnalysis] = toiletNr + toiletNr_night
+                                
                         if('confusion_behavior_detection' in line.keys()):
                             confusion_behavior_detection_dict = line['confusion_behavior_detection']
-                            if('number' in confusion_behavior_detection_dict.keys()):
-                                abnormalEvents[indexAnalysis] = confusion_behavior_detection_dict.get('number')  
-                            if('event' in confusion_behavior_detection_dict.keys()):
-                                confusion_behavior_detectionEvents = confusion_behavior_detection_dict.get('event')
-                                confusion_behavior_detectionNr = len(confusion_behavior_detectionEvents)                        
-                                if(confusion_behavior_detectionNr>0):
-                                    confusion_behavior_detection_duration = np.zeros(shape=confusion_behavior_detectionNr)
-                                    for i in range(confusion_behavior_detectionNr):
-                                        dictconfusion_behavior_detection = confusion_behavior_detectionEvents[i]                            
-                                        confusion_behavior_detection_duration[i] = dictconfusion_behavior_detection.get('duration')
-                        if('leave the house' in line.keys()):
-                            nr_leaving_the_house[indexAnalysis] = line['leave the house']
+                            if (len(confusion_behavior_detection_dict)!=0):
+                                if('number' in confusion_behavior_detection_dict.keys()):
+                                    abnormalEvents[indexAnalysis] = confusion_behavior_detection_dict.get('number')  
+                                    if('event' in confusion_behavior_detection_dict.keys()):
+                                        confusion_behavior_detectionEvents = confusion_behavior_detection_dict.get('event')
+                                        confusion_behavior_detectionNr = len(confusion_behavior_detectionEvents)
+                                    if(confusion_behavior_detectionNr>0):
+                                        confusion_behavior_detection_duration = np.zeros(shape=confusion_behavior_detectionNr)
+                                        for i in range(confusion_behavior_detectionNr):
+                                            dictconfusion_behavior_detection = confusion_behavior_detectionEvents[i]                            
+                                            confusion_behavior_detection_duration[i] = dictconfusion_behavior_detection.get('duration')
+                                            
+                        if('leave_the_house' in line.keys()):
+                            nrLeavingHouse = line['leave_the_house']
+                            if(len(nrLeavingHouse)==0):                            
+                                 nr_leaving_the_house[indexAnalysis] = entranceNr + entranceNr_night
+                                 
                         if('leave_house_confused' in line.keys()):
                             leavingHouseConfused = line['leave_house_confused']
                         
@@ -535,7 +536,39 @@ class MultimodalFusion():
                    
         return foundPatientId, main_diagnosis, disease_level, age, gender, civilStatus, bmi, active, mobility, gradeDependence, autonomousWalk, independenceDailyActivities, comorbiditesNeurologist, comorbiditesPsychiatrist, cognitiveFunctions, comorbiditesCardiovascular, hipertension, comorbiditesUrinary, incontinence, insomnia, depression, medications, medicationNames, evaluations, evaluationsScore, evaluationDates, evaluationDateList
     
-    def parseDITFile_ABD(self,filePath,nrDays):
+    def parseDITFile_allEvents(self,filePath,nrDays,startDay):
+        
+        totalTimeUsageperDayInterval = np.zeros(shape= 3*nrDays)
+        totalTimeUsageperDay = np.zeros(shape= nrDays)
+        
+        with open(filePath,'r') as inf:
+            for line in inf:
+                functionalityName = line
+                
+                if(functionalityName.find("eventTime")>0):
+                    fieldName = functionalityName.split(':')[1]
+                    obj = fieldName.split('"')[1]
+                    obj_ = obj.split('/')
+                    obj_day = obj_[1]
+                    currentday = int(obj_day)-startDay+1
+                                       
+                    obj_time = obj_[2].split(' ')[1]
+                    currentTime = int(obj_time)
+                    
+                    if(currentTime<12):
+                        currentTimeIndex = 0
+                    elif(currentTime<18):
+                        currentTimeIndex = 1
+                    else:
+                        currentTimeIndex = 2
+                    currentIndex = (currentday-1)*3 + currentTimeIndex
+                    
+                    totalTimeUsageperDayInterval[currentIndex] = totalTimeUsageperDayInterval[currentIndex] + 1
+                    totalTimeUsageperDay[currentday-1] = totalTimeUsageperDay[currentday-1] + 1                           
+                    
+        return totalTimeUsageperDay
+
+    def parseDITFile_ABD(self,filePath,nrDays,startDay):
     
         abnormalUsageTime = np.zeros(shape= nrDays)
         nrAbnormalEvents = np.zeros(shape= nrDays)
@@ -556,8 +589,9 @@ class MultimodalFusion():
                     fieldName = functionalityName.split(':')[1]
                     obj = fieldName.split('"')[1]
                     obj_date = obj.split(' ')[0]                  
-                    index_day = int(obj_date.split('/')[1])                                
-           
+                    index_day = int(obj_date.split('/')[1])    
+                    index_day = index_day - startDay+1
+                             
                 elif functionalityName.find("doctype") > 0 :
            
                     fieldName = functionalityName.split(':')[1]
@@ -654,11 +688,11 @@ class MultimodalFusion():
     
         percent_steps = steps_period2 - steps_period1        
         if percent_steps > 0.1:
-            line = 'General daily motion increase of: ' + str(round(percent_steps*100)) + '%; ' + str(steps) + "\n"           
+            line = 'General daily motion (based on steps) increase of: ' + str(round(percent_steps*100)) + '%; ' + str(steps) + "\n"           
         elif percent_steps < -0.1:
-            line = 'General daily motion decrease of: ' + str(round(-percent_steps*100)) + '%; ' + str(steps) +  "\n"            
+            line = 'General daily motion (based on steps) decrease of: ' + str(round(-percent_steps*100)) + '%; ' + str(steps) +  "\n"            
         else:
-            line = "General daily motion no deviations; "  + str(steps) +  "\n"           
+            line = "General daily motion (based on steps) no deviations; "  + str(steps) +  "\n"           
         print line
                 
         line = '\t\t\"overallMotion\":{\n' + '\t\t\t\"result\":' + str(round(percent_steps*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,steps))+'\n\t\t\t]\n' + '\t\t},\n'
@@ -666,7 +700,7 @@ class MultimodalFusion():
         
         #in the case daily motion calculated using the nr of steps decreases, the probability of apathy increases
         if(percent_steps<0):
-            probabilityApathy_steps = -percent_dailyMotion*0.2
+            probabilityApathy_steps = -percent_steps*0.2
             probabilityImprovedBehaviour_steps = 0.001
         else:
             # for increasing daily motion the probability of apathy is very low
@@ -1579,7 +1613,41 @@ class MultimodalFusion():
             plt.axis(days_axis)
             plt.xlabel('Amount of stationary behaviour over the investigated days')
             plt.show()    
-   
+        
+         #assess the steps received from the band
+        steps = self.steps
+        maxValue = max(steps)
+        if maxValue>0:
+            steps_ = steps/maxValue
+        else:
+            steps_ = steps
+            
+        steps_period1 = np.mean(steps_[:halfInterval])
+        steps_period2 = np.mean(steps_[halfInterval:])
+    
+        percent_steps = steps_period2 - steps_period1        
+        if percent_steps > 0.1:
+            line = 'General daily motion (based on steps) increase of: ' + str(round(percent_steps*100)) + '%; ' + str(steps) + "\n"           
+        elif percent_steps < -0.1:
+            line = 'General daily motion (based on steps) decrease of: ' + str(round(-percent_steps*100)) + '%; ' + str(steps) +  "\n"            
+        else:
+            line = "General daily motion (based on steps) no deviations; "  + str(steps) +  "\n"           
+        print line
+                
+        line = '\t\t\"overallMotion\":{\n' + '\t\t\t\"result\":' + str(round(percent_steps*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,steps))+'\n\t\t\t]\n' + '\t\t},\n'
+        outputFile.writelines(line)
+        
+        #in the case daily motion calculated using the nr of steps decreases, the probability of apathy increases
+        if(percent_steps<0):
+            probabilityApathy_steps = -percent_steps*0.2
+            probabilityImprovedBehaviour_steps = 0.001
+            probabilityMovementIssues_steps =-0.2*percent_steps
+        else:
+            # for increasing daily motion the probability of apathy is very low
+            probabilityApathy_steps = 0.001
+            probabilityMovementIssues_steps = 0.001
+            probabilityImprovedBehaviour_steps= 0.2*percent_steps
+            
         #assess the daily motion
         dailyMotion = self.dailyMotion
         maxValue = max(dailyMotion)
@@ -1639,13 +1707,13 @@ class MultimodalFusion():
         percent_leavingHouse = leavingHouse_period2 - leavingHouse_period1 
                     
         if percent_leavingHouse > 0.1:
-            line = 'Patient leaving the house, increase of: ' + str(round(percent_leavingHouse*100)) + '%; ' + str(nr_leaving_the_house) + "\n"
+            line = 'Leaving the house events, increase of: ' + str(round(percent_leavingHouse*100)) + '%; ' + str(nr_leaving_the_house) + "\n"
             
         elif percent_leavingHouse < -0.1:
-            line = 'Patient leaving the house, decrease of: ' + str(round(-percent_leavingHouse*100)) + '%; ' + str(nr_leaving_the_house) + "\n"
+            line = 'Leaving the house events, decrease of: ' + str(round(-percent_leavingHouse*100)) + '%; ' + str(nr_leaving_the_house) + "\n"
             
         else:
-            line = 'Patient leaving the house, no deviations; ' + str(nr_leaving_the_house) + "\n"
+            line = 'Leaving the house events, no deviations; ' + str(nr_leaving_the_house) + "\n"
         print line
         
         if(percent_leavingHouse<0):
@@ -1660,7 +1728,7 @@ class MultimodalFusion():
     
         line = '\t\t\"leavingHouse\":{\n' + '\t\t\t\"result\":' + str(round(percent_leavingHouse*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,nr_leaving_the_house))+'\n\t\t\t]\n' + '\t\t},\n'              
         outputFile.writelines(line)
-        
+                   
         #assess the heart rate events for detecting deviations 
         hr_events = self.heartRate_mean
         hr_events_min = self.heartRate_min
@@ -1926,7 +1994,7 @@ class MultimodalFusion():
         outputFile.writelines(line)
         
         if(percent_fall_down>=0):            
-            probabilityMovementIssues_fall_down = 0.4*percent_fall_down
+            probabilityMovementIssues_fall_down = 0.3*percent_fall_down
             probabilityImprovedBehaviour_fallDown = 0.001
         else:
             # for decreasing falling down events the probability of Parkinson events is very low
@@ -1985,7 +2053,7 @@ class MultimodalFusion():
             plt.show()
 
         if(percent_loss_of_balance>=0):            
-            probabilityMovementIssues_lossBalance = 0.3*percent_loss_of_balance
+            probabilityMovementIssues_lossBalance = 0.2*percent_loss_of_balance
             probabilityImprovedBehaviour_lossBalance = 0.001
         else:
             # for decreasing loss of balance events the probability of Parkinson events is very low
@@ -2198,7 +2266,7 @@ class MultimodalFusion():
         line = '\t\t{\n\t\t\t\"type\":\"Insomnia|medicalCondition\",\n'+'\t\t\t\"value\":'+str(round(probabilityInsomnia_medicalCondition,3)) + '\n\t\t},\n'
         outputFile.writelines(line)
         
-        line = '\t\t{\n\t\t\t\"type\":\"Insomnia\",\n'+'\t\t\t\"value\":'+str(round(insomniaProb,3)) + '\n\t\t},\n'
+        line = '\t\t{\n\t\t\t\"type\":\"sleepDisorders\",\n'+'\t\t\t\"value\":'+str(round(insomniaProb,3)) + '\n\t\t},\n'
         outputFile.writelines(line)        
         
         line = '\t\t{\n\t\t\t\"type\":\"Incontinence|visitsBathroom\",\n'+'\t\t\t\"value\":'+str(round(probabilityIncontinence_visitsBathroom,3)) + '\n\t\t},\n'
@@ -2243,12 +2311,15 @@ class MultimodalFusion():
         line = '\t\t{\n\t\t\t\"type\":\"digitalConfusion\",\n'+'\t\t\t\"value\":'+str(round(probDigitalConfusion,3)) + '\n\t\t},\n'
         outputFile.writelines(line)
                        
-        probApathy = probabilityApathy_stationary + probabilityApathy_leavingHouse + probabilityApathy_timeDit+probabilityApathy_dailyMotion                      
+        probApathy = probabilityApathy_stationary + probabilityApathy_leavingHouse + probabilityApathy_timeDit+probabilityApathy_dailyMotion+probabilityApathy_steps                      
     
         line = '\t\t{\n\t\t\t\"type\":\"Apathy|stationaryBehaviour\",\n'+'\t\t\t\"value\":'+str(round(probabilityApathy_stationary,3)) + '\n\t\t},\n'
         outputFile.writelines(line)
         
         line = '\t\t{\n\t\t\t\"type\":\"Apathy|dailyMotion\",\n'+'\t\t\t\"value\":'+str(round(probabilityApathy_dailyMotion,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"Apathy|overallMotion\",\n'+'\t\t\t\"value\":'+str(round(probabilityApathy_steps,3)) + '\n\t\t},\n'
         outputFile.writelines(line)
         
         line = '\t\t{\n\t\t\t\"type\":\"Apathy|leavingHouse\",\n'+'\t\t\t\"value\":'+str(round(probabilityApathy_leavingHouse,3)) + '\n\t\t},\n'
@@ -2260,7 +2331,7 @@ class MultimodalFusion():
         line = '\t\t{\n\t\t\t\"type\":\"Apathy\",\n'+'\t\t\t\"value\":'+str(round(probApathy,3)) + '\n\t\t},\n'
         outputFile.writelines(line)                               
         
-        probMovementIssues = probabilityMovementIssues_fall_down  + probabilityMovementIssues_lossBalance + probabilityMovementIssues_leavingHouse + probabilityMovementIssues_stationary + probabilityMovementIssues_dailyMotion
+        probMovementIssues = probabilityMovementIssues_fall_down  + probabilityMovementIssues_lossBalance + probabilityMovementIssues_leavingHouse + probabilityMovementIssues_stationary + probabilityMovementIssues_dailyMotion + probabilityMovementIssues_steps
         
         line = '\t\t{\n\t\t\t\"type\":\"MovementIssues|fallDown\",\n'+'\t\t\t\"value\":'+str(round(probabilityMovementIssues_fall_down,3)) + '\n\t\t},\n'      
         outputFile.writelines(line)
@@ -2274,13 +2345,16 @@ class MultimodalFusion():
         line = '\t\t{\n\t\t\t\"type\":\"MovementIssues|dailyMotion\",\n'+'\t\t\t\"value\":'+str(round(probabilityMovementIssues_dailyMotion,3)) + '\n\t\t},\n'      
         outputFile.writelines(line)
         
+        line = '\t\t{\n\t\t\t\"type\":\"MovementIssues|overallMotion\",\n'+'\t\t\t\"value\":'+str(round(probabilityMovementIssues_steps,3)) + '\n\t\t},\n'      
+        outputFile.writelines(line)
+        
         line = '\t\t{\n\t\t\t\"type\":\"MovementIssues|leavingHouse\",\n'+'\t\t\t\"value\":'+str(round(probabilityMovementIssues_leavingHouse,3)) + '\n\t\t},\n'      
         outputFile.writelines(line)
         
         line = '\t\t{\n\t\t\t\"type\":\"MovementIssues\",\n'+'\t\t\t\"value\":'+str(round(probMovementIssues,3)) + '\n\t\t},\n'
         outputFile.writelines(line)                
         
-        probImprovedBehaviour = probabilityImprovedBehaviour_abnormalDigitalBehaviour + probabilityImprovedBehaviour_dailyMotion + probabilityImprovedBehaviour_fallDown + probabilityImprovedBehaviour_abnormalEvents + probabilityImprovedBehaviour_lossBalance + probabilityImprovedBehaviour_nightMotion + probabilityImprovedBehaviour_stationary + probabilityImprovedBehaviour_leavingHouse
+        probImprovedBehaviour = probabilityImprovedBehaviour_abnormalDigitalBehaviour + probabilityImprovedBehaviour_dailyMotion + probabilityImprovedBehaviour_fallDown + probabilityImprovedBehaviour_abnormalEvents + probabilityImprovedBehaviour_lossBalance + probabilityImprovedBehaviour_nightMotion + probabilityImprovedBehaviour_stationary + probabilityImprovedBehaviour_leavingHouse + probabilityImprovedBehaviour_steps
         
         if(probImprovedBehaviour>1):
             probImprovedBehaviour = 1
@@ -2292,6 +2366,9 @@ class MultimodalFusion():
         outputFile.writelines(line)
         
         line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|dailyMotion\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_dailyMotion,3)) + '\n\t\t},\n'                                    
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|overallMotion\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_steps,3)) + '\n\t\t},\n'                                    
         outputFile.writelines(line)
         
         line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|nightMotion\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_nightMotion,3)) + '\n\t\t},\n'                                    
@@ -2342,8 +2419,9 @@ class MultimodalFusion():
             self.evaluationsExercises = evaluations
             self.evaluationsScore = evaluationsScore
             self.evaluationDates = evaluationDates
-            self.evaluationDateList = evaluationDateList
-        
+            self.evaluationDateList = evaluationDateList            
+       
+            
             if self.mainDiagnose==1:
                 str_patient = 'The patient with id '+str(patientId)+ ' has Parkinsons level ' + str(self.disease_level)  
                 if commentsEnabled: 
@@ -2379,11 +2457,20 @@ class MultimodalFusion():
             typeAnalysis = "ABD"
             response_abd = getDIT.get_data(patientId, date_from, date_to, inputDITABDFiletoMF,typeAnalysis)                                                                                             
             if response_abd>0:
-                time_dit, nr_abnormal_dit_behaviours, nr_abnormalBehaviours_S, nr_abnormalBehaviours_T, nr_abnormalBehaviours_ST = self.parseDITFile_ABD(inputDITABDFiletoMF,date_from,investigatedPeriodinDays)                                    
+                timeABD_dit, nr_abnormal_dit_behaviours, nr_abnormalBehaviours_S, nr_abnormalBehaviours_T, nr_abnormalBehaviours_ST = self.parseDITFile_ABD(inputDITABDFiletoMF,investigatedPeriodinDays,startDate.day)                                    
                 print "Dit abnormal events parsed"
             else:           
                 print "No file received in DIT with abnormal events"          
-        
+                
+            inputDITEventFiletoMF = inputDITpath + '/' + 'inputEventfile_.txt'    
+            typeAnalysis = "Event"
+            response_event = getDIT.get_data(patientId, date_from, date_to, inputDITEventFiletoMF,typeAnalysis)                                                                                             
+            if response_event>0:
+                time_dit = self.parseDITFile_allEvents(inputDITEventFiletoMF,investigatedPeriodinDays,startDate.day)        
+                print "Dit events parsed"
+            else:           
+                print "No file received in DIT with events"          
+                          
             # extract the ABD parameters for each of the investigated day in the predefined period
             stationary = np.zeros(shape= (investigatedPeriodinDays))
             dailyMotion = np.zeros(shape= (investigatedPeriodinDays))
@@ -2462,51 +2549,53 @@ class MultimodalFusion():
                 print 'The HETRA data for patient with id: ' + str(patientId) + ' was not found.'
         else:
             print 'The EHR data for patient with id: ' + str(patientId) + ' was not found.'
-               
+
 if __name__ == '__main__':
-    
-    # define the set of parameters
-    #the list of patienIds need to be updated
-    listPatientIds = ['50baff5b-7898-436d-8eb6-543600cc86c3', '99815373-2355-4898-9eaa-ca54caec85e1']    
-    
+
+	# define the set of parameters
+	#the list of patienIds need to be updated
+    listPatientIds = ['5315e0fb-a7ef-4742-9387-12cd9a000b20']
+	
     nrPatients = len(listPatientIds)
-    
     investigatedPeriodinDays = 10  #interval for MF analysis
-    analysisDate = datetime.date.today()   
-    
-    str_date = analysisDate.strftime('%d-%m-%Y')        
-    analysisDate = analysisDate.replace(2017,11,25) #this date is used for testing purposes
-    
+    analysisDate = datetime.date.today()
+	
+    str_date = analysisDate.strftime('%d-%m-%Y')
+    analysisDate = analysisDate.replace(2018,7,21) #this date is used for testing purposes
+	
     year = analysisDate.year
     month= analysisDate.month
     day = analysisDate.day
     
-    #output file of the MF module containing the results of the analysis          
+    #output file of the MF module containing the results of the analysis
     outputMFpath = '../output/ehr'
     inputEHRpath = '../input/EHR'
     inputHETRApath = '../input/HETRA'
     inputDITpath = '../input/DIT'
     
-    if (day<10):
-        outputMF_File =  'MF_' + str(year) + str(month) + '0'+ str(day) + '.json'                                      
-        inputEHR_File = 'EHR_' + str(year) + str(month) + '0'+ str(day) + '.json'                                      
-        inputHETRA_File = 'HETRA_' + str(year) + str(month) + '0'+ str(day) + '.json'                                      
-        inputDIT_File =   'DitML_' + str(year) + str(month) + '0'+ str(day) + '.json'                                      
+    if(day<10):
+        dayString = '0'+str(day)
     else:
-        outputMF_File =  'MF_' + str(year) + str(month) + str(day) + '.json'                                                              
-        inputEHR_File = 'EHR_' + str(year) + str(month) + str(day) + '.json'                                      
-        inputHETRA_File = 'HETRA_' + str(year) + str(month) + str(day) + '.json'                                      
-        inputDIT_File =   'DitML_' + str(year) + str(month) + str(day) + '.json'      
+        dayString = str(day)
+    if(month<10):
+        monthString = '0'+str(month)
+    else:
+        monthString = str(month)
+        
+    outputMF_File =  'MF_' + str(year) + monthString + dayString  + '.json'
+    inputEHR_File = 'EHR_' + str(year) + monthString + dayString  + '.json'
+    inputHETRA_File = 'HETRA_' + str(year) + monthString + dayString  + '.json'
+    inputDIT_File =   'DitML_' + str(year) + monthString + dayString  + '.json'
                                        
     outputFileMF = outputMFpath + '/' + outputMF_File   
     
-    #check if all the input files are available 
+    #check if all the input files are available
     inputFileEHR = inputEHRpath + '/' + inputEHR_File   
     inputFileHETRA = inputHETRApath + '/' + inputHETRA_File   
     inputFileDIT = inputDITpath + '/' + inputDIT_File
+	
+    startDate = analysisDate + timedelta(days=-investigatedPeriodinDays)	   
     
-    startDate = analysisDate + timedelta(days=-investigatedPeriodinDays)
-     
     if (os.path.isfile(inputFileEHR) & os.path.isfile(inputFileHETRA) & os.path.isfile(inputFileDIT)):
     
         print 'all input files are received'
