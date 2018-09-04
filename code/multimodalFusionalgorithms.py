@@ -117,14 +117,13 @@ class MultimodalFusion():
                             
                             if ('daily_motion' in line.keys()):
                                 daily_dict = line['daily_motion']
-                                
-                            if (len(daily_dict)!=0):
-                                stationary_ = round(daily_dict.get('stationary',0),2)
-                                fastMov = daily_dict.get('fast_mov',0)
-                                slowMov = daily_dict.get('slow_mov',0)
-                                dailyMov = round(fastMov + slowMov,2)
-                                dailyMotion[indexAnalysis] = dailyMov
-                                stationary[indexAnalysis] = stationary_
+                                if (len(daily_dict)!=0):
+                                    stationary_ = round(daily_dict.get('stationary',0),2)
+                                    fastMov = daily_dict.get('fast_mov',0)
+                                    slowMov = daily_dict.get('slow_mov',0)
+                                    dailyMov = round(fastMov + slowMov,2)
+                                    dailyMotion[indexAnalysis] = dailyMov
+                                    stationary[indexAnalysis] = stationary_
                                 
                         if('steps' in line.keys()):
                             steps[indexAnalysis] = line['steps']
@@ -162,156 +161,161 @@ class MultimodalFusion():
                                 
                         if('as_day_motion' in line.keys()):
                             daily_dict = line['as_day_motion']
-                            toilet_dict = daily_dict.get('toilet')                        
+                            lenDict = len(daily_dict)
+                            if(lenDict!=0):
+                                toilet_dict = daily_dict.get('toilet')                        
                             
-                            toiletNr = len(toilet_dict)
-                            if (len(toilet_dict)!=0):
-                                toilet_duration = np.zeros(shape=toiletNr)
-                                for i in range(toiletNr):
-                                    toiletItem = toilet_dict[i]
-                                    if (len(toiletItem.get('duration'))!=0):
-                                        toilet_duration[i] = float(toiletItem.get('duration'))
+                                toiletNr = len(toilet_dict)
+                                if (len(toilet_dict)!=0):
+                                    toilet_duration = np.zeros(shape=toiletNr)
+                                    for i in range(toiletNr):
+                                        toiletItem = toilet_dict[i]
+                                        if (len(toiletItem.get('duration'))!=0):
+                                            toilet_duration[i] = float(toiletItem.get('duration'))
                                             
-                            entrance_dict = daily_dict.get('entrance')
-                            entranceNr = len(entrance_dict)
-                            
-                            if (len(entrance_dict)!=0):
-                                entrance_duration = np.zeros(shape=entranceNr)
-                                for i in range(entranceNr):
-                                    entranceItem = entrance_dict[i]
-                                    if (len(entranceItem.get('duration'))!=0):
-                                        entrance_duration[i] = float(entranceItem.get('duration'))
+                                entrance_dict = daily_dict.get('entrance')
+                                entranceNr = len(entrance_dict)
+                                if (len(entrance_dict)!=0):
+                                    entrance_duration = np.zeros(shape=entranceNr)
+                                    for i in range(entranceNr):
+                                        entranceItem = entrance_dict[i]
+                                        if (len(entranceItem.get('duration'))!=0):
+                                            entrance_duration[i] = float(entranceItem.get('duration'))
                                         
-                            bedroom_dict = daily_dict.get('bedroom')
-                            bedroomNr = len(bedroom_dict)
-                            if (len(bedroom_dict)!=0):
-                                bedroom_duration = np.zeros(shape=bedroomNr)
-                                for i in range(bedroomNr):
-                                    bedroomItem = bedroom_dict[i]
-                                    if (len(bedroomItem.get('duration'))!=0):
-                                        bedroom_duration[i] = float(bedroomItem.get('duration'))                                            
+                                bedroom_dict = daily_dict.get('bedroom')
+                                bedroomNr = len(bedroom_dict)
+                                if (len(bedroom_dict)!=0):
+                                    bedroom_duration = np.zeros(shape=bedroomNr)
+                                    for i in range(bedroomNr):
+                                        bedroomItem = bedroom_dict[i]
+                                        if (len(bedroomItem.get('duration'))!=0):
+                                            bedroom_duration[i] = float(bedroomItem.get('duration'))                                            
                                             
-                        if('as_night_motion' in line.keys()):
-                            daily_dict = line['as_day_motion']
-                            toilet_dict = daily_dict.get('toilet')
-                            toiletNr_night = len(toilet_dict)
-                            if (toiletNr_night!=0):
-                                toiletN_duration = np.zeros(shape=toiletNr_night)
-                                for i in range(toiletNr_night):
-                                    eventToilet = toilet_dict[i]
-                                    if (len(eventToilet.get('duration'))!=0):
-                                        toiletN_duration[i] = float(eventToilet.get('duration'))                                            
+                            if('as_night_motion' in line.keys()):
+                                daily_dict = line['as_day_motion']
+                                lenDict = len(daily_dict)
+                                if(lenDict!=0):
+                                    toilet_dict = daily_dict.get('toilet')
+                                    toiletNr_night = len(toilet_dict)
+                                    if (toiletNr_night!=0):
+                                        toiletN_duration = np.zeros(shape=toiletNr_night)
+                                        for i in range(toiletNr_night):
+                                            eventToilet = toilet_dict[i]
+                                            if (len(eventToilet.get('duration'))!=0):
+                                                toiletN_duration[i] = float(eventToilet.get('duration'))                                            
                                             
-                            entrance_dict = daily_dict.get('entrance')
-                            entranceNr_night = len(entrance_dict)
+                                    entrance_dict = daily_dict.get('entrance')
+                                    entranceNr_night = len(entrance_dict)
                     
-                            if (len(entrance_dict)!=0):
-                                entranceN_duration = np.zeros(shape=entranceNr_night)
-                                for i in range(entranceNr_night):
-                                    eventEntrance = entrance_dict[i]
-                                    if (len(eventEntrance.get('duration'))!=0):
-                                        entranceN_duration[i] = float(eventEntrance.get('duration'))                                            
+                                    if (len(entrance_dict)!=0):
+                                        entranceN_duration = np.zeros(shape=entranceNr_night)
+                                        for i in range(entranceNr_night):
+                                            eventEntrance = entrance_dict[i]
+                                            if (len(eventEntrance.get('duration'))!=0):
+                                                entranceN_duration[i] = float(eventEntrance.get('duration'))                                            
                                             
-                            bedroom_dict = daily_dict.get('bedroom')
-                            bedroomNr_night = len(bedroom_dict)
-                            if (bedroomNr_night!=0):
-                                bedroomN_duration = np.zeros(shape=bedroomNr_night)
-                                for i in range(bedroomNr_night):
-                                    eventBedroom = bedroom_dict[i]
-                                    if (len(eventBedroom.get('duration'))!=0):
-                                        bedroomN_duration[i] = float(eventBedroom.get('duration'))                                                                                        
+                                    bedroom_dict = daily_dict.get('bedroom')
+                                    bedroomNr_night = len(bedroom_dict)
+                                    if (bedroomNr_night!=0):
+                                        bedroomN_duration = np.zeros(shape=bedroomNr_night)
+                                        for i in range(bedroomNr_night):
+                                            eventBedroom = bedroom_dict[i]
+                                            if (len(eventBedroom.get('duration'))!=0):
+                                                bedroomN_duration[i] = float(eventBedroom.get('duration'))                                                                                        
                                             
-                        nr_night_visits[indexAnalysis] = toiletNr_night + entranceNr_night + bedroomNr_night
+                            nr_night_visits[indexAnalysis] = toiletNr_night + entranceNr_night + bedroomNr_night
                         
-                        if('freezing' in line.keys()):
-                            freezing_dict = line['freezing']
-                            if (len(freezing_dict)!=0):
-                                if('number' in freezing_dict.keys()):
-                                    freezing_events[indexAnalysis] = freezing_dict.get('number')
-                                if('event' in freezing_dict.keys()):
-                                    freezingEvents = freezing_dict.get('event')
-                                    freezingNr = len(freezingEvents)
-                                    if(freezingNr>0):
-                                        freezing_duration = np.zeros(shape=freezingNr)
-                                        for i in range(freezingNr):
-                                            dictfreezing = freezingEvents[i]
-                                            freezing_duration[i] = dictfreezing.get('duration')
-                        if('festination' in line.keys()):
-                            festination_dict = line['festination']
-                            if (len(festination_dict)!=0):
-                                if('number' in festination_dict.keys()):
-                                    festination_events[indexAnalysis] = festination_dict.get('number')
-                                    if('event' in festination_dict.keys()):
-                                        festinationEvents = festination_dict.get('event')
-                                        festinationNr = len(festinationEvents)
-                                        if(festinationNr>0):
-                                            festination_duration = np.zeros(shape=festinationNr)
-                                        for i in range(festinationNr):
-                                            dictfestination = festinationEvents[i]
-                                            festination_duration[i] = dictfestination.get('duration')
-                        if('loss_of_balance' in line.keys()):
-                            loss_of_balance_dict = line['loss_of_balance']
-                            if (len(loss_of_balance_dict)!=0):
-                                if('number' in loss_of_balance_dict.keys()):
-                                    loss_of_balance_events[indexAnalysis] = loss_of_balance_dict.get('number')
-                                    if('event' in loss_of_balance_dict.keys()):
-                                        loss_of_balanceEvents = loss_of_balance_dict.get('event')
-                                        loss_of_balanceNr = len(loss_of_balanceEvents)
-                                        if(loss_of_balanceNr>0):
-                                            loss_of_balance_duration = np.zeros(shape=loss_of_balanceNr)
-                                            for i in range(loss_of_balanceNr):
-                                                dictloss_of_balance = loss_of_balanceEvents[i]
-                                                loss_of_balance_duration[i] = dictloss_of_balance.get('duration')
-                        if('fall_down' in line.keys()):
-                            fall_down_dict = line['fall_down']
-                            if (len(fall_down_dict)!=0):
-                                if('number' in fall_down_dict.keys()):
-                                    fall_down_events[indexAnalysis] = fall_down_dict.get('number')
-                                    if('event' in fall_down_dict.keys()):
-                                        fall_downEvents = fall_down_dict.get('event')
-                                        fall_downNr = len(fall_downEvents)
-                                        if(fall_downNr>0):
-                                            fall_down_duration = np.zeros(shape=fall_downNr)
-                                            for i in range(fall_downNr):
-                                                dictfall_down = fall_downEvents[i]
-                                                fall_down_duration[i] = dictfall_down.get('duration')
-                        if('visit_bathroom' in line.keys()):
-                            visit_bathroom_dict = line['visit_bathroom']
-                            if (len(visit_bathroom_dict)!=0):
-                                if('number' in visit_bathroom_dict.keys()):
-                                    nr_visits_bathroom[indexAnalysis] = visit_bathroom_dict.get('number')
-                                if('event' in visit_bathroom_dict.keys()):
-                                    visit_bathroomEvents = visit_bathroom_dict.get('event')
-                                    visit_bathroomNr = len(visit_bathroomEvents)
-                                    if(visit_bathroomNr>0):
-                                        visit_bathroom_duration = np.zeros(shape=visit_bathroomNr)
-                                        for i in range(visit_bathroomNr):
-                                            dictvisit_bathroom = visit_bathroomEvents[i]
-                                            visit_bathroom_duration[i] = dictvisit_bathroom.get('duration')
-                            else:
-                                nr_visits_bathroom[indexAnalysis] = toiletNr + toiletNr_night
+                            if('freezing' in line.keys()):
+                                freezing_dict = line['freezing']
+                                if (len(freezing_dict)!=0):
+                                    if('number' in freezing_dict.keys()):
+                                        freezing_events[indexAnalysis] = freezing_dict.get('number')
+                                        if('event' in freezing_dict.keys()):
+                                            freezingEvents = freezing_dict.get('event')
+                                            freezingNr = len(freezingEvents)
+                                            if(freezingNr>0):
+                                                freezing_duration = np.zeros(shape=freezingNr)
+                                                for i in range(freezingNr):
+                                                    dictfreezing = freezingEvents[i]
+                                                    freezing_duration[i] = dictfreezing.get('duration')
+                            if('festination' in line.keys()):
+                                festination_dict = line['festination']
+                                if (len(festination_dict)!=0):
+                                    if('number' in festination_dict.keys()):
+                                        festination_events[indexAnalysis] = festination_dict.get('number')
+                                        if('event' in festination_dict.keys()):
+                                            festinationEvents = festination_dict.get('event')
+                                            festinationNr = len(festinationEvents)
+                                            if(festinationNr>0):
+                                                festination_duration = np.zeros(shape=festinationNr)
+                                                for i in range(festinationNr):
+                                                    dictfestination = festinationEvents[i]
+                                                    festination_duration[i] = dictfestination.get('duration')
+                            if('loss_of_balance' in line.keys()):
+                                loss_of_balance_dict = line['loss_of_balance']
+                                if (len(loss_of_balance_dict)!=0):
+                                    if('number' in loss_of_balance_dict.keys()):
+                                        loss_of_balance_events[indexAnalysis] = loss_of_balance_dict.get('number')
+                                        if('event' in loss_of_balance_dict.keys()):
+                                            loss_of_balanceEvents = loss_of_balance_dict.get('event')
+                                            loss_of_balanceNr = len(loss_of_balanceEvents)
+                                            if(loss_of_balanceNr>0):
+                                                loss_of_balance_duration = np.zeros(shape=loss_of_balanceNr)
+                                                for i in range(loss_of_balanceNr):
+                                                    dictloss_of_balance = loss_of_balanceEvents[i]
+                                                    loss_of_balance_duration[i] = dictloss_of_balance.get('duration')
+                            
+                            if('fall_down' in line.keys()):
+                                fall_down_dict = line['fall_down']
+                                if (len(fall_down_dict)!=0):
+                                    if('number' in fall_down_dict.keys()):
+                                        fall_down_events[indexAnalysis] = fall_down_dict.get('number')
+                                        if('event' in fall_down_dict.keys()):
+                                            fall_downEvents = fall_down_dict.get('event')
+                                            fall_downNr = len(fall_downEvents)
+                                            if(fall_downNr>0):
+                                                fall_down_duration = np.zeros(shape=fall_downNr)
+                                                for i in range(fall_downNr):
+                                                    dictfall_down = fall_downEvents[i]
+                                                    fall_down_duration[i] = dictfall_down.get('duration')
+                            
+                            if('visit_bathroom' in line.keys()):
+                                visit_bathroom_dict = line['visit_bathroom']
+                                if (len(visit_bathroom_dict)!=0):
+                                    if('number' in visit_bathroom_dict.keys()):
+                                        nr_visits_bathroom[indexAnalysis] = visit_bathroom_dict.get('number')
+                                        if('event' in visit_bathroom_dict.keys()):
+                                            visit_bathroomEvents = visit_bathroom_dict.get('event')
+                                            visit_bathroomNr = len(visit_bathroomEvents)
+                                            if(visit_bathroomNr>0):
+                                                visit_bathroom_duration = np.zeros(shape=visit_bathroomNr)
+                                                for i in range(visit_bathroomNr):
+                                                    dictvisit_bathroom = visit_bathroomEvents[i]
+                                                    visit_bathroom_duration[i] = dictvisit_bathroom.get('duration')
+                                else:
+                                    nr_visits_bathroom[indexAnalysis] = toiletNr + toiletNr_night
                                 
-                        if('confusion_behavior_detection' in line.keys()):
-                            confusion_behavior_detection_dict = line['confusion_behavior_detection']
-                            if (len(confusion_behavior_detection_dict)!=0):
-                                if('number' in confusion_behavior_detection_dict.keys()):
-                                    abnormalEvents[indexAnalysis] = confusion_behavior_detection_dict.get('number')  
-                                    if('event' in confusion_behavior_detection_dict.keys()):
-                                        confusion_behavior_detectionEvents = confusion_behavior_detection_dict.get('event')
-                                        confusion_behavior_detectionNr = len(confusion_behavior_detectionEvents)
-                                    if(confusion_behavior_detectionNr>0):
-                                        confusion_behavior_detection_duration = np.zeros(shape=confusion_behavior_detectionNr)
-                                        for i in range(confusion_behavior_detectionNr):
-                                            dictconfusion_behavior_detection = confusion_behavior_detectionEvents[i]                            
-                                            confusion_behavior_detection_duration[i] = dictconfusion_behavior_detection.get('duration')
+                            if('confusion_behavior_detection' in line.keys()):
+                                confusion_behavior_detection_dict = line['confusion_behavior_detection']
+                                if (len(confusion_behavior_detection_dict)!=0):
+                                    if('number' in confusion_behavior_detection_dict.keys()):
+                                        abnormalEvents[indexAnalysis] = confusion_behavior_detection_dict.get('number')  
+                                        if('event' in confusion_behavior_detection_dict.keys()):
+                                            confusion_behavior_detectionEvents = confusion_behavior_detection_dict.get('event')
+                                            confusion_behavior_detectionNr = len(confusion_behavior_detectionEvents)
+                                            if(confusion_behavior_detectionNr>0):
+                                                confusion_behavior_detection_duration = np.zeros(shape=confusion_behavior_detectionNr)
+                                                for i in range(confusion_behavior_detectionNr):
+                                                    dictconfusion_behavior_detection = confusion_behavior_detectionEvents[i]                            
+                                                    confusion_behavior_detection_duration[i] = dictconfusion_behavior_detection.get('duration')
                                             
-                        if('leave_the_house' in line.keys()):
-                            nrLeavingHouse = line['leave_the_house']
-                            if(len(nrLeavingHouse)==0):                            
-                                 nr_leaving_the_house[indexAnalysis] = entranceNr + entranceNr_night
+                            if('leave_the_house' in line.keys()):
+                                nrLeavingHouse = line['leave_the_house']
+                                if(len(nrLeavingHouse)==0):                            
+                                    nr_leaving_the_house[indexAnalysis] = entranceNr + entranceNr_night
                                  
-                        if('leave_house_confused' in line.keys()):
-                            leavingHouseConfused = line['leave_house_confused']
+                            if('leave_house_confused' in line.keys()):
+                                leavingHouseConfused = line['leave_house_confused']
                         
         return foundPatientId, stationary, dailyMotion, freezing_events, festination_events, loss_of_balance_events, fall_down_events, nr_visits_bathroom, nr_leaving_the_house, nr_night_visits, abnormalEvents, heart_rate_min, heart_rate_max, heart_rate_mean, heart_rate_median, heart_rate_mode, heart_rate_skewness, heart_rate_kurtosis, heartRateLow, heartRateHigh, gsr_min, gsr_max, gsr_mean, gsr_median, gsr_mode, gsr_skewness, gsr_kurtosis, steps    
 
@@ -2445,7 +2449,9 @@ class MultimodalFusion():
             inputDITpath = '../input/DIT'
             date_from = str(startDate) 
             date_to = str(currentDate)                   
-        
+            print date_from
+            print date_to
+            
             # parameters for DIT analysis
             time_dit = np.zeros(shape= (investigatedPeriodinDays))
             nr_abnormalBehaviours_S = np.zeros(shape= (investigatedPeriodinDays))
@@ -2554,15 +2560,16 @@ if __name__ == '__main__':
 
 	# define the set of parameters
 	#the list of patienIds need to be updated
-    listPatientIds = ['5315e0fb-a7ef-4742-9387-12cd9a000b20']
-	
+    listPatientIds = ['5315e0fb-a7ef-4742-9387-12cd9a000b20','50baff5b-7898-436d-8eb6-543600cc86c3']
+    	
     nrPatients = len(listPatientIds)
     investigatedPeriodinDays = 10  #interval for MF analysis
     analysisDate = datetime.date.today()
 	
     str_date = analysisDate.strftime('%d-%m-%Y')
+    #analysisDate = analysisDate.replace(2018,6,11) #this date is used for testing purposes
     analysisDate = analysisDate.replace(2018,7,21) #this date is used for testing purposes
-	
+    
     year = analysisDate.year
     month= analysisDate.month
     day = analysisDate.day
@@ -2593,7 +2600,7 @@ if __name__ == '__main__':
     inputFileEHR = inputEHRpath + '/' + inputEHR_File   
     inputFileHETRA = inputHETRApath + '/' + inputHETRA_File   
     inputFileDIT = inputDITpath + '/' + inputDIT_File
-	
+        
     startDate = analysisDate + timedelta(days=-investigatedPeriodinDays)	   
     
     if (os.path.isfile(inputFileEHR) & os.path.isfile(inputFileHETRA) & os.path.isfile(inputFileDIT)):
