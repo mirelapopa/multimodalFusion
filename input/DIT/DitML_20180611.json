@@ -1,0 +1,235 @@
+[
+	{
+		"patientID":"5015e0fb-a7ef-4742-9387-12cd9a000b20",
+		"startDate":" 2017-11-14",
+		"endDate":" 2017-11-24",
+		"learnedPatterns":[
+			"id0":{
+				"services":{"App": 0.0, "Calendar": 0.0, "Ehr": 0.0, "Notifications": 0.0, "MyHealth": 0.0, "SocialMedia": 0.0, "Training": 0.0, "ISSP": 1.0, "MyPeopleAndMe": 0.0, "Home": 0.0, "Games": 0.0},
+				"functions":{"ICT4Life": 0.0, "Help": 0.0, "Calendar": 0.0, "Home": 0.5, "MyHealth": 0.0, "Medication": 0.0, "Gamification": 0.0, "ISSP": 0.5, "Training": 0.0, "Rehabilitation": 0.0, "MyPeopleAndMe": 0.0, "Caregivers": 0.0, "Games": 0.0, "Communication": 0.0, "Notifications": 0.0, "DIT_ANALYTICS": 0.0, "MyProfile": 0.0},
+			},
+			"id1":{
+				"services":{"App": 0.0, "Calendar": 0.0, "Ehr": 0.0, "Notifications": 0.0, "MyHealth": 0.0, "SocialMedia": 0.0, "Training": 0.0, "ISSP": 1.0, "MyPeopleAndMe": 0.0, "Home": 0.0, "Games": 0.0},
+				"functions":{"ICT4Life": 0.0, "Help": 0.0, "Calendar": 0.0, "Home": 0.804, "MyHealth": 0.0, "Medication": 0.0, "Gamification": 0.0, "ISSP": 0.196, "Training": 0.0, "Rehabilitation": 0.0, "MyPeopleAndMe": 0.0, "Caregivers": 0.0, "Games": 0.0, "Communication": 0.0, "Notifications": 0.0, "DIT_ANALYTICS": 0.0, "MyProfile": 0.0},
+			},
+			"id2":{
+				"services":{"App": 0.129, "Calendar": 0.024, "Ehr": 0.0, "Notifications": 0.019, "MyHealth": 0.0, "SocialMedia": 0.064, "Training": 0.003, "ISSP": 0.617, "MyPeopleAndMe": 0.091, "Home": 0.054, "Games": 0.054},
+				"functions":{"ICT4Life": 0.179, "Help": 0.004, "Calendar": 0.034, "Home": 0.451, "MyHealth": 0.041, "Medication": 0.0, "Gamification": 0.0, "ISSP": 0.209, "Training": 0.0, "Rehabilitation": 0.0, "MyPeopleAndMe": 0.052, "Caregivers": 0.019, "Games": 0.0, "Communication": 0.0, "Notifications": 0.0, "DIT_ANALYTICS": 0.0, "MyProfile": 0.011},
+			},
+			"id3":{
+				"services":{"App": 0.052, "Calendar": 0.0, "Ehr": 0.0, "Notifications": 0.0, "MyHealth": 0.0, "SocialMedia": 0.0, "Training": 0.0, "ISSP": 0.919, "MyPeopleAndMe": 0.006, "Home": 0.023, "Games": 0.023},
+				"functions":{"ICT4Life": 0.051, "Help": 0.0, "Calendar": 0.0, "Home": 0.551, "MyHealth": 0.0, "Medication": 0.0, "Gamification": 0.0, "ISSP": 0.388, "Training": 0.0, "Rehabilitation": 0.0, "MyPeopleAndMe": 0.01, "Caregivers": 0.0, "Games": 0.0, "Communication": 0.0, "Notifications": 0.0, "DIT_ANALYTICS": 0.0, "MyProfile": 0.0},
+			},
+			"id4":{
+				"services":{"App": 0.026, "Calendar": 0.0, "Ehr": 0.009, "Notifications": 0.0, "MyHealth": 0.0, "SocialMedia": 0.012, "Training": 0.0, "ISSP": 0.9, "MyPeopleAndMe": 0.043, "Home": 0.01, "Games": 0.01},
+				"functions":{"ICT4Life": 0.134, "Help": 0.021, "Calendar": 0.0, "Home": 0.309, "MyHealth": 0.0, "Medication": 0.0, "Gamification": 0.0, "ISSP": 0.278, "Training": 0.0, "Rehabilitation": 0.0, "MyPeopleAndMe": 0.062, "Caregivers": 0.0, "Games": 0.0, "Communication": 0.0, "Notifications": 0.0, "DIT_ANALYTICS": 0.0, "MyProfile": 0.196},
+			},
+			"id5":{
+				"services":{"App": 0.012, "Calendar": 0.0, "Ehr": 0.0, "Notifications": 0.0, "MyHealth": 0.0, "SocialMedia": 0.002, "Training": 0.005, "ISSP": 0.955, "MyPeopleAndMe": 0.0, "Home": 0.026, "Games": 0.026},
+				"functions":{"ICT4Life": 0.007, "Help": 0.0, "Calendar": 0.0, "Home": 0.965, "MyHealth": 0.0, "Medication": 0.0, "Gamification": 0.0, "ISSP": 0.022, "Training": 0.005, "Rehabilitation": 0.0, "MyPeopleAndMe": 0.0, "Caregivers": 0.0, "Games": 0.0, "Communication": 0.0, "Notifications": 0.0, "DIT_ANALYTICS": 0.0, "MyProfile": 0.0},
+			},
+			"id6":{
+				"services":{"App": 0.197, "Calendar": 0.092, "Ehr": 0.0, "Notifications": 0.0, "MyHealth": 0.0, "SocialMedia": 0.0, "Training": 0.105, "ISSP": 0.355, "MyPeopleAndMe": 0.066, "Home": 0.184, "Games": 0.184},
+				"functions":{"ICT4Life": 0.22, "Help": 0.016, "Calendar": 0.11, "Home": 0.402, "MyHealth": 0.0, "Medication": 0.0, "Gamification": 0.0, "ISSP": 0.071, "Training": 0.11, "Rehabilitation": 0.0, "MyPeopleAndMe": 0.031, "Caregivers": 0.0, "Games": 0.0, "Communication": 0.0, "Notifications": 0.0, "DIT_ANALYTICS": 0.0, "MyProfile": 0.039},
+			},
+			"id7":{
+				"services":{"App": 0.0, "Calendar": 0.0, "Ehr": 0.0, "Notifications": 0.0, "MyHealth": 0.0, "SocialMedia": 0.0, "Training": 0.0, "ISSP": 1.0, "MyPeopleAndMe": 0.0, "Home": 0.0, "Games": 0.0},
+				"functions":{"ICT4Life": 0.0, "Help": 0.0, "Calendar": 0.0, "Home": 0.922, "MyHealth": 0.0, "Medication": 0.0, "Gamification": 0.0, "ISSP": 0.078, "Training": 0.0, "Rehabilitation": 0.0, "MyPeopleAndMe": 0.0, "Caregivers": 0.0, "Games": 0.0, "Communication": 0.0, "Notifications": 0.0, "DIT_ANALYTICS": 0.0, "MyProfile": 0.0},
+			},
+			"id8":{
+				"services":{"App": 0.135, "Calendar": 0.135, "Ehr": 0.0, "Notifications": 0.0, "MyHealth": 0.0, "SocialMedia": 0.0, "Training": 0.0, "ISSP": 0.538, "MyPeopleAndMe": 0.0, "Home": 0.192, "Games": 0.192},
+				"functions":{"ICT4Life": 0.119, "Help": 0.048, "Calendar": 0.167, "Home": 0.595, "MyHealth": 0.0, "Medication": 0.0, "Gamification": 0.0, "ISSP": 0.071, "Training": 0.0, "Rehabilitation": 0.0, "MyPeopleAndMe": 0.0, "Caregivers": 0.0, "Games": 0.0, "Communication": 0.0, "Notifications": 0.0, "DIT_ANALYTICS": 0.0, "MyProfile": 0.0},
+			},
+			"id9":{
+				"services":{"App": 0.054, "Calendar": 0.0, "Ehr": 0.0, "Notifications": 0.0, "MyHealth": 0.0, "SocialMedia": 0.0, "Training": 0.022, "ISSP": 0.882, "MyPeopleAndMe": 0.0, "Home": 0.043, "Games": 0.043},
+				"functions":{"ICT4Life": 0.052, "Help": 0.0, "Calendar": 0.0, "Home": 0.552, "MyHealth": 0.0, "Medication": 0.0, "Gamification": 0.0, "ISSP": 0.345, "Training": 0.034, "Rehabilitation": 0.017, "MyPeopleAndMe": 0.0, "Caregivers": 0.0, "Games": 0.0, "Communication": 0.0, "Notifications": 0.0, "DIT_ANALYTICS": 0.0, "MyProfile": 0.0},
+			},
+		],
+		"distributionofPatterns":{
+			"histogramTraining":[
+				"month 3.0":[
+					24.0,
+					0.0,
+					0.0,
+					0.0,
+					0.0,
+					1.0,
+					0.0,
+					2.0,
+					2.0,
+					2.0
+				],
+				"month 4.0":[
+					20.0,
+					0.0,
+					1.0,
+					2.0,
+					0.0,
+					0.0,
+					1.0,
+					1.0,
+					2.0,
+					3.0
+				],
+				"month 5.0":[
+					14.0,
+					1.0,
+					3.0,
+					2.0,
+					0.0,
+					0.0,
+					6.0,
+					1.0,
+					3.0,
+					1.0
+				],
+				"month 6.0":[
+					16.0,
+					0.0,
+					1.0,
+					3.0,
+					2.0,
+					0.0,
+					2.0,
+					1.0,
+					4.0,
+					1.0
+				],
+				"month 7.0":[
+					23.0,
+					0.0,
+					1.0,
+					0.0,
+					0.0,
+					0.0,
+					3.0,
+					1.0,
+					2.0,
+					1.0
+				],
+				"month 8.0":[
+					21.0,
+					0.0,
+					0.0,
+					2.0,
+					0.0,
+					0.0,
+					1.0,
+					0.0,
+					2.0,
+					5.0
+				],
+			],
+			"histogramTesting":[
+				"month 9.0":[
+					20.0,
+					0.0,
+					0.0,
+					1.0,
+					0.0,
+					0.0,
+					0.0,
+					1.0,
+					6.0,
+					2.0
+				],
+				"month 10.0":[
+					22.0,
+					0.0,
+					0.0,
+					0.0,
+					0.0,
+					0.0,
+					4.0,
+					0.0,
+					3.0,
+					2.0
+				],
+				"month 11.0":[
+					20.0,
+					0.0,
+					0.0,
+					1.0,
+					0.0,
+					0.0,
+					2.0,
+					0.0,
+					5.0,
+					2.0
+				],
+			],
+			"deviationsPerPattern":[
+				"month 9.0":[
+					-14.0,
+					-100.0,
+					-100.0,
+					-61.8,
+					-100.0,
+					-100.0,
+					-100.0,
+					-36.6,
+					83.84,
+					-44.89
+				],
+				"overallMonthDeviation": 20.0,
+				"month 10.0":[
+					-5.4,
+					-100.0,
+					-100.0,
+					-100.0,
+					-100.0,
+					-100.0,
+					-2.85,
+					-100.0,
+					-8.08,
+					-44.89
+				],
+				"overallMonthDeviation": 20.0,
+				"month 11.0":[
+					-14.0,
+					-100.0,
+					-100.0,
+					-61.8,
+					-100.0,
+					-100.0,
+					-51.43,
+					-100.0,
+					53.2,
+					-44.89
+				],
+				"overallMonthDeviation": 20.0,
+			],
+			"overallDeviation": 20.0,
+			"overallDeviationNewPatterns": 0.0,
+		},
+		"mostlyUsedServicesTraining":[{
+			"ISSP": 69.55,
+			"App": 7.46,
+			"Home": 6.06,
+			"MyPeopleAndMe": 4.69}
+		],
+		"mostlyUsedServicesTesting":[{
+			"ISSP": 64.41,
+			"App": 12.1,
+			"Home": 10.75,
+			"MyPeopleAndMe": 4.01}
+		],
+		"mostlyUsedFunctionsTraining":[{
+			"Home": 47.57,
+			"ISSP": 20.92,
+			"ICT4Life": 7.39,
+			"Medication": 4.34,
+			"Calendar": 4.28,
+			"MyHealth": 3.1}
+		],
+		"mostlyUsedFunctionsTesting":[{
+			"Home": 48.61,
+			"ISSP": 23.79,
+			"ICT4Life": 5.13,
+			"DIT_ANALYTICS": 4.84,
+			"Help": 3.06,
+			"Calendar": 2.69}
+		],
+		"timeUsageDeviationTrainingTesting": 60.63,
+	}
+]
