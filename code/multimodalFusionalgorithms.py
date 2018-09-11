@@ -2568,7 +2568,7 @@ if __name__ == '__main__':
 	
     str_date = analysisDate.strftime('%d-%m-%Y')
     #analysisDate = analysisDate.replace(2018,6,11) #this date is used for testing purposes
-    analysisDate = analysisDate.replace(2018,7,21) #this date is used for testing purposes
+    #analysisDate = analysisDate.replace(2018,7,21) #this date is used for testing purposes
     
     year = analysisDate.year
     month= analysisDate.month
@@ -2603,7 +2603,7 @@ if __name__ == '__main__':
         
     startDate = analysisDate + timedelta(days=-investigatedPeriodinDays)	   
     
-    if (os.path.isfile(inputFileEHR) & os.path.isfile(inputFileHETRA) & os.path.isfile(inputFileDIT)):
+    if (os.path.isfile(inputFileEHR) & os.path.isfile(inputFileHETRA)):
     
         print 'all input files are received'
         outputFile = open(outputFileMF,'w')     
@@ -2634,7 +2634,7 @@ if __name__ == '__main__':
         outputFile.close()  
         
         # upload the output file to the cloud containing the analysis results
-        uploadResults = 0
+        uploadResults = 1
         if(uploadResults):
         
             outputPath= '../output'        
