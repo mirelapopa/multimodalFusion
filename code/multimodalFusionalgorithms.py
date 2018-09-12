@@ -373,10 +373,10 @@ class MultimodalFusion():
                     
                     if ('mainDiagnosis' in line.keys()):
            
-                        if (line['mainDiagnosis']=='Parkinsons'):
-                            main_diagnosis = 1
-                        elif(line['mainDiagnosis']=='Alzheimers'):
-                            main_diagnosis = 0                              
+                        if (line['mainDiagnosis']=='583acccd-2d33-4c97-bb8e-e708303ccfd0'):
+                            main_diagnosis = 1 #Parkinsons
+                        elif(line['mainDiagnosis']=='d292186c-f9a6-11e6-aa21-02910a60a2f7'):
+                            main_diagnosis = 0 #Alzheimers                             
                             #print main_diagnosis
            
                     if ('ParkinsonHoehnAndYard' in line.keys()):           
@@ -384,7 +384,9 @@ class MultimodalFusion():
                         
                     if ('MMSE' in line.keys()):
                         mmse = int(line['MMSE'])
-                        if(mmse<=10):
+                        if(mmse==-1):
+                            mmse_score = -1
+                        elif(mmse<=10):
                             mmse_score = 5
                         elif(mmse<=19):
                             mmse_score = 4
@@ -2427,11 +2429,17 @@ class MultimodalFusion():
        
             
             if self.mainDiagnose==1:
-                str_patient = 'The patient with id '+str(patientId)+ ' has Parkinsons level ' + str(self.disease_level)  
+                if(self.disease_level==-1):
+                    str_patient = 'The patient with id '+str(patientId)+ ' has Parkinsons.' 
+                else:
+                    str_patient = 'The patient with id '+str(patientId)+ ' has Parkinsons level ' + str(self.disease_level)  
                 if commentsEnabled: 
                     print str_patient
             elif (self.mainDiagnose==0):
-                str_patient = 'The patient with id '+str(patientId)+ ' has Alzheimers level ' + str(self.disease_level)  
+                if(self.disease_level==-1):
+                    str_patient = 'The patient with id '+str(patientId)+ ' has Alzheimers.'
+                else:
+                    str_patient = 'The patient with id '+str(patientId)+ ' has Alzheimers level ' + str(self.disease_level)  
                 if commentsEnabled: 
                     print str_patient
 
