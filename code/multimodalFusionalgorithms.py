@@ -2568,7 +2568,7 @@ if __name__ == '__main__':
 
 	# define the set of parameters
 	#the list of patienIds need to be updated
-    listPatientIds = ['5315e0fb-a7ef-4742-9387-12cd9a000b20','50baff5b-7898-436d-8eb6-543600cc86c3']
+    listPatientIds = ['5315e0fb-a7ef-4742-9387-12cd9a000b20','50baff5b-7898-436d-8eb6-543600cc86c3','4d54d40a-919e-40f4-baa8-9e73dea08f73']
     	
     nrPatients = len(listPatientIds)
     investigatedPeriodinDays = 10  #interval for MF analysis
