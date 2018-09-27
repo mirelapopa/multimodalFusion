@@ -1,4 +1,5 @@
 import numpy as np
+import typing
 import time, datetime
 import ast
 import downloadFileFromCloud
@@ -64,32 +65,32 @@ class MultimodalFusion():
 		
     def parseHETRAFile(self,filePath,patientId,startDate,nrDays):
 	
-        stationary = np.zeros(shape =nrDays)
-        dailyMotion =  np.zeros(shape =nrDays)
-        freezing_events = np.zeros(shape =nrDays)
-        festination_events = np.zeros(shape =nrDays)
-        loss_of_balance_events = np.zeros(shape =nrDays)
-        fall_down_events = np.zeros(shape =nrDays)
-        nr_visits_bathroom = np.zeros(shape =nrDays)
-        nr_leaving_the_house = np.zeros(shape =nrDays)
-        nr_night_visits = np.zeros(shape =nrDays)
-        abnormalEvents = np.zeros(shape =nrDays)
-        heart_rate_min = np.zeros (shape= (investigatedPeriodinDays))
-        heart_rate_max = np.zeros (shape= (investigatedPeriodinDays))
-        heart_rate_mean = np.zeros (shape= (investigatedPeriodinDays))
-        heart_rate_median = np.zeros (shape= (investigatedPeriodinDays))
-        heart_rate_mode = np.zeros (shape= (investigatedPeriodinDays))
-        heart_rate_skewness = np.zeros (shape= (investigatedPeriodinDays))
-        heart_rate_kurtosis = np.zeros(shape= (investigatedPeriodinDays))
-        heartRateLow = np.zeros(shape= (investigatedPeriodinDays))
-        heartRateHigh = np.zeros(shape= (investigatedPeriodinDays))
-        gsr_min = np.zeros (shape= (investigatedPeriodinDays))
-        gsr_max = np.zeros (shape= (investigatedPeriodinDays))
-        gsr_mean = np.zeros (shape= (investigatedPeriodinDays))
-        gsr_median = np.zeros (shape= (investigatedPeriodinDays))
-        gsr_mode = np.zeros (shape= (investigatedPeriodinDays))
-        gsr_skewness = np.zeros (shape= (investigatedPeriodinDays))
-        gsr_kurtosis = np.zeros (shape= (investigatedPeriodinDays))
+        stationary = -1*np.ones(shape =nrDays)
+        dailyMotion =  -1*np.ones(shape =nrDays)
+        freezing_events = -1*np.ones(shape =nrDays)
+        festination_events = -1*np.ones(shape =nrDays)
+        loss_of_balance_events = -1*np.ones(shape =nrDays)
+        fall_down_events = -1*np.ones(shape =nrDays)
+        nr_visits_bathroom = -1*np.ones(shape =nrDays)
+        nr_leaving_the_house = -1*np.ones(shape =nrDays)
+        nr_night_visits = -1*np.ones(shape =nrDays)
+        abnormalEvents = -1*np.ones(shape =nrDays)
+        heart_rate_min = -1*np.ones(shape= (investigatedPeriodinDays))
+        heart_rate_max = -1*np.ones(shape= (investigatedPeriodinDays))
+        heart_rate_mean = -1*np.ones(shape= (investigatedPeriodinDays))
+        heart_rate_median = -1*np.ones(shape= (investigatedPeriodinDays))
+        heart_rate_mode = -1*np.ones(shape= (investigatedPeriodinDays))
+        heart_rate_skewness = -1*np.ones(shape= (investigatedPeriodinDays))
+        heart_rate_kurtosis = -1*np.ones(shape= (investigatedPeriodinDays))
+        heartRateLow = -1*np.ones(shape= (investigatedPeriodinDays))
+        heartRateHigh = -1*np.ones(shape= (investigatedPeriodinDays))
+        gsr_min = -1*np.ones(shape= (investigatedPeriodinDays))
+        gsr_max = -1*np.ones(shape= (investigatedPeriodinDays))
+        gsr_mean = -1*np.ones(shape= (investigatedPeriodinDays))
+        gsr_median = -1*np.ones(shape= (investigatedPeriodinDays))
+        gsr_mode = -1*np.ones(shape= (investigatedPeriodinDays))
+        gsr_skewness = -1*np.ones(shape= (investigatedPeriodinDays))
+        gsr_kurtosis = -1*np.ones(shape= (investigatedPeriodinDays))
         foundPatientId = 0
         indexAnalysis = 0
         startDate = startDate.strftime('%Y-%m-%d')
@@ -97,6 +98,9 @@ class MultimodalFusion():
         entranceNr_night = 0
         bedroomNr_night = 0
         toiletNr_night = 0
+        entranceNr = 0
+        bedroomNr = 0
+        toiletNr = 0
         steps = np.zeros (shape= (investigatedPeriodinDays))
 		
         with open(filePath) as f:
@@ -112,7 +116,7 @@ class MultimodalFusion():
                         #print 'found patient'
                         if ('date' in line.keys()):
                             dateFile = datetime.datetime.strptime(str(line['date']),'%Y-%m-%d')
-                            difDays = (dateFile-startDate).days
+                            difDays = (dateFile-startDate).days                           
                             indexAnalysis = difDays
                             
                             if ('daily_motion' in line.keys()):
@@ -126,7 +130,8 @@ class MultimodalFusion():
                                     stationary[indexAnalysis] = stationary_
                                 
                         if('steps' in line.keys()):
-                            steps[indexAnalysis] = line['steps']
+                            if(type(line['steps']) == typing.types.IntType):
+                                steps[indexAnalysis] = line['steps']
                                     
                         if('hr' in line.keys()):
                             hr_dict = line['hr']
@@ -163,65 +168,67 @@ class MultimodalFusion():
                             daily_dict = line['as_day_motion']
                             lenDict = len(daily_dict)
                             if(lenDict!=0):
-                                toilet_dict = daily_dict.get('toilet')                        
-                            
-                                toiletNr = len(toilet_dict)
-                                if (len(toilet_dict)!=0):
-                                    toilet_duration = np.zeros(shape=toiletNr)
-                                    for i in range(toiletNr):
-                                        toiletItem = toilet_dict[i]
-                                        if (len(toiletItem.get('duration'))!=0):
-                                            toilet_duration[i] = float(toiletItem.get('duration'))
-                                            
-                                entrance_dict = daily_dict.get('entrance')
-                                entranceNr = len(entrance_dict)
-                                if (len(entrance_dict)!=0):
-                                    entrance_duration = np.zeros(shape=entranceNr)
-                                    for i in range(entranceNr):
-                                        entranceItem = entrance_dict[i]
-                                        if (len(entranceItem.get('duration'))!=0):
-                                            entrance_duration[i] = float(entranceItem.get('duration'))
-                                        
-                                bedroom_dict = daily_dict.get('bedroom')
-                                bedroomNr = len(bedroom_dict)
-                                if (len(bedroom_dict)!=0):
-                                    bedroom_duration = np.zeros(shape=bedroomNr)
-                                    for i in range(bedroomNr):
-                                        bedroomItem = bedroom_dict[i]
-                                        if (len(bedroomItem.get('duration'))!=0):
-                                            bedroom_duration[i] = float(bedroomItem.get('duration'))                                            
+                                if('toilet' in daily_dict.keys()):
+                                    toilet_dict = daily_dict.get('toilet')                                                    
+                                    toiletNr = len(toilet_dict)
+                                    if (len(toilet_dict)!=0):
+                                        toilet_duration = np.zeros(shape=toiletNr)
+                                        for i in range(toiletNr):
+                                            toiletItem = toilet_dict[i]
+                                            if (len(toiletItem.get('duration'))!=0):
+                                                toilet_duration[i] = float(toiletItem.get('duration'))
+                                if('entrance' in daily_dict.keys()):            
+                                    entrance_dict = daily_dict.get('entrance')
+                                    entranceNr = len(entrance_dict)
+                                    if (len(entrance_dict)!=0):
+                                        entrance_duration = np.zeros(shape=entranceNr)
+                                        for i in range(entranceNr):
+                                            entranceItem = entrance_dict[i]
+                                            if (len(entranceItem.get('duration'))!=0):
+                                                entrance_duration[i] = float(entranceItem.get('duration'))
+                                if('bedroom' in daily_dict.keys()):        
+                                    bedroom_dict = daily_dict.get('bedroom')
+                                    bedroomNr = len(bedroom_dict)
+                                    if (len(bedroom_dict)!=0):
+                                        bedroom_duration = np.zeros(shape=bedroomNr)
+                                        for i in range(bedroomNr):
+                                            bedroomItem = bedroom_dict[i]
+                                            if (len(bedroomItem.get('duration'))!=0):
+                                                bedroom_duration[i] = float(bedroomItem.get('duration'))                                            
                                             
                             if('as_night_motion' in line.keys()):
                                 daily_dict = line['as_day_motion']
                                 lenDict = len(daily_dict)
                                 if(lenDict!=0):
-                                    toilet_dict = daily_dict.get('toilet')
-                                    toiletNr_night = len(toilet_dict)
-                                    if (toiletNr_night!=0):
-                                        toiletN_duration = np.zeros(shape=toiletNr_night)
-                                        for i in range(toiletNr_night):
-                                            eventToilet = toilet_dict[i]
-                                            if (len(eventToilet.get('duration'))!=0):
-                                                toiletN_duration[i] = float(eventToilet.get('duration'))                                            
-                                            
-                                    entrance_dict = daily_dict.get('entrance')
-                                    entranceNr_night = len(entrance_dict)
-                    
-                                    if (len(entrance_dict)!=0):
-                                        entranceN_duration = np.zeros(shape=entranceNr_night)
-                                        for i in range(entranceNr_night):
-                                            eventEntrance = entrance_dict[i]
-                                            if (len(eventEntrance.get('duration'))!=0):
-                                                entranceN_duration[i] = float(eventEntrance.get('duration'))                                            
-                                            
-                                    bedroom_dict = daily_dict.get('bedroom')
-                                    bedroomNr_night = len(bedroom_dict)
-                                    if (bedroomNr_night!=0):
-                                        bedroomN_duration = np.zeros(shape=bedroomNr_night)
-                                        for i in range(bedroomNr_night):
-                                            eventBedroom = bedroom_dict[i]
-                                            if (len(eventBedroom.get('duration'))!=0):
-                                                bedroomN_duration[i] = float(eventBedroom.get('duration'))                                                                                        
+                                    if('toilet' in daily_dict.keys()):
+                                        toilet_dict = daily_dict.get('toilet')
+                                        toiletNr_night = len(toilet_dict)
+                                        if (toiletNr_night!=0):
+                                            toiletN_duration = np.zeros(shape=toiletNr_night)
+                                            for i in range(toiletNr_night):
+                                                eventToilet = toilet_dict[i]
+                                                if (len(eventToilet.get('duration'))!=0):
+                                                    toiletN_duration[i] = float(eventToilet.get('duration'))                                            
+                                    
+                                    if('entrance' in daily_dict.keys()):
+                                        entrance_dict = daily_dict.get('entrance')
+                                        entranceNr_night = len(entrance_dict)
+                                        
+                                        if (len(entrance_dict)!=0):
+                                            entranceN_duration = np.zeros(shape=entranceNr_night)
+                                            for i in range(entranceNr_night):
+                                                eventEntrance = entrance_dict[i]
+                                                if (len(eventEntrance.get('duration'))!=0):
+                                                    entranceN_duration[i] = float(eventEntrance.get('duration'))                                            
+                                    if('bedroom' in daily_dict.keys()):        
+                                        bedroom_dict = daily_dict.get('bedroom')
+                                        bedroomNr_night = len(bedroom_dict)
+                                        if (bedroomNr_night!=0):
+                                            bedroomN_duration = np.zeros(shape=bedroomNr_night)
+                                            for i in range(bedroomNr_night):
+                                                eventBedroom = bedroom_dict[i]
+                                                if (len(eventBedroom.get('duration'))!=0):
+                                                    bedroomN_duration[i] = float(eventBedroom.get('duration'))                                                                                        
                                             
                             nr_night_visits[indexAnalysis] = toiletNr_night + entranceNr_night + bedroomNr_night
                         
@@ -638,19 +645,25 @@ class MultimodalFusion():
         halfInterval = int(investigatedPeriodinDays/2) 
         
         #evaluation of stationary behaviour
-        stationary = self.stationaryEvents       
-        maxValue = max(stationary)
-        
-        if maxValue>0:
-            stationary_ = stationary/maxValue
-        else:
-            stationary_ = stationary
+        stationary = self.stationaryEvents
+        ind = np.argwhere(stationary>-1)
+        if(len(ind)>9):
+            halfInterval = int(len(ind)/2) 
+            stationary1 = stationary[ind]                
+            maxValue = max(stationary1)
+            
+            if maxValue>0:
+                stationary_ = stationary1/maxValue
+            else:
+                stationary_ = stationary1
                
-        stationary_period1 = np.mean(stationary_[:halfInterval])
-        stationary_period2 = np.mean(stationary_[halfInterval:])
+            stationary_period1 = np.mean(stationary_[:halfInterval])
+            stationary_period2 = np.mean(stationary_[halfInterval:])
         
-        percent_stationary = stationary_period2 -stationary_period1
-        
+            percent_stationary = stationary_period2 -stationary_period1
+        else:
+            percent_stationary = 0
+            
         if percent_stationary > 0.1:
             line = 'Apathy increase of: ' + str(round(percent_stationary*100,2)) + '%; ' + str(stationary) + "\n"        
         elif percent_stationary < -0.1:
@@ -683,16 +696,24 @@ class MultimodalFusion():
    
         #assess the steps received from the band
         steps = self.steps
-        maxValue = max(steps)
-        if maxValue>0:
-            steps_ = steps/maxValue
-        else:
-            steps_ = steps
+        ind = np.argwhere(steps>0)
+        if(len(ind)>9):
+            halfInterval = int(len(ind)/2) 
+            steps1 = steps[ind]                
+            maxValue = max(steps1)
             
-        steps_period1 = np.mean(steps_[:halfInterval])
-        steps_period2 = np.mean(steps_[halfInterval:])
-    
-        percent_steps = steps_period2 - steps_period1        
+            if maxValue>0:
+                steps_ = steps1/maxValue
+            else:
+                steps_ = steps1
+               
+            steps_period1 = np.mean(steps_[:halfInterval])
+            steps_period2 = np.mean(steps_[halfInterval:])
+        
+            percent_steps = steps_period2 - steps_period1        
+        else:
+            percent_steps = 0           
+            
         if percent_steps > 0.1:
             line = 'General daily motion (based on steps) increase of: ' + str(round(percent_steps*100)) + '%; ' + str(steps) + "\n"           
         elif percent_steps < -0.1:
@@ -715,16 +736,24 @@ class MultimodalFusion():
         
         #assess the daily motion
         dailyMotion = self.dailyMotion
-        maxValue = max(dailyMotion)
-        if maxValue>0:
-            dailyMotion_ = dailyMotion/maxValue
-        else:
-            dailyMotion_ = dailyMotion
+        ind = np.argwhere(dailyMotion>-1)
+        if(len(ind)>9):
+            halfInterval = int(len(ind)/2) 
+            dailyMotion1 = dailyMotion[ind]                
+            maxValue = max(dailyMotion1)
             
-        dailyMotion_period1 = np.mean(dailyMotion_[:halfInterval])
-        dailyMotion_period2 = np.mean(dailyMotion_[halfInterval:])
-    
-        percent_dailyMotion = dailyMotion_period2 -dailyMotion_period1        
+            if maxValue>0:
+                dailyMotion_ = dailyMotion1/maxValue
+            else:
+                dailyMotion_ = dailyMotion1
+               
+            dailyMotion_period1 = np.mean(dailyMotion_[:halfInterval])
+            dailyMotion_period2 = np.mean(dailyMotion_[halfInterval:])
+        
+            percent_dailyMotion = dailyMotion_period2 - dailyMotion_period1        
+        else:
+            percent_dailyMotion = 0                   
+        
         if percent_dailyMotion > 0.1:
             line = 'Daily motion increase of: ' + str(round(percent_dailyMotion*100)) + '%; ' + str(dailyMotion) + "\n"           
         elif percent_dailyMotion < -0.1:
@@ -756,7 +785,7 @@ class MultimodalFusion():
             plt.show()
         
         # evaluation of the number of leaving the house events
-        nr_leaving_the_house = self.leavingHouse
+        nr_leaving_the_house = self.leavingHouse                    
         maxValue = max(nr_leaving_the_house)
         if maxValue>0:
             nr_leaving_the_house_ = nr_leaving_the_house/maxValue
@@ -856,17 +885,24 @@ class MultimodalFusion():
         
         #assess the freezing events for detecting deviations 
         freezing_events = self.freezing
-        maxValue = max(freezing_events)
-        if maxValue>0:
-            freezing_events_ = freezing_events/maxValue
-        else:
-            freezing_events_ = freezing_events
+        ind = np.argwhere(freezing_events>-1)
+        if(len(ind)>9):
+            halfInterval = int(len(ind)/2) 
+            freezing_events1 = freezing_events[ind]                
+            maxValue = max(freezing_events1)
             
-        freezing_period1 = np.mean(freezing_events_[:halfInterval])
-        freezing_period2 = np.mean(freezing_events_[halfInterval:])
+            if maxValue>0:
+                freezing_events_ = freezing_events1/maxValue
+            else:
+                freezing_events_ = freezing_events1
+               
+            freezing_period1 = np.mean(freezing_events_[:halfInterval])
+            freezing_period2 = np.mean(freezing_events_[halfInterval:])
         
-        percent_freezing = freezing_period2 - freezing_period1
-       
+            percent_freezing = freezing_period2 - freezing_period1
+        else:
+            percent_freezing = 0                       
+               
         if percent_freezing > 0.1:
         
             line = 'Freezing events, increase of: ' + str(round(percent_freezing*100))+ '%; ' + str(freezing_events) + "\n"
@@ -901,17 +937,24 @@ class MultimodalFusion():
         
         #assess the festination events for detecting deviations 
         festination_events = self.festination
-        maxValue = max(festination_events)
-        if maxValue>0:
-            festination_events_ = festination_events/maxValue
-        else:
-            festination_events_ = festination_events
+        ind = np.argwhere(festination_events>-1)
+        if(len(ind)>9):
+            halfInterval = int(len(ind)/2) 
+            festination_events1 = festination_events[ind]                
+            maxValue = max(festination_events1)
             
-        festination_period1 = np.mean(festination_events_[:halfInterval])
-        festination_period2 = np.mean(festination_events_[halfInterval:])
+            if maxValue>0:
+                festination_events_ = festination_events1/maxValue
+            else:
+                festination_events_ = festination_events1
+               
+            festination_period1 = np.mean(festination_events_[:halfInterval])
+            festination_period2 = np.mean(festination_events_[halfInterval:])
         
-        percent_festination = festination_period2 - festination_period1
-        
+            percent_festination = festination_period2 - festination_period1
+        else:
+            percent_festination = 0                  
+                           
         if percent_festination > 0.5:        
             line = 'Festination events, increase of: ' + str(round(percent_festination*100))+ '%; ' + str(festination_events) + "\n"
             line1 = 'Therefore, a visit to the neurologist would be indicated.'
@@ -958,17 +1001,23 @@ class MultimodalFusion():
         
         #assess the  fall down event  deviations
         fall_down_events = self.fallDown
-        maxValue = max(fall_down_events)
-        if maxValue>0:
-            fall_down_events_ = fall_down_events/maxValue
-        else:
-            fall_down_events_ = fall_down_events
+        ind = np.argwhere(fall_down_events>-1)
+        if(len(ind)>9):
+            halfInterval = int(len(ind)/2) 
+            fall_down_events1 = fall_down_events[ind]                
+            maxValue = max(fall_down_events1)
+            if maxValue>0:
+                fall_down_events_ = fall_down_events1/maxValue
+            else:
+                fall_down_events_ = fall_down_events1
             
-        fall_down_period1 = np.mean(fall_down_events_[:halfInterval])
-        fall_down_period2 = np.mean(fall_down_events_[halfInterval:])
+            fall_down_period1 = np.mean(fall_down_events_[:halfInterval])
+            fall_down_period2 = np.mean(fall_down_events_[halfInterval:])
         
-        percent_fall_down = fall_down_period2 - fall_down_period1 
-        
+            percent_fall_down = fall_down_period2 - fall_down_period1 
+        else:
+            percent_fall_down = 0                       
+                
         if percent_fall_down > 0.3:
         
             line = 'Fall down events, increase of: ' + str(round(percent_fall_down*100))+ '%; ' + str(fall_down_events) + "\n"
@@ -1008,16 +1057,22 @@ class MultimodalFusion():
         
         #assess the loss of balance event deviations 
         loss_of_balance_events = self.lossOfBalance
-        maxValue = max(loss_of_balance_events)
-        if maxValue>0:
-            loss_of_balance_events_ = loss_of_balance_events/maxValue
-        else:
-            loss_of_balance_events_ = loss_of_balance_events
+        ind = np.argwhere(loss_of_balance_events>-1)
+        if(len(ind)>9):
+            halfInterval = int(len(ind)/2) 
+            loss_of_balance_events1 = loss_of_balance_events[ind]                
+            maxValue = max(loss_of_balance_events1)
+            if maxValue>0:
+                loss_of_balance_events_ = loss_of_balance_events1/maxValue
+            else:
+                loss_of_balance_events_ = loss_of_balance_events1
 
-        loss_of_balance_period1 = np.mean(loss_of_balance_events_[:halfInterval])
-        loss_of_balance_period2 = np.mean(loss_of_balance_events_[halfInterval:])
+            loss_of_balance_period1 = np.mean(loss_of_balance_events_[:halfInterval])
+            loss_of_balance_period2 = np.mean(loss_of_balance_events_[halfInterval:])
               
-        percent_loss_of_balance = loss_of_balance_period2 - loss_of_balance_period1
+            percent_loss_of_balance = loss_of_balance_period2 - loss_of_balance_period1
+        else:
+            percent_loss_of_balance = 0                      
         
         if percent_loss_of_balance > 0.5 :
             line = 'Loss of balance events, increase of: ' + str(round(percent_loss_of_balance*100))+ '%; ' + str(loss_of_balance_events) + "\n"
@@ -1121,16 +1176,23 @@ class MultimodalFusion():
         hr_events_mode = self.heartRate_mode
         hr_events_skewness = self.heartRate_skewness
         hr_events_kurtosis = self.heartRate_kurtosis
-        maxValue = max(hr_events)
-        if maxValue>0:
-            hr_events_ = hr_events/maxValue
-        else:
-            hr_events_ = hr_events
-            
-        hr_period1 = np.mean(hr_events_[:halfInterval])
-        hr_period2 = np.mean(hr_events_[halfInterval:])
         
-        percent_hr = hr_period2 - hr_period1
+        ind = np.argwhere(hr_events>0)
+        if(len(ind)>9):
+            halfInterval = int(len(ind)/2) 
+            hr_events1 = hr_events[ind]                
+            maxValue = max(hr_events1)
+            if maxValue>0:
+                hr_events_ = hr_events1/maxValue
+            else:
+                hr_events_ = hr_events1
+            
+            hr_period1 = np.mean(hr_events_[:halfInterval])
+            hr_period2 = np.mean(hr_events_[halfInterval:])
+        
+            percent_hr = hr_period2 - hr_period1
+        else:
+            percent_hr = 0                                     
        
         if percent_hr > 0.2:
         
@@ -2568,15 +2630,15 @@ if __name__ == '__main__':
 
 	# define the set of parameters
 	#the list of patienIds need to be updated
-    listPatientIds = ['5315e0fb-a7ef-4742-9387-12cd9a000b20','50baff5b-7898-436d-8eb6-543600cc86c3','4d54d40a-919e-40f4-baa8-9e73dea08f73']
+    listPatientIds = ['5315e0fb-a7ef-4742-9387-12cd9a000b20','50baff5b-7898-436d-8eb6-543600cc86c3','4d54d40a-919e-40f4-baa8-9e73dea08f73','ccc97074-c7f9-47ae-a46f-3e9c79025cab']
     	
     nrPatients = len(listPatientIds)
-    investigatedPeriodinDays = 10  #interval for MF analysis
+    investigatedPeriodinDays = 31  #interval for MF analysis
     analysisDate = datetime.date.today()
 	
     str_date = analysisDate.strftime('%d-%m-%Y')
     #analysisDate = analysisDate.replace(2018,6,11) #this date is used for testing purposes
-    #analysisDate = analysisDate.replace(2018,7,21) #this date is used for testing purposes
+    analysisDate = analysisDate.replace(2018,8,1) #this date is used for testing purposes
     
     year = analysisDate.year
     month= analysisDate.month
