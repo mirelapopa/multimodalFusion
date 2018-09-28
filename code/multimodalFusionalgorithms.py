@@ -111,6 +111,8 @@ class MultimodalFusion():
             
             for line in d:
                 if ('patientID' in line.keys()):
+                   
+                    
                     if(line['patientID']==patientId):
                         foundPatientId = 1
                         #print 'found patient'
@@ -1239,19 +1241,27 @@ class MultimodalFusion():
         gsr_median = self.galvanicSkinResponse_median
         gsr_mode = self.galvanicSkinResponse_mode
         gsr_skewness = self.galvanicSkinResponse_skewness
-        gsr_kurtosis = self.galvanicSkinResponse_kurtosis
+        gsr_kurtosis = self.galvanicSkinResponse_kurtosis        
+        gsr_events = np.around(gsr_events,2)
+        print gsr_events
         
-        maxValue = max(gsr_events)
-        if maxValue>0:
-            gsr_events_ = gsr_events/maxValue
-        else:
-            gsr_events_ = gsr_events
+        ind = np.argwhere(gsr_events>0)
+        if(len(ind)>9):
+            halfInterval = int(len(ind)/2) 
+            gsr_events1 = gsr_events[ind]                
+            maxValue = max(gsr_events1)
+            if maxValue>0:
+                gsr_events_ = gsr_events1/maxValue
+            else:
+                gsr_events_ = gsr_events1
             
-        gsr_period1 = np.mean(gsr_events_[:halfInterval])
-        gsr_period2 = np.mean(gsr_events_[halfInterval:])
+            gsr_period1 = np.mean(gsr_events_[:halfInterval])
+            gsr_period2 = np.mean(gsr_events_[halfInterval:])
         
-        percent_gsr = gsr_period2 - gsr_period1
-       
+            percent_gsr = gsr_period2 - gsr_period1
+        else:
+            percent_gsr = 0           
+               
         if percent_gsr > 0.2:
         
             line = 'Galvanic skin response, increase of: ' + str(round(percent_gsr*100))+ '%; ' + str(gsr_events) + "\n"
@@ -1429,22 +1439,22 @@ class MultimodalFusion():
         # check if there are movement evaluations in the analyzed period
         nrParts = self.evaluationsExercises.shape[1]
         percentageParts = np.zeros(nrParts)
-        percentageEvaluation = 0
+        percentageEvaluation = 0      
+        evaluations = self.evaluationsExercises
+        
+        if(nrEvaluations>1):
+            if((self.evaluationsScore[nrEvaluations-1]+self.evaluationsScore[nrEvaluations-2])>0):
+                percentageEvaluation = (self.evaluationsScore[nrEvaluations-1]-self.evaluationsScore[nrEvaluations-2])/(self.evaluationsScore[nrEvaluations-1]+self.evaluationsScore[nrEvaluations-2])
+                print percentageEvaluation
+            else:
+                percentageEvaluation = 0
 
-        if(np.sum(self.evaluationDateList)>0):
-            #check if there at least 2 evaluations
-            if(nrEvaluations>1):
-                if(self.evaluationsScore[nrEvaluations-1]+self.evaluationsScore[nrEvaluations-2]>0):
-                    percentageEvaluation = (self.evaluationsScore[nrEvaluations-1]-self.evaluationsScore[nrEvaluations-2])/(self.evaluationsScore[nrEvaluations-1]+self.evaluationsScore[nrEvaluations-2])
+            for i in range(nrParts):             
+                if((evaluations[nrEvaluations - 1,i] + evaluations[nrEvaluations - 2,i])>0):
+                    percentageParts[i] = (self.evaluationsExercises[nrEvaluations - 1,i] - self.evaluationsExercises[nrEvaluations - 2,i]) / (self.evaluationsExercises[nrEvaluations - 1,i] + self.evaluationsExercises[nrEvaluations - 2,i])                    
                 else:
-                    percentageEvaluation = 0
-
-                for i in range(nrParts):
-                    if(self.evaluationsExercises[nrEvaluations - 1,i] + self.evaluationsExercises[nrEvaluations - 2,i]>0):
-                        percentageParts[i] = (self.evaluationsExercises[nrEvaluations - 1,i] - self.evaluationsExercises[nrEvaluations - 2,i]) / (self.evaluationsExercises[nrEvaluations - 1,i] + self.evaluationsExercises[nrEvaluations - 2,i])
-                    else:
-                        percentageParts[i] = 0
-                percentageParts = np.round(percentageParts,2)
+                    percentageParts[i] = 0
+            percentageParts = np.round(percentageParts,2)
 
         line = '\t\t{\n' + '\t\t\t\"totalScoreDeviation\":' + str(round(percentageEvaluation,3)) + ',\n'
         line = line + '\t\t\t\"partsDeviation\":' + '[' + ', '.join(map(str, percentageParts)) + ']' + '\n' + '\t\t}\n'
@@ -1639,18 +1649,24 @@ class MultimodalFusion():
         halfInterval = int(investigatedPeriodinDays/2) 
         
         #evaluation of stationary behaviour
-        stationary = self.stationaryEvents
-        maxValue = max(stationary)
-        if maxValue>0:
-            stationary_ = stationary/maxValue
+        stationary = self.stationaryEvents         
+        ind = np.argwhere(stationary>-1)
+        if(len(ind)>9):
+            halfInterval = int(len(ind)/2) 
+            stationary1 = stationary[ind]                
+            maxValue = max(stationary1)
+            if maxValue>0:
+                stationary_ = stationary1/maxValue
+            else:
+                stationary_ = stationary1
+            
+            stationary_period1 = np.mean(stationary_[:halfInterval])
+            stationary_period2 = np.mean(stationary_[halfInterval:])
+        
+            percent_stationary = stationary_period2 -stationary_period1
         else:
-            stationary_ = stationary
-               
-        stationary_period1 = np.mean(stationary_[:halfInterval])
-        stationary_period2 = np.mean(stationary_[halfInterval:])
-        
-        percent_stationary = stationary_period2 -stationary_period1
-        
+            percent_stationary = 0                               
+                
         if percent_stationary > 0.1:
             line = 'Apathy increase of: ' + str(round(percent_stationary*100,2)) + '%; ' + str(stationary) + "\n"        
         elif percent_stationary < -0.1:
@@ -1684,16 +1700,23 @@ class MultimodalFusion():
         
          #assess the steps received from the band
         steps = self.steps
-        maxValue = max(steps)
-        if maxValue>0:
-            steps_ = steps/maxValue
-        else:
-            steps_ = steps
+        ind = np.argwhere(steps>0)
+        if(len(ind)>9):
+            halfInterval = int(len(ind)/2) 
+            steps1 = steps[ind]                
+            maxValue = max(steps1)
+            if maxValue>0:
+                steps_ = steps1/maxValue
+            else:
+                steps_ = steps1        
             
-        steps_period1 = np.mean(steps_[:halfInterval])
-        steps_period2 = np.mean(steps_[halfInterval:])
+            steps_period1 = np.mean(steps_[:halfInterval])
+            steps_period2 = np.mean(steps_[halfInterval:])
     
-        percent_steps = steps_period2 - steps_period1        
+            percent_steps = steps_period2 - steps_period1        
+        else:
+            percent_steps = 0
+            
         if percent_steps > 0.1:
             line = 'General daily motion (based on steps) increase of: ' + str(round(percent_steps*100)) + '%; ' + str(steps) + "\n"           
         elif percent_steps < -0.1:
@@ -1718,16 +1741,23 @@ class MultimodalFusion():
             
         #assess the daily motion
         dailyMotion = self.dailyMotion
-        maxValue = max(dailyMotion)
-        if maxValue>0:
-            dailyMotion_ = dailyMotion/maxValue
-        else:
-            dailyMotion_ = dailyMotion
-            
-        dailyMotion_period1 = np.mean(dailyMotion_[:halfInterval])
-        dailyMotion_period2 = np.mean(dailyMotion_[halfInterval:])
+        ind = np.argwhere(dailyMotion>-1)
+        if(len(ind)>9):
+            halfInterval = int(len(ind)/2) 
+            dailyMotion1 = dailyMotion[ind]                
+            maxValue = max(dailyMotion1)
+            if maxValue>0:
+                dailyMotion_ = dailyMotion1/maxValue
+            else:
+                dailyMotion_ = dailyMotion1               
+                    
+            dailyMotion_period1 = np.mean(dailyMotion_[:halfInterval])
+            dailyMotion_period2 = np.mean(dailyMotion_[halfInterval:])
     
-        percent_dailyMotion = dailyMotion_period2 -dailyMotion_period1        
+            percent_dailyMotion = dailyMotion_period2 -dailyMotion_period1        
+        else:
+            percent_dailyMotion = 0
+            
         if percent_dailyMotion > 0.1:
             line = 'Daily motion increase of: ' + str(round(percent_dailyMotion*100)) + '%; ' + str(dailyMotion) + "\n"           
         elif percent_dailyMotion < -0.1:
@@ -1805,16 +1835,23 @@ class MultimodalFusion():
         hr_events_mode = self.heartRate_mode
         hr_events_skewness = self.heartRate_skewness
         hr_events_kurtosis = self.heartRate_kurtosis
-        maxValue = max(hr_events)
-        if maxValue>0:
-            hr_events_ = hr_events/maxValue
-        else:
-            hr_events_ = hr_events
-            
-        hr_period1 = np.mean(hr_events_[:halfInterval])
-        hr_period2 = np.mean(hr_events_[halfInterval:])
         
-        percent_hr = hr_period2 - hr_period1
+        ind = np.argwhere(hr_events>-1)
+        if(len(ind)>9):
+            halfInterval = int(len(ind)/2) 
+            hr_events1 = hr_events[ind]                
+            maxValue = max(hr_events1)
+            if maxValue>0:
+                hr_events_ = hr_events1/maxValue
+            else:
+                hr_events_ = hr_events1
+        
+            hr_period1 = np.mean(hr_events_[:halfInterval])
+            hr_period2 = np.mean(hr_events_[halfInterval:])
+        
+            percent_hr = hr_period2 - hr_period1
+        else:
+            percent_hr = 0
        
         if percent_hr > 0.2:
         
@@ -1863,16 +1900,22 @@ class MultimodalFusion():
         gsr_skewness = self.galvanicSkinResponse_skewness
         gsr_kurtosis = self.galvanicSkinResponse_kurtosis
         
-        maxValue = max(gsr_events)
-        if maxValue>0:
-            gsr_events_ = gsr_events/maxValue
-        else:
-            gsr_events_ = gsr_events
-            
-        gsr_period1 = np.mean(gsr_events_[:halfInterval])
-        gsr_period2 = np.mean(gsr_events_[halfInterval:])
+        ind = np.argwhere(gsr_events>-1)
+        if(len(ind)>9):
+            halfInterval = int(len(ind)/2) 
+            gsr_events1 = gsr_events[ind]                
+            maxValue = max(gsr_events1)
+            if maxValue>0:
+                gsr_events_ = gsr_events1/maxValue
+            else:
+                gsr_events_ = gsr_events1
+                    
+            gsr_period1 = np.mean(gsr_events_[:halfInterval])
+            gsr_period2 = np.mean(gsr_events_[halfInterval:])
         
-        percent_gsr = gsr_period2 - gsr_period1
+            percent_gsr = gsr_period2 - gsr_period1
+        else:
+            percent_gsr = 0
        
         if percent_gsr > 0.2:
         
@@ -1966,16 +2009,22 @@ class MultimodalFusion():
         
         #assess the abnormal behaviours
         abnormalEvents = self.abnormalEvents
-        maxValue = max(abnormalEvents)
-        if maxValue>0:
-            abnormalEvents_ = abnormalEvents/maxValue
-        else:
-            abnormalEvents_ = abnormalEvents
-            
-        abnormalEvents_period1 = np.mean(abnormalEvents_[:halfInterval])
-        abnormalEvents_period2 = np.mean(abnormalEvents_[halfInterval:])
+        ind = np.argwhere(abnormalEvents>-1)
+        if(len(ind)>9):
+            halfInterval = int(len(ind)/2) 
+            abnormalEvents1 = abnormalEvents[ind]                
+            maxValue = max(abnormalEvents1)
+            if maxValue>0:
+                abnormalEvents_ = abnormalEvents1/maxValue
+            else:
+                abnormalEvents_ = abnormalEvents1
+                    
+            abnormalEvents_period1 = np.mean(abnormalEvents_[:halfInterval])
+            abnormalEvents_period2 = np.mean(abnormalEvents_[halfInterval:])
     
-        percent_abnormalEvents = abnormalEvents_period2 -abnormalEvents_period1        
+            percent_abnormalEvents = abnormalEvents_period2 -abnormalEvents_period1        
+        else:
+            percent_abnormalEvents = 0
         
         if(percent_abnormalEvents>0.1):
             line = 'Abnormal events increase of: ' + str(round(percent_abnormalEvents*100)) + '%; ' + str(abnormalEvents) + '\n'
@@ -2031,16 +2080,22 @@ class MultimodalFusion():
             
         #assess the  fall down event  deviations
         fall_down_events = self.fallDown
-        maxValue = max(fall_down_events)
-        if maxValue>0:
-            fall_down_events_ = fall_down_events/maxValue
-        else:
-            fall_down_events_ = fall_down_events
+        ind = np.argwhere(fall_down_events>-1)
+        if(len(ind)>9):
+            halfInterval = int(len(ind)/2) 
+            fall_down_events1 = fall_down_events[ind]                
+            maxValue = max(fall_down_events1)
+            if maxValue>0:
+                fall_down_events_ = fall_down_events1/maxValue
+            else:
+                fall_down_events_ = fall_down_events1        
             
-        fall_down_period1 = np.mean(fall_down_events_[:halfInterval])
-        fall_down_period2 = np.mean(fall_down_events_[halfInterval:])
-        
-        percent_fall_down = fall_down_period2 - fall_down_period1 
+            fall_down_period1 = np.mean(fall_down_events_[:halfInterval])
+            fall_down_period2 = np.mean(fall_down_events_[halfInterval:])
+            
+            percent_fall_down = fall_down_period2 - fall_down_period1 
+        else:
+            percent_fall_down = 0
         
         if percent_fall_down > 0.3:
         
@@ -2081,16 +2136,22 @@ class MultimodalFusion():
         
         #assess the loss of balance event deviations 
         loss_of_balance_events = self.lossOfBalance
-        maxValue = max(loss_of_balance_events)
-        if maxValue>0:
-            loss_of_balance_events_ = loss_of_balance_events/maxValue
-        else:
-            loss_of_balance_events_ = loss_of_balance_events
+        ind = np.argwhere(loss_of_balance_events>-1)
+        if(len(ind)>9):
+            halfInterval = int(len(ind)/2) 
+            loss_of_balance_events1 = loss_of_balance_events[ind]                
+            maxValue = max(loss_of_balance_events1)
+            if maxValue>0:
+                loss_of_balance_events_ = loss_of_balance_events1/maxValue
+            else:
+                loss_of_balance_events_ = loss_of_balance_events1                    
 
-        loss_of_balance_period1 = np.mean(loss_of_balance_events_[:halfInterval])
-        loss_of_balance_period2 = np.mean(loss_of_balance_events_[halfInterval:])
+            loss_of_balance_period1 = np.mean(loss_of_balance_events_[:halfInterval])
+            loss_of_balance_period2 = np.mean(loss_of_balance_events_[halfInterval:])
               
-        percent_loss_of_balance = loss_of_balance_period2 - loss_of_balance_period1
+            percent_loss_of_balance = loss_of_balance_period2 - loss_of_balance_period1
+        else:
+            percent_loss_of_balance = 0
         
         if percent_loss_of_balance > 0.5 :
             line = 'Loss of balance events, increase of: ' + str(round(percent_loss_of_balance*100))+ '%; ' + str(loss_of_balance_events) + "\n"
@@ -2633,12 +2694,12 @@ if __name__ == '__main__':
     listPatientIds = ['5315e0fb-a7ef-4742-9387-12cd9a000b20','50baff5b-7898-436d-8eb6-543600cc86c3','4d54d40a-919e-40f4-baa8-9e73dea08f73','ccc97074-c7f9-47ae-a46f-3e9c79025cab']
     	
     nrPatients = len(listPatientIds)
-    investigatedPeriodinDays = 31  #interval for MF analysis
+    investigatedPeriodinDays = 10  #interval for MF analysis
     analysisDate = datetime.date.today()
 	
     str_date = analysisDate.strftime('%d-%m-%Y')
     #analysisDate = analysisDate.replace(2018,6,11) #this date is used for testing purposes
-    analysisDate = analysisDate.replace(2018,8,1) #this date is used for testing purposes
+    #analysisDate = analysisDate.replace(2018,9,1) #this date is used for testing purposes
     
     year = analysisDate.year
     month= analysisDate.month
@@ -2704,7 +2765,7 @@ if __name__ == '__main__':
         outputFile.close()  
         
         # upload the output file to the cloud containing the analysis results
-        uploadResults = 1
+        uploadResults = 0
         if(uploadResults):
         
             outputPath= '../output'        
