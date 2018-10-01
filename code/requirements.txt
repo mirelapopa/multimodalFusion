@@ -6,3 +6,4 @@ packaging==16.8
 pyparsing==2.2.0
 requests==2.14.2
 six==1.10.0
+typing==3.5.1
