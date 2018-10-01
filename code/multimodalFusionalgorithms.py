@@ -2726,12 +2726,17 @@ if __name__ == '__main__':
     inputDIT_File =   'DitML_' + str(year) + monthString + dayString  + '.json'
                                        
     outputFileMF = outputMFpath + '/' + outputMF_File   
-    
+                    
     #check if all the input files are available
     inputFileEHR = inputEHRpath + '/' + inputEHR_File   
     inputFileHETRA = inputHETRApath + '/' + inputHETRA_File   
     inputFileDIT = inputDITpath + '/' + inputDIT_File
-        
+    
+    downloadFiles = 1
+    if(downloadFiles):                
+        downloadFileFromCloud.downloadFile_Cloud(inputFileEHR,inputEHR_File)        
+        downloadFileFromCloud.downloadFile_Cloud(inputFileHETRA,inputHETRA_File)        
+
     startDate = analysisDate + timedelta(days=-investigatedPeriodinDays)	   
     
     if (os.path.isfile(inputFileEHR) & os.path.isfile(inputFileHETRA)):
