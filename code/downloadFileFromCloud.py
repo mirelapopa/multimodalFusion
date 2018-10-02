@@ -6,14 +6,20 @@ from lib import S3FileManager
 #    print 'Finished downloading the file'
 	
 def downloadFile_CloudEHR(pathFile):
-    fileManager = S3FileManager.S3FileManger('mf/out','mf/in/ehr')
-    #fileManager.download_file(pathFile,fileName)
-    fileManager.latest_document(pathFile) 
-    print 'Finished downloading the EHR file'
+    try:
+        fileManager = S3FileManager.S3FileManger('mf/out','mf/in/ehr')
+        #fileManager.download_file(pathFile,fileName)
+        fileManager.latest_document(pathFile) 
+        print 'Finished downloading the EHR file'
+    except ValueError:
+        print ValueError
 
 def downloadFile_CloudHETRA(pathFile):    
-    fileManager = S3FileManager.S3FileManger('mf/out','mf/in/hetra')
-    #fileManager.download_file(pathFile,fileName)
-    fileManager.latest_document(pathFile)  
-    print 'Finished downloading the HETRA file'
+    try:
+        fileManager = S3FileManager.S3FileManger('mf/out','mf/in/hetra')
+        #fileManager.download_file(pathFile,fileName)
+        fileManager.latest_document(pathFile)  
+        print 'Finished downloading the HETRA file'
+    except ValueError:
+        print ValueError
 
