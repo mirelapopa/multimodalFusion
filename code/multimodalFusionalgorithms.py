@@ -102,6 +102,7 @@ class MultimodalFusion():
         bedroomNr = 0
         toiletNr = 0
         steps = np.zeros (shape= (investigatedPeriodinDays))
+        indexAnalysis = -1
 		
         with open(filePath) as f:
             try:
@@ -115,11 +116,15 @@ class MultimodalFusion():
                     
                     if(line['patientID']==patientId):
                         foundPatientId = 1
+                        print indexAnalysis
                         #print 'found patient'
                         if ('date' in line.keys()):
                             dateFile = datetime.datetime.strptime(str(line['date']),'%Y-%m-%d')
                             difDays = (dateFile-startDate).days                           
-                            indexAnalysis = difDays
+                            #indexAnalysis = difDays
+                            indexAnalysis = indexAnalysis + 1
+                            if(indexAnalysis>=investigatedPeriodinDays):
+                                break
                             
                             if ('daily_motion' in line.keys()):
                                 daily_dict = line['daily_motion']
@@ -2698,7 +2703,7 @@ if __name__ == '__main__':
     analysisDate = datetime.date.today()
 	
     str_date = analysisDate.strftime('%d-%m-%Y')
-    #analysisDate = analysisDate.replace(2018,6,11) #this date is used for testing purposes
+    #analysisDate = analysisDate.replace(2018,9,1) #this date is used for testing purposes
     #analysisDate = analysisDate.replace(2018,9,1) #this date is used for testing purposes
     
     year = analysisDate.year
