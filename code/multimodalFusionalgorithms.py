@@ -2734,8 +2734,10 @@ if __name__ == '__main__':
     
     downloadFiles = 1
     if(downloadFiles):                
-        downloadFileFromCloud.downloadFile_Cloud(inputFileEHR,inputEHR_File)        
-        downloadFileFromCloud.downloadFile_Cloud(inputFileHETRA,inputHETRA_File)        
+        #downloadFileFromCloud.downloadFile_CloudEHR(inputFileEHR,inputEHR_File)        
+        #downloadFileFromCloud.downloadFile_CloudHETRA(inputFileHETRA,inputHETRA_File)              
+        downloadFileFromCloud.downloadFile_CloudEHR(inputFileEHR)        
+        downloadFileFromCloud.downloadFile_CloudHETRA(inputFileHETRA)        
 
     startDate = analysisDate + timedelta(days=-investigatedPeriodinDays)	   
     
