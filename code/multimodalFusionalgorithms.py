@@ -2772,7 +2772,7 @@ if __name__ == '__main__':
         outputFile.close()  
         
         # upload the output file to the cloud containing the analysis results
-        uploadResults = 0
+        uploadResults = 1
         if(uploadResults):
         
             outputPath= '../output'        
