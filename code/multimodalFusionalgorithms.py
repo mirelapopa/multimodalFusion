@@ -583,8 +583,8 @@ class MultimodalFusion():
                     else:
                         currentTimeIndex = 2
                     currentIndex = (currentday-1)*3 + currentTimeIndex
-                    print currentIndex
-                    print currentday
+                    #print currentIndex
+                    #print currentday
                     totalTimeUsageperDayInterval[currentIndex] = totalTimeUsageperDayInterval[currentIndex] + 1
                     totalTimeUsageperDay[currentday-1] = totalTimeUsageperDay[currentday-1] + 1                           
                     
@@ -2784,8 +2784,8 @@ if __name__ == '__main__':
         downloadFileFromCloud.downloadFile_CloudHETRA(inputFileHETRA)        
 
     startDate = analysisDate + timedelta(days=-investigatedPeriodinDays)	   
-    print inputFileEHR
-    print inputFileHETRA
+    #print inputFileEHR
+    #print inputFileHETRA
     
     if (os.path.isfile(inputFileEHR) & os.path.isfile(inputFileHETRA)):
     
