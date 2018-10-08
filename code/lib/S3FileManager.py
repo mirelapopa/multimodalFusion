@@ -10,7 +10,7 @@ class S3FileManger:
     #
     def latest_document(self, destination):
         try:
-            s3 = boto3.client("s3")
+            s3 = boto3.client("s3", region_name="eu-west-1")
             print 'Bucket: ' + self.BUCKET_NAME
             print 'Dir: ' + self.params.get("in_dir")
             response = s3.list_objects_v2(Bucket=self.BUCKET_NAME, Prefix=self.params.get("in_dir"))
@@ -24,7 +24,7 @@ class S3FileManger:
 
     def upload_file(self, origin, filename):
         try:
-            s3 = boto3.client("s3")
+            s3 = boto3.client("s3", region_name="eu-west-1")
             s3.upload_file(origin, self.BUCKET_NAME, self.params.get("out_dir") + '/' + filename)
             return 1
         except Exception as e:
@@ -33,7 +33,7 @@ class S3FileManger:
 
     def download_file(self, destination, filename):
         try:
-            s3 = boto3.client("s3")
+            s3 = boto3.client("s3", region_name="eu-west-1")
             print 'Go into download file with params: ' + self.params.get("in_dir")
             print 'Filename coming is:' + filename
             print 'Target destination:' + destination
