@@ -11,6 +11,8 @@ class S3FileManger:
     def latest_document(self, destination):
         try:
             s3 = boto3.client("s3")
+            print 'Bucket: ' + self.BUCKET_NAME
+            print 'Dir: ' + self.params.get("in_dir")
             response = s3.list_objects_v2(Bucket=self.BUCKET_NAME, Prefix=self.params.get("in_dir"))
             last_modified = sorted(response.get("Contents"), key=lambda content: content.get("LastModified"),
                                    reverse=True)
@@ -32,6 +34,9 @@ class S3FileManger:
     def download_file(self, destination, filename):
         try:
             s3 = boto3.client("s3")
+            print 'Go into download file with params: ' + self.params.get("in_dir")
+            print 'Filename coming is:' + filename
+            print 'Target destination:' + destination
             s3.download_file(self.BUCKET_NAME, self.params.get("in_dir") + '/' + filename, destination)
             return 1
         except Exception as e:
