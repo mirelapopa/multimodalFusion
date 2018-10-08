@@ -115,11 +115,11 @@ class MultimodalFusion():
                    
                     
                     if(line['patientID']==patientId):
-                        foundPatientId = 1
-                        print indexAnalysis
+                        foundPatientId = 1                      
                         #print 'found patient'
                         if ('date' in line.keys()):
                             dateFile = datetime.datetime.strptime(str(line['date']),'%Y-%m-%d')
+                            #print dateFile
                             difDays = (dateFile-startDate).days                           
                             #indexAnalysis = difDays
                             indexAnalysis = indexAnalysis + 1
@@ -178,30 +178,31 @@ class MultimodalFusion():
                                 if('toilet' in daily_dict.keys()):
                                     toilet_dict = daily_dict.get('toilet')                                                    
                                     toiletNr = len(toilet_dict)
-                                    if (len(toilet_dict)!=0):
-                                        toilet_duration = np.zeros(shape=toiletNr)
-                                        for i in range(toiletNr):
-                                            toiletItem = toilet_dict[i]
-                                            if (len(toiletItem.get('duration'))!=0):
-                                                toilet_duration[i] = float(toiletItem.get('duration'))
+#                                    if (len(toilet_dict)!=0):
+#                                        toilet_duration = np.zeros(shape=toiletNr)
+#                                        for i in range(toiletNr):
+#                                            toiletItem = toilet_dict[i]
+#                                            if (len(toiletItem.get('duration'))!=0):
+#                                                toilet_duration[i] = float(toiletItem.get('duration'))
                                 if('entrance' in daily_dict.keys()):            
                                     entrance_dict = daily_dict.get('entrance')
                                     entranceNr = len(entrance_dict)
-                                    if (len(entrance_dict)!=0):
-                                        entrance_duration = np.zeros(shape=entranceNr)
-                                        for i in range(entranceNr):
-                                            entranceItem = entrance_dict[i]
-                                            if (len(entranceItem.get('duration'))!=0):
-                                                entrance_duration[i] = float(entranceItem.get('duration'))
+                                    #if (len(entrance_dict)!=0):
+#                                        entrance_duration = np.zeros(shape=entranceNr)
+#                                        for i in range(entranceNr):
+#                                            entranceItem = entrance_dict[i]
+#                                            if (len(entranceItem.get('duration'))!=0):
+#                                                entrance_duration[i] = float(entranceItem.get('duration'))
+                                
                                 if('bedroom' in daily_dict.keys()):        
                                     bedroom_dict = daily_dict.get('bedroom')
                                     bedroomNr = len(bedroom_dict)
-                                    if (len(bedroom_dict)!=0):
-                                        bedroom_duration = np.zeros(shape=bedroomNr)
-                                        for i in range(bedroomNr):
-                                            bedroomItem = bedroom_dict[i]
-                                            if (len(bedroomItem.get('duration'))!=0):
-                                                bedroom_duration[i] = float(bedroomItem.get('duration'))                                            
+                                    #if (len(bedroom_dict)!=0):
+#                                        bedroom_duration = np.zeros(shape=bedroomNr)
+#                                        for i in range(bedroomNr):
+#                                            bedroomItem = bedroom_dict[i]
+#                                            if (len(bedroomItem.get('duration'))!=0):
+#                                                bedroom_duration[i] = float(bedroomItem.get('duration'))                                            
                                             
                             if('as_night_motion' in line.keys()):
                                 daily_dict = line['as_day_motion']
@@ -210,12 +211,12 @@ class MultimodalFusion():
                                     if('toilet' in daily_dict.keys()):
                                         toilet_dict = daily_dict.get('toilet')
                                         toiletNr_night = len(toilet_dict)
-                                        if (toiletNr_night!=0):
-                                            toiletN_duration = np.zeros(shape=toiletNr_night)
-                                            for i in range(toiletNr_night):
-                                                eventToilet = toilet_dict[i]
-                                                if (len(eventToilet.get('duration'))!=0):
-                                                    toiletN_duration[i] = float(eventToilet.get('duration'))                                            
+#                                        if (toiletNr_night!=0):
+#                                            toiletN_duration = np.zeros(shape=toiletNr_night)
+#                                            for i in range(toiletNr_night):
+#                                                eventToilet = toilet_dict[i]
+#                                                if (len(eventToilet.get('duration'))!=0):
+#                                                    toiletN_duration[i] = float(eventToilet.get('duration'))                                            
                                     
                                     if('entrance' in daily_dict.keys()):
                                         entrance_dict = daily_dict.get('entrance')
@@ -223,19 +224,19 @@ class MultimodalFusion():
                                         
                                         if (len(entrance_dict)!=0):
                                             entranceN_duration = np.zeros(shape=entranceNr_night)
-                                            for i in range(entranceNr_night):
-                                                eventEntrance = entrance_dict[i]
-                                                if (len(eventEntrance.get('duration'))!=0):
-                                                    entranceN_duration[i] = float(eventEntrance.get('duration'))                                            
+#                                            for i in range(entranceNr_night):
+#                                                eventEntrance = entrance_dict[i]
+#                                                if (len(eventEntrance.get('duration'))!=0):
+#                                                    entranceN_duration[i] = float(eventEntrance.get('duration'))                                            
                                     if('bedroom' in daily_dict.keys()):        
                                         bedroom_dict = daily_dict.get('bedroom')
                                         bedroomNr_night = len(bedroom_dict)
-                                        if (bedroomNr_night!=0):
-                                            bedroomN_duration = np.zeros(shape=bedroomNr_night)
-                                            for i in range(bedroomNr_night):
-                                                eventBedroom = bedroom_dict[i]
-                                                if (len(eventBedroom.get('duration'))!=0):
-                                                    bedroomN_duration[i] = float(eventBedroom.get('duration'))                                                                                        
+#                                        if (bedroomNr_night!=0):
+#                                            bedroomN_duration = np.zeros(shape=bedroomNr_night)
+#                                            for i in range(bedroomNr_night):
+#                                                eventBedroom = bedroom_dict[i]
+#                                                if (len(eventBedroom.get('duration'))!=0):
+#                                                    bedroomN_duration[i] = float(eventBedroom.get('duration'))                                                                                        
                                             
                             nr_night_visits[indexAnalysis] = toiletNr_night + entranceNr_night + bedroomNr_night
                         
@@ -582,7 +583,8 @@ class MultimodalFusion():
                     else:
                         currentTimeIndex = 2
                     currentIndex = (currentday-1)*3 + currentTimeIndex
-                    
+                    print currentIndex
+                    print currentday
                     totalTimeUsageperDayInterval[currentIndex] = totalTimeUsageperDayInterval[currentIndex] + 1
                     totalTimeUsageperDay[currentday-1] = totalTimeUsageperDay[currentday-1] + 1                           
                     
@@ -647,14 +649,14 @@ class MultimodalFusion():
         #print abnormalUsageTime, nrAbnormalEvents, type_events_T, type_events_S, type_events_ST, nrFunctionCalls_newAttachment, nrFunctionCalls_kBase, nrFunctionCalls_medication 
         return abnormalUsageTime, nrAbnormalEvents, type_events_T, type_events_S, type_events_ST         
        
-    def evaluateParkinsonsActivities(self,outputFile,investigatedPeriodinDays):
+    def evaluateParkinsonsActivities(self,outputFile,investigatedPeriodinDays,minimumAnalysisDays):
         
         halfInterval = int(investigatedPeriodinDays/2) 
         
         #evaluation of stationary behaviour
         stationary = self.stationaryEvents
         ind = np.argwhere(stationary>-1)
-        if(len(ind)>9):
+        if(len(ind)>=minimumAnalysisDays):
             halfInterval = int(len(ind)/2) 
             stationary1 = stationary[ind]                
             maxValue = max(stationary1)
@@ -704,7 +706,7 @@ class MultimodalFusion():
         #assess the steps received from the band
         steps = self.steps
         ind = np.argwhere(steps>0)
-        if(len(ind)>9):
+        if(len(ind)>=minimumAnalysisDays):
             halfInterval = int(len(ind)/2) 
             steps1 = steps[ind]                
             maxValue = max(steps1)
@@ -744,7 +746,7 @@ class MultimodalFusion():
         #assess the daily motion
         dailyMotion = self.dailyMotion
         ind = np.argwhere(dailyMotion>-1)
-        if(len(ind)>9):
+        if(len(ind)>=minimumAnalysisDays):
             halfInterval = int(len(ind)/2) 
             dailyMotion1 = dailyMotion[ind]                
             maxValue = max(dailyMotion1)
@@ -792,18 +794,24 @@ class MultimodalFusion():
             plt.show()
         
         # evaluation of the number of leaving the house events
-        nr_leaving_the_house = self.leavingHouse                    
-        maxValue = max(nr_leaving_the_house)
-        if maxValue>0:
-            nr_leaving_the_house_ = nr_leaving_the_house/maxValue
-        else:
-            nr_leaving_the_house_ = nr_leaving_the_house
+        nr_leaving_the_house = self.leavingHouse    
+        ind = np.argwhere(nr_leaving_the_house>-1)
+        if(len(ind)>=minimumAnalysisDays):
+            halfInterval = int(len(ind)/2) 
+            nr_leaving_the_house1 = nr_leaving_the_house[ind]                
+            maxValue = max(nr_leaving_the_house1)        
+            if maxValue>0:
+                nr_leaving_the_house_ = nr_leaving_the_house/maxValue
+            else:
+                nr_leaving_the_house_ = nr_leaving_the_house1
                 
-        leavingHouse_period1 = np.mean(nr_leaving_the_house_[:halfInterval])    
-        leavingHouse_period2 = np.mean(nr_leaving_the_house_[halfInterval:])
+            leavingHouse_period1 = np.mean(nr_leaving_the_house_[:halfInterval])    
+            leavingHouse_period2 = np.mean(nr_leaving_the_house_[halfInterval:])
         
-        percent_leavingHouse = leavingHouse_period2 - leavingHouse_period1 
-                    
+            percent_leavingHouse = leavingHouse_period2 - leavingHouse_period1 
+        else:
+            percent_leavingHouse = 0
+            
         if percent_leavingHouse > 0.1:
             line = 'Patient leaving the house, increase of: ' + str(round(percent_leavingHouse*100)) + '%; ' + str(nr_leaving_the_house) + "\n"
             
@@ -837,17 +845,23 @@ class MultimodalFusion():
     
         #evaluation of the number of visits during the night
         nr_night_visits = self.nightMotion
-        maxValue = max(nr_night_visits)
-        if maxValue>0:
-            nr_night_visits_ = nr_night_visits/maxValue
-        else:
-            nr_night_visits_ = nr_night_visits
+        ind = np.argwhere(nr_night_visits>-1)
+        if(len(ind)>=minimumAnalysisDays):
+            halfInterval = int(len(ind)/2) 
+            nr_night_visits1 = nr_night_visits[ind]                
+            maxValue = max(nr_night_visits1)        
+            if maxValue>0:
+                nr_night_visits_ = nr_night_visits1/maxValue
+            else:
+                nr_night_visits_ = nr_night_visits1
             
-        # assess deviations in the night motion
-        nightMotion_period1 = np.mean(nr_night_visits_[:halfInterval])    
-        nightMotion_period2 = np.mean(nr_night_visits_[halfInterval:])
+            # assess deviations in the night motion
+            nightMotion_period1 = np.mean(nr_night_visits_[:halfInterval])    
+            nightMotion_period2 = np.mean(nr_night_visits_[halfInterval:])
         
-        percent_nightMotion = nightMotion_period2-nightMotion_period1 
+            percent_nightMotion = nightMotion_period2-nightMotion_period1 
+        else:
+            percent_nightMotion = 0
                 
         if percent_nightMotion > 0.1:
             line = 'Night motion, increase of: ' + str(round(percent_nightMotion*100)) + '%; ' + str(nr_night_visits) + "\n"
@@ -893,7 +907,7 @@ class MultimodalFusion():
         #assess the freezing events for detecting deviations 
         freezing_events = self.freezing
         ind = np.argwhere(freezing_events>-1)
-        if(len(ind)>9):
+        if(len(ind)>=minimumAnalysisDays):
             halfInterval = int(len(ind)/2) 
             freezing_events1 = freezing_events[ind]                
             maxValue = max(freezing_events1)
@@ -945,7 +959,7 @@ class MultimodalFusion():
         #assess the festination events for detecting deviations 
         festination_events = self.festination
         ind = np.argwhere(festination_events>-1)
-        if(len(ind)>9):
+        if(len(ind)>=minimumAnalysisDays):
             halfInterval = int(len(ind)/2) 
             festination_events1 = festination_events[ind]                
             maxValue = max(festination_events1)
@@ -1009,7 +1023,7 @@ class MultimodalFusion():
         #assess the  fall down event  deviations
         fall_down_events = self.fallDown
         ind = np.argwhere(fall_down_events>-1)
-        if(len(ind)>9):
+        if(len(ind)>=minimumAnalysisDays):
             halfInterval = int(len(ind)/2) 
             fall_down_events1 = fall_down_events[ind]                
             maxValue = max(fall_down_events1)
@@ -1065,7 +1079,7 @@ class MultimodalFusion():
         #assess the loss of balance event deviations 
         loss_of_balance_events = self.lossOfBalance
         ind = np.argwhere(loss_of_balance_events>-1)
-        if(len(ind)>9):
+        if(len(ind)>=minimumAnalysisDays):
             halfInterval = int(len(ind)/2) 
             loss_of_balance_events1 = loss_of_balance_events[ind]                
             maxValue = max(loss_of_balance_events1)
@@ -1120,16 +1134,22 @@ class MultimodalFusion():
 
         #assess the deviations in the number of visits to the bathroom
         nr_visits_bathroom = self.visitsBathroom
-        maxValue = max(nr_visits_bathroom)
-        if maxValue>0:
-            nr_visits_bathroom_ = nr_visits_bathroom/maxValue
-        else:
-            nr_visits_bathroom_ = nr_visits_bathroom
+        ind = np.argwhere(nr_visits_bathroom>-1)
+        if(len(ind)>=minimumAnalysisDays):
+            halfInterval = int(len(ind)/2) 
+            nr_visits_bathroom1 = nr_visits_bathroom[ind]                
+            maxValue = max(nr_visits_bathroom1)        
+            if maxValue>0:
+                nr_visits_bathroom_ = nr_visits_bathroom1/maxValue
+            else:
+                nr_visits_bathroom_ = nr_visits_bathroom1       
             
-        nr_visits_bathroom_period1 = np.mean(nr_visits_bathroom_[:halfInterval])
-        nr_visits_bathroom_period2 = np.mean(nr_visits_bathroom_[halfInterval:])
-        
-        percent_nr_visits_bathroom = nr_visits_bathroom_period2 - nr_visits_bathroom_period1 
+            nr_visits_bathroom_period1 = np.mean(nr_visits_bathroom_[:halfInterval])
+            nr_visits_bathroom_period2 = np.mean(nr_visits_bathroom_[halfInterval:])
+            
+            percent_nr_visits_bathroom = nr_visits_bathroom_period2 - nr_visits_bathroom_period1 
+        else:
+            percent_nr_visits_bathroom = 0
         
         if percent_nr_visits_bathroom > 0.3:
         
@@ -1185,7 +1205,7 @@ class MultimodalFusion():
         hr_events_kurtosis = self.heartRate_kurtosis
         
         ind = np.argwhere(hr_events>0)
-        if(len(ind)>9):
+        if(len(ind)>=minimumAnalysisDays):
             halfInterval = int(len(ind)/2) 
             hr_events1 = hr_events[ind]                
             maxValue = max(hr_events1)
@@ -1251,7 +1271,7 @@ class MultimodalFusion():
         print gsr_events
         
         ind = np.argwhere(gsr_events>0)
-        if(len(ind)>9):
+        if(len(ind)>=minimumAnalysisDays):
             halfInterval = int(len(ind)/2) 
             gsr_events1 = gsr_events[ind]                
             maxValue = max(gsr_events1)
@@ -1649,14 +1669,14 @@ class MultimodalFusion():
         line = '\t\t]\n'
         outputFile.writelines(line)    
        
-    def evaluateAlzheimersActivities(self,outputFile,investigatedPeriodinDays):    
+    def evaluateAlzheimersActivities(self,outputFile,investigatedPeriodinDays,minimumAnalysisDays):    
         
         halfInterval = int(investigatedPeriodinDays/2) 
         
         #evaluation of stationary behaviour
         stationary = self.stationaryEvents         
         ind = np.argwhere(stationary>-1)
-        if(len(ind)>9):
+        if(len(ind)>=minimumAnalysisDays):
             halfInterval = int(len(ind)/2) 
             stationary1 = stationary[ind]                
             maxValue = max(stationary1)
@@ -1706,7 +1726,7 @@ class MultimodalFusion():
          #assess the steps received from the band
         steps = self.steps
         ind = np.argwhere(steps>0)
-        if(len(ind)>9):
+        if(len(ind)>=minimumAnalysisDays):
             halfInterval = int(len(ind)/2) 
             steps1 = steps[ind]                
             maxValue = max(steps1)
@@ -1747,7 +1767,7 @@ class MultimodalFusion():
         #assess the daily motion
         dailyMotion = self.dailyMotion
         ind = np.argwhere(dailyMotion>-1)
-        if(len(ind)>9):
+        if(len(ind)>=minimumAnalysisDays):
             halfInterval = int(len(ind)/2) 
             dailyMotion1 = dailyMotion[ind]                
             maxValue = max(dailyMotion1)
@@ -1798,16 +1818,22 @@ class MultimodalFusion():
         
         # evaluation of the number of leaving the house events
         nr_leaving_the_house = self.leavingHouse
-        maxValue = max(nr_leaving_the_house)
-        if maxValue>0:
-            nr_leaving_the_house_ = nr_leaving_the_house/maxValue
-        else:
-            nr_leaving_the_house_ = nr_leaving_the_house
-                
-        leavingHouse_period1 = np.mean(nr_leaving_the_house_[:halfInterval])    
-        leavingHouse_period2 = np.mean(nr_leaving_the_house_[halfInterval:])
+        ind = np.argwhere(nr_leaving_the_house>-1)
+        if(len(ind)>=minimumAnalysisDays):
+            halfInterval = int(len(ind)/2) 
+            nr_leaving_the_house1 = nr_leaving_the_house[ind]                
+            maxValue = max(nr_leaving_the_house1)        
+            if maxValue>0:
+                nr_leaving_the_house_ = nr_leaving_the_house1/maxValue
+            else:
+                nr_leaving_the_house_ = nr_leaving_the_house1        
         
-        percent_leavingHouse = leavingHouse_period2 - leavingHouse_period1 
+            leavingHouse_period1 = np.mean(nr_leaving_the_house_[:halfInterval])    
+            leavingHouse_period2 = np.mean(nr_leaving_the_house_[halfInterval:])
+        
+            percent_leavingHouse = leavingHouse_period2 - leavingHouse_period1 
+        else:
+            percent_leavingHouse = 0
                     
         if percent_leavingHouse > 0.1:
             line = 'Leaving the house events, increase of: ' + str(round(percent_leavingHouse*100)) + '%; ' + str(nr_leaving_the_house) + "\n"
@@ -1842,7 +1868,7 @@ class MultimodalFusion():
         hr_events_kurtosis = self.heartRate_kurtosis
         
         ind = np.argwhere(hr_events>-1)
-        if(len(ind)>9):
+        if(len(ind)>=minimumAnalysisDays):
             halfInterval = int(len(ind)/2) 
             hr_events1 = hr_events[ind]                
             maxValue = max(hr_events1)
@@ -1906,7 +1932,7 @@ class MultimodalFusion():
         gsr_kurtosis = self.galvanicSkinResponse_kurtosis
         
         ind = np.argwhere(gsr_events>-1)
-        if(len(ind)>9):
+        if(len(ind)>=minimumAnalysisDays):
             halfInterval = int(len(ind)/2) 
             gsr_events1 = gsr_events[ind]                
             maxValue = max(gsr_events1)
@@ -1958,17 +1984,23 @@ class MultimodalFusion():
     
         #evaluation of the number of visits during the night
         nr_night_visits = self.nightMotion
-        maxValue = max(nr_night_visits)
-        if maxValue>0:
-            nr_night_visits_ = nr_night_visits/maxValue
-        else:
-            nr_night_visits_ = nr_night_visits
-            
-        # assess deviations in the night motion
-        nightMotion_period1 = np.mean(nr_night_visits_[:halfInterval])    
-        nightMotion_period2 = np.mean(nr_night_visits_[halfInterval:])
+        ind = np.argwhere(nr_night_visits>-1)
+        if(len(ind)>=minimumAnalysisDays):
+            halfInterval = int(len(ind)/2) 
+            nr_night_visits1 = nr_night_visits[ind]                
+            maxValue = max(nr_night_visits1)        
+            if maxValue>0:
+                nr_night_visits_ = nr_night_visits1/maxValue
+            else:
+                nr_night_visits_ = nr_night_visits1              
+                       
+            # assess deviations in the night motion
+            nightMotion_period1 = np.mean(nr_night_visits_[:halfInterval])    
+            nightMotion_period2 = np.mean(nr_night_visits_[halfInterval:])
         
-        percent_nightMotion = nightMotion_period2-nightMotion_period1 
+            percent_nightMotion = nightMotion_period2-nightMotion_period1 
+        else:
+            percent_nightMotion = 0
                 
         if percent_nightMotion > 0.1:
             line = 'Night motion, increase of: ' + str(round(percent_nightMotion*100)) + '%; ' + str(nr_night_visits) + "\n"
@@ -2015,7 +2047,7 @@ class MultimodalFusion():
         #assess the abnormal behaviours
         abnormalEvents = self.abnormalEvents
         ind = np.argwhere(abnormalEvents>-1)
-        if(len(ind)>9):
+        if(len(ind)>=minimumAnalysisDays):
             halfInterval = int(len(ind)/2) 
             abnormalEvents1 = abnormalEvents[ind]                
             maxValue = max(abnormalEvents1)
@@ -2086,7 +2118,7 @@ class MultimodalFusion():
         #assess the  fall down event  deviations
         fall_down_events = self.fallDown
         ind = np.argwhere(fall_down_events>-1)
-        if(len(ind)>9):
+        if(len(ind)>=minimumAnalysisDays):
             halfInterval = int(len(ind)/2) 
             fall_down_events1 = fall_down_events[ind]                
             maxValue = max(fall_down_events1)
@@ -2142,7 +2174,7 @@ class MultimodalFusion():
         #assess the loss of balance event deviations 
         loss_of_balance_events = self.lossOfBalance
         ind = np.argwhere(loss_of_balance_events>-1)
-        if(len(ind)>9):
+        if(len(ind)>=minimumAnalysisDays):
             halfInterval = int(len(ind)/2) 
             loss_of_balance_events1 = loss_of_balance_events[ind]                
             maxValue = max(loss_of_balance_events1)
@@ -2196,16 +2228,22 @@ class MultimodalFusion():
 
         #assess the deviations in the number of visits to the bathroom
         nr_visits_bathroom = self.visitsBathroom
-        maxValue = max(nr_visits_bathroom)
-        if maxValue>0:
-            nr_visits_bathroom_ = nr_visits_bathroom/maxValue
-        else:
-            nr_visits_bathroom_ = nr_visits_bathroom
+        ind = np.argwhere(nr_visits_bathroom>-1)
+        if(len(ind)>=minimumAnalysisDays):
+            halfInterval = int(len(ind)/2) 
+            nr_visits_bathroom1 = nr_visits_bathroom[ind]                
+            maxValue = max(nr_visits_bathroom1)        
+            if maxValue>0:
+                nr_visits_bathroom_ = nr_visits_bathroom1/maxValue
+            else:
+                nr_visits_bathroom_ = nr_visits_bathroom1                  
             
-        nr_visits_bathroom_period1 = np.mean(nr_visits_bathroom_[:halfInterval])
-        nr_visits_bathroom_period2 = np.mean(nr_visits_bathroom_[halfInterval:])
+            nr_visits_bathroom_period1 = np.mean(nr_visits_bathroom_[:halfInterval])
+            nr_visits_bathroom_period2 = np.mean(nr_visits_bathroom_[halfInterval:])
         
-        percent_nr_visits_bathroom = nr_visits_bathroom_period2 - nr_visits_bathroom_period1 
+            percent_nr_visits_bathroom = nr_visits_bathroom_period2 - nr_visits_bathroom_period1 
+        else:
+            percent_nr_visits_bathroom = 0
         
         if percent_nr_visits_bathroom > 0.3:
         
@@ -2527,7 +2565,7 @@ class MultimodalFusion():
         outputFile.writelines(line)        
           
         
-    def multimodalFusionalgorithms(self,outputFile,patientId,currentDate,investigatedPeriodinDays,inputFileEHR,inputFileHETRA,inputFileDIT):
+    def multimodalFusionalgorithms(self,outputFile,patientId,currentDate,investigatedPeriodinDays,inputFileEHR,inputFileHETRA,inputFileDIT,minimumAnalysisDays):
     
         commentsEnabled = 1        
         # currentDay = currentDate.day
@@ -2681,9 +2719,9 @@ class MultimodalFusion():
 				
 				#Different sets of functionalities are evaluated in the case of Parkinson's or Alzheimer's disease
 				if(self.mainDiagnose==1):
-					self.evaluateParkinsonsActivities(outputFile,investigatedPeriodinDays)
+					self.evaluateParkinsonsActivities(outputFile,investigatedPeriodinDays,minimumAnalysisDays)
 				elif(self.mainDiagnose==0):
-					self.evaluateAlzheimersActivities(outputFile,investigatedPeriodinDays)
+					self.evaluateAlzheimersActivities(outputFile,investigatedPeriodinDays,minimumAnalysisDays)
 				else:
 					print "A correct diagnosis wasn't found. The analysis will not be performed.\n"
                     
@@ -2699,11 +2737,12 @@ if __name__ == '__main__':
     listPatientIds = ['5315e0fb-a7ef-4742-9387-12cd9a000b20','50baff5b-7898-436d-8eb6-543600cc86c3','4d54d40a-919e-40f4-baa8-9e73dea08f73','ccc97074-c7f9-47ae-a46f-3e9c79025cab']
     	
     nrPatients = len(listPatientIds)
-    investigatedPeriodinDays = 10  #interval for MF analysis
+    investigatedPeriodinDays = 30  #interval for MF analysis
+    minimumAnalysisDays = 8
     analysisDate = datetime.date.today()
 	
     str_date = analysisDate.strftime('%d-%m-%Y')
-    #analysisDate = analysisDate.replace(2018,9,1) #this date is used for testing purposes
+    #analysisDate = analysisDate.replace(2018,7,4) #this date is used for testing purposes
     #analysisDate = analysisDate.replace(2018,9,1) #this date is used for testing purposes
     
     year = analysisDate.year
@@ -2745,6 +2784,8 @@ if __name__ == '__main__':
         downloadFileFromCloud.downloadFile_CloudHETRA(inputFileHETRA)        
 
     startDate = analysisDate + timedelta(days=-investigatedPeriodinDays)	   
+    print inputFileEHR
+    print inputFileHETRA
     
     if (os.path.isfile(inputFileEHR) & os.path.isfile(inputFileHETRA)):
     
@@ -2764,7 +2805,7 @@ if __name__ == '__main__':
             outputFile.writelines(line)
             
             mf=MultimodalFusion()
-            mf.multimodalFusionalgorithms(outputFile,patientId,analysisDate,investigatedPeriodinDays,inputFileEHR,inputFileHETRA,inputFileDIT)        
+            mf.multimodalFusionalgorithms(outputFile,patientId,analysisDate,investigatedPeriodinDays,inputFileEHR,inputFileHETRA,inputFileDIT,minimumAnalysisDays)        
             if(i==nrPatients-1):
                 line = '\t}\n'                
             else:
