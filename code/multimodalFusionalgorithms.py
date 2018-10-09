@@ -177,7 +177,7 @@ class MultimodalFusion():
                             if(lenDict!=0):
                                 if('toilet' in daily_dict.keys()):
                                     toilet_dict = daily_dict.get('toilet')                                                    
-                                    toiletNr = len(toilet_dict)
+                                    toiletNr = len(toilet_dict)                                   
 #                                    if (len(toilet_dict)!=0):
 #                                        toilet_duration = np.zeros(shape=toiletNr)
 #                                        for i in range(toiletNr):
@@ -205,7 +205,7 @@ class MultimodalFusion():
 #                                                bedroom_duration[i] = float(bedroomItem.get('duration'))                                            
                                             
                             if('as_night_motion' in line.keys()):
-                                daily_dict = line['as_day_motion']
+                                daily_dict = line['as_night_motion']
                                 lenDict = len(daily_dict)
                                 if(lenDict!=0):
                                     if('toilet' in daily_dict.keys()):
@@ -557,7 +557,7 @@ class MultimodalFusion():
                    
         return foundPatientId, main_diagnosis, disease_level, age, gender, civilStatus, bmi, active, mobility, gradeDependence, autonomousWalk, independenceDailyActivities, comorbiditesNeurologist, comorbiditesPsychiatrist, cognitiveFunctions, comorbiditesCardiovascular, hipertension, comorbiditesUrinary, incontinence, insomnia, depression, medications, medicationNames, evaluations, evaluationsScore, evaluationDates, evaluationDateList
     
-    def parseDITFile_allEvents(self,filePath,nrDays,startDay):
+    def parseDITFile_allEvents(self,filePath,nrDays,startDate):
         
         totalTimeUsageperDayInterval = np.zeros(shape= 3*nrDays)
         totalTimeUsageperDay = np.zeros(shape= nrDays)
@@ -567,14 +567,16 @@ class MultimodalFusion():
                 functionalityName = line
                 
                 if(functionalityName.find("eventTime")>0):
-                    fieldName = functionalityName.split(':')[1]
-                    obj = fieldName.split('"')[1]
-                    obj_ = obj.split('/')
-                    obj_day = obj_[1]
-                    currentday = int(obj_day)-startDay+1
-                                       
-                    obj_time = obj_[2].split(' ')[1]
-                    currentTime = int(obj_time)
+                    index = functionalityName.find(':')   
+                    indexEnd = functionalityName.find(',')   
+                    fieldName = functionalityName[index+3:indexEnd-1]  
+                    indexSpace = fieldName.find(' ')
+                    dateField = fieldName[:indexSpace]                    
+                    hourField = fieldName[indexSpace+1:]                    
+                    dateName = datetime.datetime.strptime(dateField,"%m/%d/%Y")
+                    hourName = datetime.datetime.strptime(hourField,"%H:%M:%S")       
+                    currentday = (datetime.datetime.date(dateName)-startDate).days+1
+                    currentTime = hourName.hour 
                     
                     if(currentTime<12):
                         currentTimeIndex = 0
@@ -583,14 +585,14 @@ class MultimodalFusion():
                     else:
                         currentTimeIndex = 2
                     currentIndex = (currentday-1)*3 + currentTimeIndex
-                    #print currentIndex
+                    
                     #print currentday
                     totalTimeUsageperDayInterval[currentIndex] = totalTimeUsageperDayInterval[currentIndex] + 1
-                    totalTimeUsageperDay[currentday-1] = totalTimeUsageperDay[currentday-1] + 1                           
-                    
+                    totalTimeUsageperDay[currentday-1] = totalTimeUsageperDay[currentday-1] + 1                                               
+        
         return totalTimeUsageperDay
 
-    def parseDITFile_ABD(self,filePath,nrDays,startDay):
+    def parseDITFile_ABD(self,filePath,nrDays,startDate):
     
         abnormalUsageTime = np.zeros(shape= nrDays)
         nrAbnormalEvents = np.zeros(shape= nrDays)
@@ -608,12 +610,16 @@ class MultimodalFusion():
                 functionalityName = line
                 if functionalityName.find("eventTime") > 0 :       
                
-                    fieldName = functionalityName.split(':')[1]
-                    obj = fieldName.split('"')[1]
-                    obj_date = obj.split(' ')[0]                  
-                    index_day = int(obj_date.split('/')[1])    
-                    index_day = index_day - startDay+1
-                             
+                    index = functionalityName.find(':')   
+                    indexEnd = functionalityName.find(',')   
+                    fieldName = functionalityName[index+3:indexEnd-1]  
+                    indexSpace = fieldName.find(' ')
+                    dateField = fieldName[:indexSpace]                    
+                    hourField = fieldName[indexSpace+1:]                    
+                    dateName = datetime.datetime.strptime(dateField,"%m/%d/%Y")
+                    hourName = datetime.datetime.strptime(hourField,"%H:%M:%S")       
+                    index_day = (datetime.datetime.date(dateName)-startDate).days+1
+                    
                 elif functionalityName.find("doctype") > 0 :
            
                     fieldName = functionalityName.split(':')[1]
@@ -2637,7 +2643,7 @@ class MultimodalFusion():
             typeAnalysis = "ABD"
             response_abd = getDIT.get_data(patientId, date_from, date_to, inputDITABDFiletoMF,typeAnalysis)                                                                                             
             if response_abd>0:
-                timeABD_dit, nr_abnormal_dit_behaviours, nr_abnormalBehaviours_S, nr_abnormalBehaviours_T, nr_abnormalBehaviours_ST = self.parseDITFile_ABD(inputDITABDFiletoMF,investigatedPeriodinDays,startDate.day)                                    
+                timeABD_dit, nr_abnormal_dit_behaviours, nr_abnormalBehaviours_S, nr_abnormalBehaviours_T, nr_abnormalBehaviours_ST = self.parseDITFile_ABD(inputDITABDFiletoMF,investigatedPeriodinDays,startDate)                                    
                 print "Dit abnormal events parsed"
             else:           
                 print "No file received in DIT with abnormal events"          
@@ -2646,7 +2652,7 @@ class MultimodalFusion():
             typeAnalysis = "Event"
             response_event = getDIT.get_data(patientId, date_from, date_to, inputDITEventFiletoMF,typeAnalysis)                                                                                             
             if response_event>0:
-                time_dit = self.parseDITFile_allEvents(inputDITEventFiletoMF,investigatedPeriodinDays,startDate.day)        
+                time_dit = self.parseDITFile_allEvents(inputDITEventFiletoMF,investigatedPeriodinDays,startDate)        
                 print "Dit events parsed"
             else:           
                 print "No file received in DIT with events"          
@@ -2734,7 +2740,7 @@ if __name__ == '__main__':
 
 	# define the set of parameters
 	#the list of patienIds need to be updated
-    listPatientIds = ['5315e0fb-a7ef-4742-9387-12cd9a000b20','50baff5b-7898-436d-8eb6-543600cc86c3','4d54d40a-919e-40f4-baa8-9e73dea08f73','ccc97074-c7f9-47ae-a46f-3e9c79025cab']
+    listPatientIds = ['5315e0fb-a7ef-4742-9387-12cd9a000b20','50baff5b-7898-436d-8eb6-543600cc86c3','4d54d40a-919e-40f4-baa8-9e73dea08f73','ccc97074-c7f9-47ae-a46f-3e9c79025cab','20cd74e3-2f0e-4812-bd22-f13a277a1e6d']
     	
     nrPatients = len(listPatientIds)
     investigatedPeriodinDays = 30  #interval for MF analysis
