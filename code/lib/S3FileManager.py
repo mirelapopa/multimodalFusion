@@ -16,8 +16,8 @@ class S3FileManger:
             response = s3.list_objects_v2(Bucket=self.BUCKET_NAME, Prefix=self.params.get("in_dir"))
             last_modified = sorted(response.get("Contents"), key=lambda content: content.get("LastModified"),
                                    reverse=True)
-            print 'Prepare download file'
-			s3.download_file(self.BUCKET_NAME, last_modified[0].get("Key"), destination)
+            print 'Prepare download file:' + last_modified[0].get("Key") + 'Dest: ' + destination
+            s3.download_file(self.BUCKET_NAME, last_modified[0].get("Key"), destination)
             print 'download file ok'
             return 1
         except Exception as e:
