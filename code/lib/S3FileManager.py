@@ -18,7 +18,7 @@ class S3FileManger:
                                    reverse=True)
             print 'Prepare download file'
 			s3.download_file(self.BUCKET_NAME, last_modified[0].get("Key"), destination)
-			print 'download file ok'
+            print 'download file ok'
             return 1
         except Exception as e:
             print e
