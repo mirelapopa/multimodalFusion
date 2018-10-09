@@ -1274,7 +1274,7 @@ class MultimodalFusion():
         gsr_skewness = self.galvanicSkinResponse_skewness
         gsr_kurtosis = self.galvanicSkinResponse_kurtosis        
         gsr_events = np.around(gsr_events,2)
-        print gsr_events
+        #print gsr_events
         
         ind = np.argwhere(gsr_events>0)
         if(len(ind)>=minimumAnalysisDays):
