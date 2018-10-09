@@ -19,7 +19,7 @@ class S3FileManger:
             s3.download_file(self.BUCKET_NAME, destination, last_modified[0].get("Key"))
             return 1
         except Exception as e:
-        print e
+            print e
             return 0
 
     def upload_file(self, origin, filename):
@@ -28,7 +28,7 @@ class S3FileManger:
             s3.upload_file(origin, self.BUCKET_NAME, self.params.get("out_dir") + '/' + filename)
             return 1
         except Exception as e:
-        print e
+            print e
             return 0
 
     def download_file(self, destination, filename):
@@ -40,5 +40,5 @@ class S3FileManger:
             s3.download_file(self.BUCKET_NAME, self.params.get("in_dir") + '/' + filename, destination)
             return 1
         except Exception as e:
-print e
+            print e
             return 0
