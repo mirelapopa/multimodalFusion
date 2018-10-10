@@ -1662,16 +1662,14 @@ class MultimodalFusion():
         line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|movementEvolution\",\n' + '\t\t\t\"value\":' + str(
             round(probabilityImprovedBehaviour_movementEvolution, 3)) + '\n\t\t},\n'
         outputFile.writelines(line)
-
-        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour\",\n'+'\t\t\t\"value\":'+str(round(probImprovedBehaviour,3)) + '\n\t\t}\n'                                    
-        outputFile.writelines(line)
-
         if(probImprovedBehaviour < 0.1):
             probabilityImprovedBehaviour_medicationChange = 0.01
         line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|medicationChange\",\n' + '\t\t\t\"value\":' + str(
             round(probabilityImprovedBehaviour_medicationChange, 3)) + '\n\t\t},\n'
         outputFile.writelines(line)
-
+        
+        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour\",\n'+'\t\t\t\"value\":'+str(round(probImprovedBehaviour,3)) + '\n\t\t}\n'                                    
+        outputFile.writelines(line)         
 
         line = '\t\t]\n'
         outputFile.writelines(line)    
