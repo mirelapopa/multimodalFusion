@@ -5,6 +5,7 @@ RUN mkdir /input
 RUN mkdir /input/HETRA
 RUN mkdir /input/EHR
 RUN mkdir /output
+RUN mkdir /output/ehr
 
 ARG ACCESS_KEY
 ARG SECRET_KEY
