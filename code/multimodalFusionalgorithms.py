@@ -7,6 +7,7 @@ import uploadFileToCloud
 import matplotlib.pyplot as plt
 import retrieve_data_ as getDIT
 import os
+from os import path
 from matplotlib.figure import Figure
 from datetime import timedelta
 import json
@@ -2627,6 +2628,9 @@ class MultimodalFusion():
             # call the digital abnormal behaviour module for finding the number of abnormal events and the total interaction time  
             ## current implementation of the DIT
             inputDITpath = '../input/DIT'
+            if not os.path.exists(inputDITpath):
+                os.makedirs(inputDITpath)
+                
             date_from = str(startDate) 
             date_to = str(currentDate)                   
             print date_from
