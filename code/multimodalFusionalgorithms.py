@@ -555,9 +555,9 @@ class MultimodalFusion():
                     else:
                         str = 'process other functionalities'
                         #print obj                        
-                   
+       
         return foundPatientId, main_diagnosis, disease_level, age, gender, civilStatus, bmi, active, mobility, gradeDependence, autonomousWalk, independenceDailyActivities, comorbiditesNeurologist, comorbiditesPsychiatrist, cognitiveFunctions, comorbiditesCardiovascular, hipertension, comorbiditesUrinary, incontinence, insomnia, depression, medications, medicationNames, evaluations, evaluationsScore, evaluationDates, evaluationDateList
-    
+        
     def parseDITFile_allEvents(self,filePath,nrDays,startDate):
         
         totalTimeUsageperDayInterval = np.zeros(shape= 3*nrDays)
@@ -688,7 +688,7 @@ class MultimodalFusion():
             line = "Apathy: no signs; "  + str(stationary) +  "\n"                                 
         print line
         
-        line = '\t\t\"stationaryBehaviour\":{\n' + '\t\t\t\"result\":' + str(round(percent_stationary*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,stationary))+'\n\t\t\t]\n' + '\t\t},\n'
+        line = ',\n\t\t\"stationaryBehaviour\":{\n' + '\t\t\t\"result\":' + str(round(percent_stationary*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,stationary))+'\n\t\t\t]\n' + '\t\t},\n'
                 
         outputFile.writelines(line)
         
@@ -1248,7 +1248,7 @@ class MultimodalFusion():
         line = line + '\t\t\t\"medianHeartRate\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events_median))+'\n\t\t\t],\n'
         line = line + '\t\t\t\"modeHeartRate\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events_mode))+'\n\t\t\t],\n'
         line = line + '\t\t\t\"skewnessHeartRate\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events_skewness))+'\n\t\t\t],\n'
-        line = line + '\t\t\t\"kurtosisHeartRate\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events_kurtosis))+'\n\t\t\t],\n'                                             
+        line = line + '\t\t\t\"kurtosisHeartRate\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events_kurtosis))+'\n\t\t\t]\n'                                             
         line = line + '\t\t},\n'              
         outputFile.writelines(line)
         
@@ -1314,7 +1314,7 @@ class MultimodalFusion():
         line = line + '\t\t\t\"medianGSR\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,gsr_median))+'\n\t\t\t],\n'
         line = line + '\t\t\t\"modeGSR\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,gsr_mode))+'\n\t\t\t],\n'
         line = line + '\t\t\t\"skewnessGSR\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,gsr_skewness))+'\n\t\t\t],\n'
-        line = line + '\t\t\t\"kurtosisGSR\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,gsr_kurtosis))+'\n\t\t\t],\n'                                             
+        line = line + '\t\t\t\"kurtosisGSR\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,gsr_kurtosis))+'\n\t\t\t]\n'                                             
         line = line + '\t\t},\n'              
         outputFile.writelines(line)
         
@@ -1432,7 +1432,7 @@ class MultimodalFusion():
         line = '\t\t\"medication\":[\n'
       
         for i in range(nrMedications):            
-            line = line + '\t\t{\n' +'\t\t\t\"name\":' + self.medicationName[i] +',\n'
+            line = line + '\t\t{\n' +'\t\t\t\"name\":' + '\"' + self.medicationName[i] + '\",\n'
             line = line + '\t\t\t\"changes\":' + '['+', '.join(map(str,self.medications[i,:]))+']' +'\n'
             
             changes[i] =np.sum(self.medications[i,:])
@@ -1461,7 +1461,7 @@ class MultimodalFusion():
         nrEvaluations = len(self.evaluationDates)
         line = '\t\t\"movementEvaluations\":[\n'
         for i in range(nrEvaluations):
-            line = line + '\t\t{\n' + '\t\t\t\"date\":' + self.evaluationDates[i] + ',\n'
+            line = line + '\t\t{\n' + '\t\t\t\"date\":' + '\"' + self.evaluationDates[i] + '\",\n'
             line = line + '\t\t\t\"totalScore\":' + str(self.evaluationsScore[i]) + ',\n'
             line = line + '\t\t\t\"partScores\":' + '[' + ', '.join(map(str, self.evaluationsExercises[i, :])) + ']' + '\n'
             line = line + '\t\t},\n'
@@ -1705,7 +1705,7 @@ class MultimodalFusion():
             line = "Apathy: no signs; "  + str(stationary) +  "\n"                                 
         print line
         
-        line = '\t\t\"stationaryBehaviour\":{\n' + '\t\t\t\"result\":' + str(round(percent_stationary*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,stationary))+'\n\t\t\t]\n' + '\t\t},\n'
+        line = ',\n\t\t\"stationaryBehaviour\":{\n' + '\t\t\t\"result\":' + str(round(percent_stationary*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,stationary))+'\n\t\t\t]\n' + '\t\t},\n'
         outputFile.writelines(line)
         
         if(percent_stationary>=0):
@@ -2104,10 +2104,8 @@ class MultimodalFusion():
             probabilityConfusion_abnormalEvents = 0.65*probabilityConfusion_abnormalEvents
             probabilityComorbiditesNeurologist = 0.3*comorbiditesNeurologist            
         else:
-            probabilityConfusion_abnormalEvents = 0.7*probabilityConfusion_abnormalEvents            
-            
-        probConfusion = probabilityConfusion_abnormalEvents + probabilityComorbiditesNeurologist + probabilityComorbiditesPsychiatrist
-                         
+            probabilityConfusion_abnormalEvents = 0.7*probabilityConfusion_abnormalEvents                       
+                               
         #plot a graph of the confused behaviour over the investigated days
         showGraph_abnormalEvents = 0
         if showGraph_abnormalEvents:
@@ -2416,6 +2414,42 @@ class MultimodalFusion():
         if(insomniaProb>1):
             insomniaProb = 0.9
         
+         # assess medication changes
+        nrMedications=len(self.medicationName)        
+        changes = np.zeros(shape=nrMedications)       
+        indexMedication = np.zeros(shape=nrMedications)
+        line = '\t\t\"medication\":[\n'
+      
+        for i in range(nrMedications):            
+            line = line + '\t\t{\n' +'\t\t\t\"name\":' + '\"' + self.medicationName[i] + '\",\n'
+            line = line + '\t\t\t\"changes\":' + '['+', '.join(map(str,self.medications[i,:]))+']' +'\n'
+            
+            changes[i] =np.sum(self.medications[i,:])
+            if(changes[i]>0):
+                indexMedication[i] = 1
+            if(i==nrMedications-1):
+                line= line + '\t\t}\n'
+            else:	
+                line = line + '\t\t},\n'
+        line = line + '\t\t],\n'
+        outputFile.writelines(line)
+        changeMedication = np.sum(changes)
+
+        #check if in the analyzed period there was a change in any of the medications
+        if(changeMedication>0):
+            # compute the probability based on the number of changed medications
+            # in this version only Parkinsons medication is considered, and this is changed only one at a certain moment
+            # either by changing the ddosage, prescribing a new one or stopping a current one
+            probabilityImprovedBehaviour_medicationChange = 0.2*np.sum(indexMedication)
+            probabilityConfusion_medicationChange = 0.2 * np.sum(indexMedication)
+        else:
+            probabilityImprovedBehaviour_medicationChange = 0.01
+            probabilityConfusion_medicationChange = 0.01
+        
+        probConfusion = probabilityConfusion_abnormalEvents + probabilityComorbiditesNeurologist + probabilityComorbiditesPsychiatrist + probabilityConfusion_medicationChange
+        if(probConfusion>1):
+            probConfusion = 1
+            
         line = '\t\t\"probabilities\":[\n' 
         outputFile.writelines(line)
        
@@ -2426,6 +2460,9 @@ class MultimodalFusion():
         outputFile.writelines(line)   
         
         line = '\t\t{\n\t\t\t\"type\":\"confusion|neurologicComorbidites\",\n'+'\t\t\t\"value\":'+str(round(probabilityComorbiditesNeurologist,3)) + '\n\t\t},\n'
+        outputFile.writelines(line)   
+        
+        line = '\t\t{\n\t\t\t\"type\":\"confusion|medicationChange\",\n'+'\t\t\t\"value\":'+str(round(probabilityConfusion_medicationChange,3)) + '\n\t\t},\n'
         outputFile.writelines(line)   
         
         line = '\t\t{\n\t\t\t\"type\":\"Confusion\",\n'+'\t\t\t\"value\":'+str(round(probConfusion,3)) + '\n\t\t},\n'       
@@ -2531,7 +2568,7 @@ class MultimodalFusion():
         line = '\t\t{\n\t\t\t\"type\":\"MovementIssues\",\n'+'\t\t\t\"value\":'+str(round(probMovementIssues,3)) + '\n\t\t},\n'
         outputFile.writelines(line)                
         
-        probImprovedBehaviour = probabilityImprovedBehaviour_abnormalDigitalBehaviour + probabilityImprovedBehaviour_dailyMotion + probabilityImprovedBehaviour_fallDown + probabilityImprovedBehaviour_abnormalEvents + probabilityImprovedBehaviour_lossBalance + probabilityImprovedBehaviour_nightMotion + probabilityImprovedBehaviour_stationary + probabilityImprovedBehaviour_leavingHouse + probabilityImprovedBehaviour_steps
+        probImprovedBehaviour = probabilityImprovedBehaviour_abnormalDigitalBehaviour + probabilityImprovedBehaviour_dailyMotion + probabilityImprovedBehaviour_fallDown + probabilityImprovedBehaviour_abnormalEvents + probabilityImprovedBehaviour_lossBalance + probabilityImprovedBehaviour_nightMotion + probabilityImprovedBehaviour_stationary + probabilityImprovedBehaviour_leavingHouse + probabilityImprovedBehaviour_steps + probabilityImprovedBehaviour_medicationChange
         
         if(probImprovedBehaviour>1):
             probImprovedBehaviour = 1
@@ -2561,6 +2598,9 @@ class MultimodalFusion():
         outputFile.writelines(line)
         
         line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|abnormalDigitalBehaviour\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_abnormalDigitalBehaviour,3)) + '\n\t\t},\n'                                    
+        outputFile.writelines(line)
+        
+        line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour|medicationChange\",\n'+'\t\t\t\"value\":'+str(round(probabilityImprovedBehaviour_medicationChange,3)) + '\n\t\t},\n'                                    
         outputFile.writelines(line)
         
         line = '\t\t{\n\t\t\t\"type\":\"ImprovedBehaviour\",\n'+'\t\t\t\"value\":'+str(round(probImprovedBehaviour,3)) + '\n\t\t}\n'                                    
@@ -2809,15 +2849,15 @@ if __name__ == '__main__':
     
             line = '\t\t\"startDate\":\"' + str(startDate) + '\",\n' 
             outputFile.writelines(line)
-            line = '\t\t\"endDate\":\"' + str(analysisDate) + '\",\n' 
+            line = '\t\t\"endDate\":\"' + str(analysisDate) + '\"' 
             outputFile.writelines(line)
             
             mf=MultimodalFusion()
             mf.multimodalFusionalgorithms(outputFile,patientId,analysisDate,investigatedPeriodinDays,inputFileEHR,inputFileHETRA,inputFileDIT,minimumAnalysisDays)        
             if(i==nrPatients-1):
-                line = '\t}\n'                
+                line = '\n\t}\n'                
             else:
-                line = '\t},\n'                                
+                line = '\n\t},\n'                                
             outputFile.writelines(line)  
         
         #close the MF output file
