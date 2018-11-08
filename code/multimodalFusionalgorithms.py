@@ -2785,12 +2785,12 @@ if __name__ == '__main__':
     listPatientIds = ['5315e0fb-a7ef-4742-9387-12cd9a000b20','50baff5b-7898-436d-8eb6-543600cc86c3','4d54d40a-919e-40f4-baa8-9e73dea08f73','ccc97074-c7f9-47ae-a46f-3e9c79025cab','20cd74e3-2f0e-4812-bd22-f13a277a1e6d']
     	
     nrPatients = len(listPatientIds)
-    investigatedPeriodinDays = 30  #interval for MF analysis
+    investigatedPeriodinDays = 15  #interval for MF analysis
     minimumAnalysisDays = 8
     analysisDate = datetime.date.today()
 	
     str_date = analysisDate.strftime('%d-%m-%Y')
-    #analysisDate = analysisDate.replace(2018,7,4) #this date is used for testing purposes
+    #analysisDate = analysisDate.replace(2018,10,26) #this date is used for testing purposes
     #analysisDate = analysisDate.replace(2018,9,1) #this date is used for testing purposes
     
     year = analysisDate.year
