@@ -132,7 +132,7 @@ class MultimodalFusion():
                                 if (len(daily_dict)!=0):
                                     stationary_ = round(daily_dict.get('stationary',0),2)
                                     fastMov = daily_dict.get('fast_mov',0)
-                                    slowMov = daily_dict.get('slow_mov',0)
+                                    slowMov = daily_dict.get('slow_mov',0)                                   
                                     dailyMov = round(fastMov + slowMov,2)
                                     dailyMotion[indexAnalysis] = dailyMov
                                     stationary[indexAnalysis] = stationary_
@@ -690,8 +690,8 @@ class MultimodalFusion():
         
         line = ',\n\t\t\"stationaryBehaviour\":{\n' + '\t\t\t\"result\":' + str(round(percent_stationary*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,stationary))+'\n\t\t\t]\n' + '\t\t},\n'
                 
-        outputFile.writelines(line)
-        
+        outputFile.writelines(line)       
+              
         if(percent_stationary>=0):
             probabilityApathy_stationary = 0.5*percent_stationary
             probabilityImprovedBehaviour_stationary = 0.001
@@ -739,8 +739,8 @@ class MultimodalFusion():
         print line
                 
         line = '\t\t\"overallMotion\":{\n' + '\t\t\t\"result\":' + str(round(percent_steps*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,steps))+'\n\t\t\t]\n' + '\t\t},\n'
-        outputFile.writelines(line)
-        
+        outputFile.writelines(line)                       
+            
         #in the case daily motion calculated using the nr of steps decreases, the probability of apathy increases
         if(percent_steps<0):
             probabilityApathy_steps = -percent_steps*0.2
@@ -839,7 +839,17 @@ class MultimodalFusion():
     
         line = '\t\t\"leavingHouse\":{\n' + '\t\t\t\"result\":' + str(round(percent_leavingHouse*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,nr_leaving_the_house))+'\n\t\t\t]\n' + '\t\t},\n'              
         outputFile.writelines(line)
-       
+        
+        ind = np.argwhere(nr_leaving_the_house<0)
+        nr_leaving_the_house_ = nr_leaving_the_house
+        nr_leaving_the_house_[ind] = 0  
+        
+        if(max(nr_leaving_the_house_)>0):
+            nr_leaving_the_house_ = nr_leaving_the_house_/max(nr_leaving_the_house_)        
+            
+        line = ',\n\t\t[\n\t\t\t\"Leaving House Events\",\n\t\t\t' +',\n\t\t\t'.join(map(str,nr_leaving_the_house_))+'\n\t\t],\n'         
+        output_VisFile_bar.writelines(line)
+        
         #plot a graph of the leaving the house over the investigated days
         showGraph_leaving = 0
         if showGraph_leaving:
@@ -882,8 +892,8 @@ class MultimodalFusion():
         print line
         
         line = '\t\t\"nightMotion\":{\n' + '\t\t\t\"result\":' + str(round(percent_nightMotion*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,nr_night_visits))+'\n\t\t\t]\n' + '\t\t},\n'              
-        outputFile.writelines(line)
-    
+        outputFile.writelines(line)        
+              
         insomnia = self.insomnia
         line = '\t\t\"insomnia\":'+str(insomnia)+',\n'
         outputFile.writelines(line)
@@ -942,9 +952,9 @@ class MultimodalFusion():
             line = 'Freezing events, no deviations; ' + str(freezing_events) + "\n"
         print line
                 
-        line = '\t\t\"freezing\":{\n' + '\t\t\t\"result\":' + str(round(percent_freezing*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,freezing_events))+'\n\t\t\t]\n' + '\t\t},\n'              
-        outputFile.writelines(line)
-        
+        line = '\t\t\"freezing\":{\n' + '\t\t\t\"result\":' + str(round(percent_freezing*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,freezing_events))+'\n\t\t\t]\n' + '\t\t},\n'                      
+        outputFile.writelines(line)       
+            
         if(percent_freezing>=0):            
             probabilityParkinsonsEvents_freezing = 0.3*percent_freezing
             probabilityImprovedBehaviour_freezing = 0.001
@@ -997,8 +1007,8 @@ class MultimodalFusion():
         print line
                 
         line = '\t\t\"festination\":{\n' + '\t\t\t\"result\":' + str(round(percent_festination*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,festination_events))+'\n\t\t\t]\n' + '\t\t},\n'              
-        outputFile.writelines(line)
-    
+        outputFile.writelines(line)       
+           
         if(percent_festination>=0):            
             probabilityParkinsonsEvents_festination = 0.3*percent_festination
             probabilityImprovedBehaviour_festination = 0.001
@@ -1182,8 +1192,8 @@ class MultimodalFusion():
         incontinence = self.incontinence
         
         line = '\t\t\"incontinence\":'+str(incontinence) + ', \n'
-        outputFile.writelines(line)
-
+        outputFile.writelines(line)       
+             
         if(percent_nr_visits_bathroom>=0):            
             probabilityIncontinence_visitsBathroom = 0.7*(percent_nr_visits_bathroom)
         else:
@@ -1672,8 +1682,167 @@ class MultimodalFusion():
         outputFile.writelines(line)         
 
         line = '\t\t]\n'
-        outputFile.writelines(line)    
+        outputFile.writelines(line)  
+        
+    def visualizeParkinsonsActivities(self,investigatedPeriodinDays,minimumAnalysisDays,output_VisFile_chart,output_VisFile_bar):       
+                
+        #evaluation of stationary behaviour
+        stationary = self.stationaryEvents               
+        ind = np.argwhere(stationary<0)
+        stationary_ = stationary
+        stationary_[ind] = 0  
+        line = ',\n\t\t[\"Stationary Behaviour\", ' +', '.join(map(str,stationary_))+'],\n' 
+        output_VisFile_chart.writelines(line)               
+   
+        #assess the steps received from the band
+        steps = self.steps
+        ind = np.argwhere(steps<0)
+        steps_ = steps
+        steps_[ind] = 0  
+        
+        if(max(steps_)>0):
+            steps_ = steps_/max(steps_)          
+        
+        line = '\t\t[\"Overall Motion\", ' +', '.join(map(str,steps_))+'],\n' 
+        output_VisFile_chart.writelines(line)              
+        
+        # evaluation of the number of leaving the house events
+        nr_leaving_the_house = self.leavingHouse            
+        ind = np.argwhere(nr_leaving_the_house<0)
+        nr_leaving_the_house_ = nr_leaving_the_house
+        nr_leaving_the_house_[ind] = 0  
+        
+        if(max(nr_leaving_the_house_)>0):
+            nr_leaving_the_house_ = nr_leaving_the_house_/max(nr_leaving_the_house_)        
+            
+        line = ',\n\t\t["Leaving House Events\", ' +', '.join(map(str,nr_leaving_the_house_))+'],\n'         
+        output_VisFile_bar.writelines(line)        
+        
+        #evaluation of the number of visits during the night
+        nr_night_visits = self.nightMotion        
+        ind = np.argwhere(nr_night_visits<0)
+        nr_night_visits_ = nr_night_visits
+        nr_night_visits_[ind] = 0  
+        if max(nr_night_visits_)>0:
+            nr_night_visits_ = nr_night_visits_/max(nr_night_visits_)        
+     
+        line = '\t\t[\"Night Motion\", ' +', '.join(map(str,nr_night_visits_))+'],\n'         
+        output_VisFile_bar.writelines(line)
+        
+        #assess the freezing events for detecting deviations 
+        freezing_events = self.freezing        
+        ind = np.argwhere(freezing_events<0)
+        freezing_events_ = freezing_events
+        freezing_events_[ind] = 0 
+        
+        if(max(freezing_events_)>0):
+            freezing_events_ = freezing_events_/max(freezing_events_)            
+        
+        line = '\t\t[\"Freezing\", ' +', '.join(map(str,freezing_events_))+'],\n' 
+        output_VisFile_chart.writelines(line)        
+        
+        #assess the festination events for detecting deviations 
+        festination_events = self.festination       
+        ind = np.argwhere(festination_events<0)
+        festination_events_ = festination_events
+        festination_events_[ind] = 0 
+        
+        if(max(festination_events_)>0):
+            festination_events_ = festination_events_/max(festination_events_)
+            
+        line = '\t\t[\"Festination\", ' +', '.join(map(str,festination_events_))+']' 
+        output_VisFile_chart.writelines(line)                  
+        
+        #assess the deviations in the number of visits to the bathroom
+        nr_visits_bathroom = self.visitsBathroom       
+        ind = np.argwhere(nr_visits_bathroom<0)
+        nr_visits_bathroom_ = nr_visits_bathroom
+        nr_visits_bathroom_[ind] = 0  
+        if max(nr_visits_bathroom_)>0:
+            nr_visits_bathroom_ = nr_visits_bathroom_/max(nr_visits_bathroom_)        
+     
+        line = '\t\t[\"Visits Bathroom\", ' +', '.join(map(str,nr_visits_bathroom_))+']'         
+        output_VisFile_bar.writelines(line)      
+    
+    def visualizeAlzheimersActivities(self,investigatedPeriodinDays,minimumAnalysisDays,output_VisFile_chart,output_VisFile_bar):            
+               
+        #evaluation of stationary behaviour
+        stationary = self.stationaryEvents       
+        ind = np.argwhere(stationary<0)
+        stationary_ = stationary
+        stationary_[ind] = 0  
+        line = ',\n\t\t[\"Stationary Behaviour\", ' +', '.join(map(str,stationary_))+'],\n' 
+        output_VisFile_chart.writelines(line)        
        
+         #assess the steps received from the band
+        steps = self.steps        
+        ind = np.argwhere(steps<0)
+        steps_ = steps
+        steps_[ind] = 0  
+        
+        if(max(steps_)>0):
+            steps_ = steps_/max(steps_)          
+        
+        line = '\t\t[\"Overall Motion\", ' +', '.join(map(str,steps_))+'],\n' 
+        output_VisFile_chart.writelines(line)        
+        
+        # evaluation of the number of leaving the house events
+        nr_leaving_the_house = self.leavingHouse        
+        ind = np.argwhere(nr_leaving_the_house<0)
+        nr_leaving_the_house_ = nr_leaving_the_house
+        nr_leaving_the_house_[ind] = 0  
+        if max(nr_leaving_the_house_)>0:
+            nr_leaving_the_house_ = nr_leaving_the_house_/max(nr_leaving_the_house)        
+     
+        line = ',\n\t\t[\"Leaving House Events\", ' +', '.join(map(str,nr_leaving_the_house_))+'],\n'         
+        output_VisFile_bar.writelines(line)
+           
+        #assess the heart rate events for detecting deviations 
+        hr_events = self.heartRate_mean        
+        ind = np.argwhere(hr_events<0)
+        hr_events_ = hr_events
+        hr_events_[ind] = 0  
+        
+        if(max(hr_events_)>0):
+            hr_events_ = hr_events_/max(hr_events_)          
+        
+        line = '\t\t[\"Heart Rate Measurements\", ' +', '.join(map(str,hr_events_))+'],\n' 
+        output_VisFile_chart.writelines(line)
+    
+        #evaluation of the number of visits during the night
+        nr_night_visits = self.nightMotion                
+        ind = np.argwhere(nr_night_visits<0)
+        nr_night_visits_ = nr_night_visits
+        nr_night_visits_[ind] = 0  
+        if max(nr_night_visits_)>0:
+            nr_night_visits_ = nr_night_visits_/max(nr_night_visits_)        
+     
+        line = '\t\t[\"Night motion\", ' +', '.join(map(str,nr_night_visits_))+'],\n'         
+        output_VisFile_bar.writelines(line)
+                         
+        #assess the abnormal behaviours
+        abnormalEvents = self.abnormalEvents     
+        ind = np.argwhere(abnormalEvents<0)
+        abnormalEvents_ = abnormalEvents
+        abnormalEvents_[ind] = 0  
+        
+        if(max(abnormalEvents_)>0):
+            abnormalEvents_ = abnormalEvents_/max(abnormalEvents_)          
+        
+        line = '\t\t[\"Abnormal Events\", ' +', '.join(map(str,abnormalEvents_))+']' 
+        output_VisFile_chart.writelines(line)                       
+
+        #assess the deviations in the number of visits to the bathroom
+        nr_visits_bathroom = self.visitsBathroom     
+        ind = np.argwhere(nr_visits_bathroom<0)
+        nr_visits_bathroom_ = nr_visits_bathroom
+        nr_visits_bathroom_[ind] = 0  
+        if max(nr_visits_bathroom_)>0:
+            nr_visits_bathroom_ = nr_visits_bathroom_/max(nr_visits_bathroom_)        
+     
+        line = '\t\t["Visits Bathroom\", ' +', '.join(map(str,nr_visits_bathroom_))+']'         
+        output_VisFile_bar.writelines(line)       
+                
     def evaluateAlzheimersActivities(self,outputFile,investigatedPeriodinDays,minimumAnalysisDays):    
         
         halfInterval = int(investigatedPeriodinDays/2) 
@@ -1706,7 +1875,7 @@ class MultimodalFusion():
         print line
         
         line = ',\n\t\t\"stationaryBehaviour\":{\n' + '\t\t\t\"result\":' + str(round(percent_stationary*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,stationary))+'\n\t\t\t]\n' + '\t\t},\n'
-        outputFile.writelines(line)
+        outputFile.writelines(line)    
         
         if(percent_stationary>=0):
             probabilityApathy_stationary = 0.5*percent_stationary
@@ -1756,8 +1925,8 @@ class MultimodalFusion():
         print line
                 
         line = '\t\t\"overallMotion\":{\n' + '\t\t\t\"result\":' + str(round(percent_steps*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,steps))+'\n\t\t\t]\n' + '\t\t},\n'
-        outputFile.writelines(line)
-        
+        outputFile.writelines(line)       
+              
         #in the case daily motion calculated using the nr of steps decreases, the probability of apathy increases
         if(percent_steps<0):
             probabilityApathy_steps = -percent_steps*0.2
@@ -1861,8 +2030,8 @@ class MultimodalFusion():
             probabilityMovementIssues_leavingHouse = 0.001
     
         line = '\t\t\"leavingHouse\":{\n' + '\t\t\t\"result\":' + str(round(percent_leavingHouse*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,nr_leaving_the_house))+'\n\t\t\t]\n' + '\t\t},\n'              
-        outputFile.writelines(line)
-                   
+        outputFile.writelines(line)        
+                 
         #assess the heart rate events for detecting deviations 
         hr_events = self.heartRate_mean
         hr_events_min = self.heartRate_min
@@ -1911,8 +2080,8 @@ class MultimodalFusion():
         line = line + '\t\t\t\"skewnessHeartRate\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events_skewness))+'\n\t\t\t],\n'
         line = line + '\t\t\t\"kurtosisHeartRate\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,hr_events_kurtosis))+'\n\t\t\t],\n'                                             
         line = line + '\t\t},\n'              
-        outputFile.writelines(line)
-        
+        outputFile.writelines(line)    
+                
         if(abs(percent_hr)>=0.2):            
             probabilityHipertension_hr= 0.7*(percent_hr)
         else:
@@ -2019,8 +2188,8 @@ class MultimodalFusion():
         print line
         
         line = '\t\t\"nightMotion\":{\n' + '\t\t\t\"result\":' + str(round(percent_nightMotion*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,nr_night_visits))+'\n\t\t\t]\n' + '\t\t},\n'              
-        outputFile.writelines(line)
-    
+        outputFile.writelines(line)               
+                       
         insomnia = self.insomnia
         line = '\t\t\"insomnia\":'+str(insomnia)+',\n'
         outputFile.writelines(line)
@@ -2077,8 +2246,8 @@ class MultimodalFusion():
         print line
                 
         line = '\t\t\"abnormalEvents\":{\n' + '\t\t\t\"result\":' + str(round(percent_abnormalEvents*100)) + ',\n' + '\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,abnormalEvents))+'\n\t\t\t]\n' + '\t\t},\n' 
-        outputFile.writelines(line)
-        
+        outputFile.writelines(line)        
+         
         if(percent_abnormalEvents>=0):
             probabilityConfusion_abnormalEvents = percent_abnormalEvents
             probabilityImprovedBehaviour_abnormalEvents = 0.001  
@@ -2267,10 +2436,9 @@ class MultimodalFusion():
         print line
             
         line = '\t\t\"visitBathroom\":{\n' + '\t\t\t\"result\":' + str(round(percent_nr_visits_bathroom*100)) + ',\n' +'\t\t\t\"events\":[\n\t\t\t\t'+',\n\t\t\t\t'.join(map(str,nr_visits_bathroom))+'\n\t\t\t]\n' + '\t\t},\n'              
-        outputFile.writelines(line)
-        
-        incontinence = self.incontinence
-        
+        outputFile.writelines(line)        
+       
+        incontinence = self.incontinence        
         line = '\t\t\"incontinence\":'+str(incontinence) + ', \n'
         outputFile.writelines(line)
 
@@ -2610,7 +2778,7 @@ class MultimodalFusion():
         outputFile.writelines(line)        
           
         
-    def multimodalFusionalgorithms(self,outputFile,patientId,currentDate,investigatedPeriodinDays,inputFileEHR,inputFileHETRA,inputFileDIT,minimumAnalysisDays):
+    def multimodalFusionalgorithms(self,outputFile,patientId,currentDate,investigatedPeriodinDays,inputFileEHR,inputFileHETRA,inputFileDIT,minimumAnalysisDays,output_VisFile_chart,output_VisFile_bar,visualizeFiles):
     
         commentsEnabled = 1        
         # currentDay = currentDate.day
@@ -2735,43 +2903,47 @@ class MultimodalFusion():
             foundPatientId, stationary, dailyMotion, freezing_events, festination_events, loss_of_balance_events, fall_down_events, nr_visits_bathroom, nr_leaving_the_house, nr_night_visits, abnormalEvents, heart_rate_min, heart_rate_max, heart_rate_mean, heart_rate_mode, heart_rate_median, heart_rate_kurtosis, heart_rate_skewness, heartRateLow, heartRateHigh, gsr_min, gsr_max, gsr_mean, gsr_mode, gsr_median, gsr_kurtosis, gsr_skewness, steps  = self.parseHETRAFile(inputFileHETRA,patientId,startDate,investigatedPeriodinDays)                                                                                                    
             
             if(foundPatientId>0):
-				self.stationaryEvents = stationary
-				self.abnormalEvents = abnormalEvents
-				self.dailyMotion = dailyMotion
-				self.freezing = freezing_events
-				self.festination = festination_events
-				self.nightMotion = nr_night_visits
-				self.fallDown = fall_down_events
-				self.lossOfBalance = loss_of_balance_events
-				self.visitsBathroom = nr_visits_bathroom
-				self.leavingHouse = nr_leaving_the_house
-				self.digitalTime = time_dit
-				self.abnormalDigitalEvents = nr_abnormal_dit_behaviours
-				self.heartRate_mean = heart_rate_mean
-				self.heartRate_min = heart_rate_min
-				self.heartRate_max = heart_rate_max
-				self.heartRate_median = heart_rate_median
-				self.heartRate_mode = heart_rate_mode
-				self.heartRate_skewness = heart_rate_skewness
-				self.heartRate_kurtosis= heart_rate_kurtosis
-				self.heartRateLow = heartRateLow  # the number of events is considered
-				self.heartRateHigh = heartRateHigh # the number of events is considered
-				self.steps = steps
-				self.galvanicSkinResponse_mean = gsr_mean
-				self.galvanicSkinResponse_min = gsr_min
-				self.galvanicSkinResponse_max = gsr_max
-				self.galvanicSkinResponse_mode = gsr_mode
-				self.galvanicSkinResponse_median = gsr_median
-				self.galvanicSkinResponse_skewness = gsr_skewness
-				self.galvanicSkinResponse_kurtosis = gsr_kurtosis
+                self.stationaryEvents = stationary
+                self.abnormalEvents = abnormalEvents
+                self.dailyMotion = dailyMotion
+                self.freezing = freezing_events
+                self.festination = festination_events
+                self.nightMotion = nr_night_visits
+                self.fallDown = fall_down_events
+                self.lossOfBalance = loss_of_balance_events
+                self.visitsBathroom = nr_visits_bathroom
+                self.leavingHouse = nr_leaving_the_house
+                self.digitalTime = time_dit
+                self.abnormalDigitalEvents = nr_abnormal_dit_behaviours
+                self.heartRate_mean = heart_rate_mean
+                self.heartRate_min = heart_rate_min
+                self.heartRate_max = heart_rate_max
+                self.heartRate_median = heart_rate_median
+                self.heartRate_mode = heart_rate_mode
+                self.heartRate_skewness = heart_rate_skewness
+                self.heartRate_kurtosis= heart_rate_kurtosis
+                self.heartRateLow = heartRateLow  # the number of events is considered
+                self.heartRateHigh = heartRateHigh # the number of events is considered
+                self.steps = steps
+                self.galvanicSkinResponse_mean = gsr_mean
+                self.galvanicSkinResponse_min = gsr_min
+                self.galvanicSkinResponse_max = gsr_max
+                self.galvanicSkinResponse_mode = gsr_mode
+                self.galvanicSkinResponse_median = gsr_median
+                self.galvanicSkinResponse_skewness = gsr_skewness
+                self.galvanicSkinResponse_kurtosis = gsr_kurtosis
 				
-				#Different sets of functionalities are evaluated in the case of Parkinson's or Alzheimer's disease
-				if(self.mainDiagnose==1):
-					self.evaluateParkinsonsActivities(outputFile,investigatedPeriodinDays,minimumAnalysisDays)
-				elif(self.mainDiagnose==0):
-					self.evaluateAlzheimersActivities(outputFile,investigatedPeriodinDays,minimumAnalysisDays)
-				else:
-					print "A correct diagnosis wasn't found. The analysis will not be performed.\n"
+    				#Different sets of functionalities are evaluated in the case of Parkinson's or Alzheimer's disease
+                if(self.mainDiagnose==1):
+                    self.evaluateParkinsonsActivities(outputFile,investigatedPeriodinDays,minimumAnalysisDays)
+                    if visualizeFiles:
+                        self.visualizeParkinsonsActivities(investigatedPeriodinDays,minimumAnalysisDays,output_VisFile_chart,output_VisFile_bar)                                         
+                elif(self.mainDiagnose==0):                    
+                    self.evaluateAlzheimersActivities(outputFile,investigatedPeriodinDays,minimumAnalysisDays)      
+                    if visualizeFiles:
+                        self.visualizeAlzheimersActivities(investigatedPeriodinDays,minimumAnalysisDays,output_VisFile_chart,output_VisFile_bar)                                         
+                else:
+                    print "A correct diagnosis wasn't found. The analysis will not be performed.\n"
                     
             else:              
                 print 'The HETRA data for patient with id: ' + str(patientId) + ' was not found.'
@@ -2783,7 +2955,7 @@ if __name__ == '__main__':
 	# define the set of parameters
 	#the list of patienIds need to be updated
     listPatientIds = ['5315e0fb-a7ef-4742-9387-12cd9a000b20','50baff5b-7898-436d-8eb6-543600cc86c3','4d54d40a-919e-40f4-baa8-9e73dea08f73','ccc97074-c7f9-47ae-a46f-3e9c79025cab','20cd74e3-2f0e-4812-bd22-f13a277a1e6d']
-    	
+    #listPatientIds = ['5315e0fb-a7ef-4742-9387-12cd9a000b20']
     nrPatients = len(listPatientIds)
     investigatedPeriodinDays = 15  #interval for MF analysis
     minimumAnalysisDays = 8
@@ -2791,7 +2963,7 @@ if __name__ == '__main__':
 	
     str_date = analysisDate.strftime('%d-%m-%Y')
     #analysisDate = analysisDate.replace(2018,10,26) #this date is used for testing purposes
-    #analysisDate = analysisDate.replace(2018,9,1) #this date is used for testing purposes
+    #analysisDate = analysisDate.replace(2018,11,12) #this date is used for testing purposes
     
     year = analysisDate.year
     month= analysisDate.month
@@ -2813,18 +2985,19 @@ if __name__ == '__main__':
         monthString = str(month)
         
     outputMF_File =  'MF_' + str(year) + monthString + dayString  + '.json'
+    
     inputEHR_File = 'EHR_' + str(year) + monthString + dayString  + '.json'
     inputHETRA_File = 'HETRA_' + str(year) + monthString + dayString  + '.json'
     inputDIT_File =   'DitML_' + str(year) + monthString + dayString  + '.json'
                                        
-    outputFileMF = outputMFpath + '/' + outputMF_File   
-                    
+    outputFileMF = outputMFpath + '/' + outputMF_File      
+       
     #check if all the input files are available
     inputFileEHR = inputEHRpath + '/' + inputEHR_File   
     inputFileHETRA = inputHETRApath + '/' + inputHETRA_File   
     inputFileDIT = inputDITpath + '/' + inputDIT_File
     
-    downloadFiles = 1
+    downloadFiles = 0
     if(downloadFiles):                
         #downloadFileFromCloud.downloadFile_CloudEHR(inputFileEHR,inputEHR_File)        
         #downloadFileFromCloud.downloadFile_CloudHETRA(inputFileHETRA,inputHETRA_File)              
@@ -2835,6 +3008,7 @@ if __name__ == '__main__':
     #print inputFileEHR
     #print inputFileHETRA
     
+    visualizeFiles = 1
     if (os.path.isfile(inputFileEHR) & os.path.isfile(inputFileHETRA)):
     
         print 'all input files are received'
@@ -2852,13 +3026,57 @@ if __name__ == '__main__':
             line = '\t\t\"endDate\":\"' + str(analysisDate) + '\"' 
             outputFile.writelines(line)
             
-            mf=MultimodalFusion()
-            mf.multimodalFusionalgorithms(outputFile,patientId,analysisDate,investigatedPeriodinDays,inputFileEHR,inputFileHETRA,inputFileDIT,minimumAnalysisDays)        
-            if(i==nrPatients-1):
-                line = '\n\t}\n'                
+            #visulization file created for infograph
+            outputMF_VisFile_chart = str(patientId)  + '_events_charts'  + '.json'                    
+            outputFileMF_Vis_chart = outputMFpath + '/' + outputMF_VisFile_chart
+            output_VisFile_chart = open(outputFileMF_Vis_chart,'w') 
+            
+            outputMF_VisFile_bar =  str(patientId)  + '_events_bars'  + '.json'                    
+            outputFileMF_Vis_bar = outputMFpath + '/' + outputMF_VisFile_bar
+            output_VisFile_bar = open(outputFileMF_Vis_bar,'w')     
+            
+            line = '[\n'
+            output_VisFile_chart.writelines(line)
+            output_VisFile_bar.writelines(line)                                                       
+           
+            if(visualizeFiles):                
+                             
+                line = '\t[\n'
+                output_VisFile_chart.writelines(line)
+                output_VisFile_bar.writelines(line)
+                
+                line = '\t\t['+'\"'+ str(startDate) + ' - '+ str(analysisDate)+'\",'
+                for ii in range(investigatedPeriodinDays):
+                    if(ii==investigatedPeriodinDays-1):
+                        line = line + ' '+str(ii+1)+']'
+                    else:
+                        line = line + ' '+str(ii+1)+','                           
+                
+                output_VisFile_chart.writelines(line)
+                output_VisFile_bar.writelines(line)            
+                
+                mf=MultimodalFusion()
+                mf.multimodalFusionalgorithms(outputFile,patientId,analysisDate,investigatedPeriodinDays,inputFileEHR,inputFileHETRA,inputFileDIT,minimumAnalysisDays,output_VisFile_chart,output_VisFile_bar,1)    
+                                  
+                line ='\n\t]\n'                                
+                output_VisFile_chart.writelines(line)
+                output_VisFile_bar.writelines(line)
             else:
-                line = '\n\t},\n'                                
+                 mf=MultimodalFusion()
+                 mf.multimodalFusionalgorithms(outputFile,patientId,analysisDate,investigatedPeriodinDays,inputFileEHR,inputFileHETRA,inputFileDIT,minimumAnalysisDays,output_VisFile_chart,output_VisFile_bar,0)    
+                
+            if(i==nrPatients-1):
+                line = '\n\t}\n'                     
+            else:
+                line = '\n\t},\n'                                                
             outputFile.writelines(line)  
+            
+            line =']'
+            output_VisFile_chart.writelines(line)
+            output_VisFile_chart.close()
+            
+            output_VisFile_bar.writelines(line)
+            output_VisFile_bar.close()    
         
         #close the MF output file
         line = ']'
