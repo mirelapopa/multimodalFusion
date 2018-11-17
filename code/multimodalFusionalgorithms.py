@@ -3009,6 +3009,7 @@ if __name__ == '__main__':
     #print inputFileHETRA
     
     visualizeFiles = 1
+    uploadResults = 1
     if (os.path.isfile(inputFileEHR) & os.path.isfile(inputFileHETRA)):
     
         print 'all input files are received'
@@ -3076,7 +3077,13 @@ if __name__ == '__main__':
             output_VisFile_chart.close()
             
             output_VisFile_bar.writelines(line)
-            output_VisFile_bar.close()    
+            output_VisFile_bar.close()   
+            if (uploadResults):
+                 outputPath= '../output'        
+                 outFilePath =  outputPath + '/ehr' + '/' + outputMF_VisFile_bar
+                 uploadFileToCloud.uploadFile_Cloud(outFilePath,outputMF_VisFile_bar)
+                 outFilePath =  outputPath + '/ehr' + '/' + outputMF_VisFile_chart
+                 uploadFileToCloud.uploadFile_Cloud(outFilePath,outputMF_VisFile_chart)
         
         #close the MF output file
         line = ']'
@@ -3084,7 +3091,7 @@ if __name__ == '__main__':
         outputFile.close()  
         
         # upload the output file to the cloud containing the analysis results
-        uploadResults = 1
+        
         if(uploadResults):
         
             outputPath= '../output'        
